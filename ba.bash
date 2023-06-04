@@ -1,0 +1,19 @@
+mkdir -p src/pages/clients && touch src/pages/clients/index.tsx && echo -e "export default function ClientsPage() {return <div>ClientsPage</div>}" > src/pages/clients/index.tsx
+mkdir -p src/pages/clientsCard && touch src/pages/clientsCard/index.tsx && echo -e "export default function ClientsCardPage() {return <div>ClientsCardPage</div>}" > src/pages/clientsCard/index.tsx
+mkdir -p src/pages/clientsForm && touch src/pages/clientsForm/index.tsx && echo -e "export default function ClientsFormPage() {return <div>ClientsFormPage</div>}" > src/pages/clientsForm/index.tsx
+mkdir -p src/pages/dictionaries && touch src/pages/dictionaries/index.tsx && echo -e "export default function DictionariesPage() {return <div>DictionariesPage</div>}" > src/pages/dictionaries/index.tsx
+mkdir -p src/pages/employees && touch src/pages/employees/index.tsx && echo -e "export default function EmployeesPage() {return <div>EmployeesPage</div>}" > src/pages/employees/index.tsx
+mkdir -p src/pages/employeesCard && touch src/pages/employeesCard/index.tsx && echo -e "export default function EmployeesCardPage() {return <div>EmployeesCardPage</div>}" > src/pages/employeesCard/index.tsx
+mkdir -p src/pages/employeesForm && touch src/pages/employeesForm/index.tsx && echo -e "export default function EmployeesFormPage() {return <div>EmployeesFormPage</div>}" > src/pages/employeesForm/index.tsx
+mkdir -p src/pages/objects && touch src/pages/objects/index.tsx && echo -e "export default function ObjectsPage() {return <div>ObjectsPage</div>}" > src/pages/objects/index.tsx
+mkdir -p src/pages/objectsCard && touch src/pages/objectsCard/index.tsx && echo -e "export default function ObjectsCardPage() {return <div>ObjectsCardPage</div>}" > src/pages/objectsCard/index.tsx
+mkdir -p src/pages/objectsForm && touch src/pages/objectsForm/index.tsx && echo -e "export default function ObjectsFormPage() {return <div>ObjectsFormPage</div>}" > src/pages/objectsForm/index.tsx
+mkdir -p src/pages/root && touch src/pages/root/index.tsx && echo -e "export default function RootPage() {return <div>RootPage</div>}" > src/pages/root/index.tsx
+mkdir -p src/pages/settings && touch src/pages/settings/index.tsx && echo -e "export default function SettingsPage() {return <div>SettingsPage</div>}" > src/pages/settings/index.tsx
+mkdir -p src/pages/staff && touch src/pages/staff/index.tsx && echo -e "export default function StaffPage() {return <div>StaffPage</div>}" > src/pages/staff/index.tsx
+mkdir -p src/pages/staffCard && touch src/pages/staffCard/index.tsx && echo -e "export default function StaffCardPage() {return <div>StaffCardPage</div>}" > src/pages/staffCard/index.tsx
+mkdir -p src/pages/staffForm && touch src/pages/staffForm/index.tsx && echo -e "export default function StaffFormPage() {return <div>StaffFormPage</div>}" > src/pages/staffForm/index.tsx
+
+mkdir -p src/pages/deal && touch src/pages/deal/index.tsx && echo -e "export default function DealPage() {return <div>DealPage</div>}" > src/pages/deal/index.tsx
+mkdir -p src/pages/dealForm && touch src/pages/dealForm/index.tsx && echo -e "export default function DealFormPage() {return <div>DealFormPage</div>}" > src/pages/dealForm/index.tsx
+mkdir -p src/pages/dealProcess && touch src/pages/dealProcess/index.tsx && echo -e "export default function DealProcessPage() {return <div>DealProcessPage</div>}" > src/pages/dealProcess/index.tsx
