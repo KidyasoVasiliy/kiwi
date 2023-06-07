@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import request from 'graphql-request';
-import { gql } from 'src/gql';
+import { gql } from 'src/gql/request';
 
 const clientsQueryDoc = gql`
   query Clients($offset: Int, $limit: Int) {

@@ -1,6 +1,2 @@
-import { graphql } from './gql';
-
-export * from './fragment-masking';
-
-/** override func graphql */
-export const gql = (...args: any) => graphql(args);
+export * from "./fragment-masking";
+export * from "./gql";
