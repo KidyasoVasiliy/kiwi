@@ -1,5 +1,6 @@
 import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { ClientsTable } from 'src/features/client/ui/ClientsTable';
 
 export default function ClientsPage() {
   const navigate = useNavigate();
@@ -10,9 +11,8 @@ export default function ClientsPage() {
       <Button onClick={() => navigate('create', { relative: 'path' })}>
         Создать
       </Button>
-      <Button onClick={() => navigate('123-123-123-123', { relative: 'path' })}>
-        Открыть
-      </Button>
+
+      <ClientsTable />
     </div>
   );
 }
