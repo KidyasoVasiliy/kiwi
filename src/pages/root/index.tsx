@@ -84,7 +84,7 @@ const RootPage: React.FC = () => {
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: '0 16px' }}>
+        <Content style={{ padding: '24px' }}>
           <Outlet />
         </Content>
       </Layout>

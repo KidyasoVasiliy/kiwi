@@ -1,18 +1,12 @@
-import { Button } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { ClientsTable } from 'src/features/client/ui/ClientsTable';
+import { ClientsTable } from 'src/features/ClientsTable';
+import { useTitle } from 'src/shared/lib/browser/dom';
 
 export default function ClientsPage() {
-  const navigate = useNavigate();
+  useTitle('Клиенты');
 
   return (
-    <div>
-      <h1>ClientsPage</h1>
-      <Button onClick={() => navigate('create', { relative: 'path' })}>
-        Создать
-      </Button>
-
+    <>
       <ClientsTable />
-    </div>
+    </>
   );
 }

@@ -12,14 +12,14 @@ const config: CodegenConfig = {
       },
     },
   },
-  documents: ['src/**/*.tsx', '!src/gql/**/*'],
+  documents: ['src/**/*.tsx', 'src/**/*.ts'],
   generates: {
-    './src/gql/': {
+    './src/__gql__/': {
       preset: 'client',
       plugins: [],
     },
   },
-  watch: true,
+  ignoreNoDocuments: true,
 };
 
 export default config;

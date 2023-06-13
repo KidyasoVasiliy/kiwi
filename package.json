@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "concurrently \"react-scripts start\" \"graphql-codegen --watch\"",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "lint:fix": "eslint ./src/**/*.{ts,tsx} --fix",
+    "start": "concurrently \"react-scripts start\" \"graphql-codegen --watch\"",
     "test": "react-scripts test"
   },
   "browserslist": {
@@ -38,6 +38,14 @@
       "plugin:prettier/recommended"
     ],
     "rules": {
+      "no-restricted-imports": [
+        "error",
+        {
+          "patterns": [
+            "src/features/*/*"
+          ]
+        }
+      ],
       "import/order": [
         "error",
         {
@@ -64,7 +72,7 @@
     "root": true
   },
   "dependencies": {
-    "@apollo/client": "^3.7.15",
+    "@ant-design/icons": "^5.1.4",
     "@graphql-codegen/client-preset": "^4.0.0",
     "@tanstack/react-query": "^4.29.12",
     "@testing-library/jest-dom": "^5.16.5",
@@ -75,6 +83,7 @@
     "@types/react": "^18.2.8",
     "@types/react-dom": "^18.2.4",
     "antd": "^5.5.2",
+    "dayjs": "^1.11.8",
     "graphql-request": "^6.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -85,6 +94,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^4.0.1",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@typescript-eslint/eslint-plugin": "^5.59.8",
     "@typescript-eslint/parser": "^5.59.8",
     "concurrently": "^8.1.0",

@@ -20,6 +20,19 @@ export type Scalars = {
   uuid: { input: any; output: any; }
 };
 
+/** Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'. */
+export type Boolean_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['Boolean']['input']>;
+  _gt?: InputMaybe<Scalars['Boolean']['input']>;
+  _gte?: InputMaybe<Scalars['Boolean']['input']>;
+  _in?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['Boolean']['input']>;
+  _lte?: InputMaybe<Scalars['Boolean']['input']>;
+  _neq?: InputMaybe<Scalars['Boolean']['input']>;
+  _nin?: InputMaybe<Array<Scalars['Boolean']['input']>>;
+};
+
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['Int']['input']>;
@@ -82,12 +95,85 @@ export type Bigint_Comparison_Exp = {
 /** Таблица клиентов */
 export type Client = {
   __typename?: 'client';
+  /** An array relationship */
+  contacts: Array<Client_Contact>;
+  /** An aggregate relationship */
+  contacts_aggregate: Client_Contact_Aggregate;
   created_at: Scalars['timestamptz']['output'];
-  fullName: Scalars['String']['output'];
+  employee_id?: Maybe<Scalars['uuid']['output']>;
   id: Scalars['uuid']['output'];
+  name: Scalars['String']['output'];
+  /** An array relationship */
+  objects: Array<Client_Object>;
+  /** An aggregate relationship */
+  objects_aggregate: Client_Object_Aggregate;
   /** An object relationship */
-  objects?: Maybe<Client_Object>;
+  responsible_employee?: Maybe<Employee>;
+  /** An array relationship */
+  statuses: Array<Client_Status>;
+  /** An aggregate relationship */
+  statuses_aggregate: Client_Status_Aggregate;
   updated_at: Scalars['timestamptz']['output'];
+};
+
+
+/** Таблица клиентов */
+export type ClientContactsArgs = {
+  distinct_on?: InputMaybe<Array<Client_Contact_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Client_Contact_Order_By>>;
+  where?: InputMaybe<Client_Contact_Bool_Exp>;
+};
+
+
+/** Таблица клиентов */
+export type ClientContacts_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Client_Contact_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Client_Contact_Order_By>>;
+  where?: InputMaybe<Client_Contact_Bool_Exp>;
+};
+
+
+/** Таблица клиентов */
+export type ClientObjectsArgs = {
+  distinct_on?: InputMaybe<Array<Client_Object_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Client_Object_Order_By>>;
+  where?: InputMaybe<Client_Object_Bool_Exp>;
+};
+
+
+/** Таблица клиентов */
+export type ClientObjects_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Client_Object_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Client_Object_Order_By>>;
+  where?: InputMaybe<Client_Object_Bool_Exp>;
+};
+
+
+/** Таблица клиентов */
+export type ClientStatusesArgs = {
+  distinct_on?: InputMaybe<Array<Client_Status_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Client_Status_Order_By>>;
+  where?: InputMaybe<Client_Status_Bool_Exp>;
+};
+
+
+/** Таблица клиентов */
+export type ClientStatuses_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Client_Status_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Client_Status_Order_By>>;
+  where?: InputMaybe<Client_Status_Bool_Exp>;
 };
 
 /** aggregated selection of "client" */
@@ -142,10 +228,17 @@ export type Client_Bool_Exp = {
   _and?: InputMaybe<Array<Client_Bool_Exp>>;
   _not?: InputMaybe<Client_Bool_Exp>;
   _or?: InputMaybe<Array<Client_Bool_Exp>>;
+  contacts?: InputMaybe<Client_Contact_Bool_Exp>;
+  contacts_aggregate?: InputMaybe<Client_Contact_Aggregate_Bool_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  fullName?: InputMaybe<String_Comparison_Exp>;
+  employee_id?: InputMaybe<Uuid_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
   objects?: InputMaybe<Client_Object_Bool_Exp>;
+  objects_aggregate?: InputMaybe<Client_Object_Aggregate_Bool_Exp>;
+  responsible_employee?: InputMaybe<Employee_Bool_Exp>;
+  statuses?: InputMaybe<Client_Status_Bool_Exp>;
+  statuses_aggregate?: InputMaybe<Client_Status_Aggregate_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -155,12 +248,272 @@ export enum Client_Constraint {
   ClientPkey = 'client_pkey'
 }
 
+/** Контакты клиента */
+export type Client_Contact = {
+  __typename?: 'client_contact';
+  /** An object relationship */
+  client: Client;
+  client_id: Scalars['uuid']['output'];
+  email?: Maybe<Scalars['String']['output']>;
+  id: Scalars['uuid']['output'];
+  is_main: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  phone?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregated selection of "client_contact" */
+export type Client_Contact_Aggregate = {
+  __typename?: 'client_contact_aggregate';
+  aggregate?: Maybe<Client_Contact_Aggregate_Fields>;
+  nodes: Array<Client_Contact>;
+};
+
+export type Client_Contact_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Client_Contact_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Client_Contact_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Client_Contact_Aggregate_Bool_Exp_Count>;
+};
+
+export type Client_Contact_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Client_Contact_Select_Column_Client_Contact_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Client_Contact_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Client_Contact_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Client_Contact_Select_Column_Client_Contact_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Client_Contact_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Client_Contact_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Client_Contact_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Client_Contact_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "client_contact" */
+export type Client_Contact_Aggregate_Fields = {
+  __typename?: 'client_contact_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Client_Contact_Max_Fields>;
+  min?: Maybe<Client_Contact_Min_Fields>;
+};
+
+
+/** aggregate fields of "client_contact" */
+export type Client_Contact_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Client_Contact_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "client_contact" */
+export type Client_Contact_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Client_Contact_Max_Order_By>;
+  min?: InputMaybe<Client_Contact_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "client_contact" */
+export type Client_Contact_Arr_Rel_Insert_Input = {
+  data: Array<Client_Contact_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Client_Contact_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "client_contact". All fields are combined with a logical 'AND'. */
+export type Client_Contact_Bool_Exp = {
+  _and?: InputMaybe<Array<Client_Contact_Bool_Exp>>;
+  _not?: InputMaybe<Client_Contact_Bool_Exp>;
+  _or?: InputMaybe<Array<Client_Contact_Bool_Exp>>;
+  client?: InputMaybe<Client_Bool_Exp>;
+  client_id?: InputMaybe<Uuid_Comparison_Exp>;
+  email?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  is_main?: InputMaybe<Boolean_Comparison_Exp>;
+  name?: InputMaybe<String_Comparison_Exp>;
+  phone?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "client_contact" */
+export enum Client_Contact_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  ClientContactPkey = 'client_contact_pkey'
+}
+
+/** input type for inserting data into table "client_contact" */
+export type Client_Contact_Insert_Input = {
+  client?: InputMaybe<Client_Obj_Rel_Insert_Input>;
+  client_id?: InputMaybe<Scalars['uuid']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  is_main?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type Client_Contact_Max_Fields = {
+  __typename?: 'client_contact_max_fields';
+  client_id?: Maybe<Scalars['uuid']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
+};
+
+/** order by max() on columns of table "client_contact" */
+export type Client_Contact_Max_Order_By = {
+  client_id?: InputMaybe<Order_By>;
+  email?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  phone?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Client_Contact_Min_Fields = {
+  __typename?: 'client_contact_min_fields';
+  client_id?: Maybe<Scalars['uuid']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
+};
+
+/** order by min() on columns of table "client_contact" */
+export type Client_Contact_Min_Order_By = {
+  client_id?: InputMaybe<Order_By>;
+  email?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  phone?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "client_contact" */
+export type Client_Contact_Mutation_Response = {
+  __typename?: 'client_contact_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Client_Contact>;
+};
+
+/** on_conflict condition type for table "client_contact" */
+export type Client_Contact_On_Conflict = {
+  constraint: Client_Contact_Constraint;
+  update_columns?: Array<Client_Contact_Update_Column>;
+  where?: InputMaybe<Client_Contact_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "client_contact". */
+export type Client_Contact_Order_By = {
+  client?: InputMaybe<Client_Order_By>;
+  client_id?: InputMaybe<Order_By>;
+  email?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  is_main?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  phone?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: client_contact */
+export type Client_Contact_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "client_contact" */
+export enum Client_Contact_Select_Column {
+  /** column name */
+  ClientId = 'client_id',
+  /** column name */
+  Email = 'email',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  IsMain = 'is_main',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  Phone = 'phone'
+}
+
+/** select "client_contact_aggregate_bool_exp_bool_and_arguments_columns" columns of table "client_contact" */
+export enum Client_Contact_Select_Column_Client_Contact_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsMain = 'is_main'
+}
+
+/** select "client_contact_aggregate_bool_exp_bool_or_arguments_columns" columns of table "client_contact" */
+export enum Client_Contact_Select_Column_Client_Contact_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsMain = 'is_main'
+}
+
+/** input type for updating data in table "client_contact" */
+export type Client_Contact_Set_Input = {
+  client_id?: InputMaybe<Scalars['uuid']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  is_main?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "client_contact" */
+export type Client_Contact_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Client_Contact_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Client_Contact_Stream_Cursor_Value_Input = {
+  client_id?: InputMaybe<Scalars['uuid']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  is_main?: InputMaybe<Scalars['Boolean']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "client_contact" */
+export enum Client_Contact_Update_Column {
+  /** column name */
+  ClientId = 'client_id',
+  /** column name */
+  Email = 'email',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  IsMain = 'is_main',
+  /** column name */
+  Name = 'name',
+  /** column name */
+  Phone = 'phone'
+}
+
+export type Client_Contact_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Client_Contact_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Client_Contact_Bool_Exp;
+};
+
 /** input type for inserting data into table "client" */
 export type Client_Insert_Input = {
+  contacts?: InputMaybe<Client_Contact_Arr_Rel_Insert_Input>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  fullName?: InputMaybe<Scalars['String']['input']>;
+  employee_id?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  objects?: InputMaybe<Client_Object_Obj_Rel_Insert_Input>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  objects?: InputMaybe<Client_Object_Arr_Rel_Insert_Input>;
+  responsible_employee?: InputMaybe<Employee_Obj_Rel_Insert_Input>;
+  statuses?: InputMaybe<Client_Status_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
@@ -168,203 +521,37 @@ export type Client_Insert_Input = {
 export type Client_Max_Fields = {
   __typename?: 'client_max_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
-  fullName?: Maybe<Scalars['String']['output']>;
+  employee_id?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
 /** order by max() on columns of table "client" */
 export type Client_Max_Order_By = {
   created_at?: InputMaybe<Order_By>;
-  fullName?: InputMaybe<Order_By>;
+  employee_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
-};
-
-/** Таблица атрибутов Клиента */
-export type Client_Meta = {
-  __typename?: 'client_meta';
-  client_id: Scalars['uuid']['output'];
-  created_at: Scalars['timestamptz']['output'];
-  id: Scalars['uuid']['output'];
-  inn?: Maybe<Scalars['String']['output']>;
-  updated_at: Scalars['timestamptz']['output'];
-};
-
-/** aggregated selection of "client_meta" */
-export type Client_Meta_Aggregate = {
-  __typename?: 'client_meta_aggregate';
-  aggregate?: Maybe<Client_Meta_Aggregate_Fields>;
-  nodes: Array<Client_Meta>;
-};
-
-/** aggregate fields of "client_meta" */
-export type Client_Meta_Aggregate_Fields = {
-  __typename?: 'client_meta_aggregate_fields';
-  count: Scalars['Int']['output'];
-  max?: Maybe<Client_Meta_Max_Fields>;
-  min?: Maybe<Client_Meta_Min_Fields>;
-};
-
-
-/** aggregate fields of "client_meta" */
-export type Client_Meta_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Client_Meta_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** Boolean expression to filter rows from the table "client_meta". All fields are combined with a logical 'AND'. */
-export type Client_Meta_Bool_Exp = {
-  _and?: InputMaybe<Array<Client_Meta_Bool_Exp>>;
-  _not?: InputMaybe<Client_Meta_Bool_Exp>;
-  _or?: InputMaybe<Array<Client_Meta_Bool_Exp>>;
-  client_id?: InputMaybe<Uuid_Comparison_Exp>;
-  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  id?: InputMaybe<Uuid_Comparison_Exp>;
-  inn?: InputMaybe<String_Comparison_Exp>;
-  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "client_meta" */
-export enum Client_Meta_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  ClientMetaPkey = 'client_meta_pkey'
-}
-
-/** input type for inserting data into table "client_meta" */
-export type Client_Meta_Insert_Input = {
-  client_id?: InputMaybe<Scalars['uuid']['input']>;
-  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  inn?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-};
-
-/** aggregate max on columns */
-export type Client_Meta_Max_Fields = {
-  __typename?: 'client_meta_max_fields';
-  client_id?: Maybe<Scalars['uuid']['output']>;
-  created_at?: Maybe<Scalars['timestamptz']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  inn?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['timestamptz']['output']>;
-};
-
-/** aggregate min on columns */
-export type Client_Meta_Min_Fields = {
-  __typename?: 'client_meta_min_fields';
-  client_id?: Maybe<Scalars['uuid']['output']>;
-  created_at?: Maybe<Scalars['timestamptz']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-  inn?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['timestamptz']['output']>;
-};
-
-/** response of any mutation on the table "client_meta" */
-export type Client_Meta_Mutation_Response = {
-  __typename?: 'client_meta_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Client_Meta>;
-};
-
-/** on_conflict condition type for table "client_meta" */
-export type Client_Meta_On_Conflict = {
-  constraint: Client_Meta_Constraint;
-  update_columns?: Array<Client_Meta_Update_Column>;
-  where?: InputMaybe<Client_Meta_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "client_meta". */
-export type Client_Meta_Order_By = {
-  client_id?: InputMaybe<Order_By>;
-  created_at?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  inn?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: client_meta */
-export type Client_Meta_Pk_Columns_Input = {
-  id: Scalars['uuid']['input'];
-};
-
-/** select columns of table "client_meta" */
-export enum Client_Meta_Select_Column {
-  /** column name */
-  ClientId = 'client_id',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Inn = 'inn',
-  /** column name */
-  UpdatedAt = 'updated_at'
-}
-
-/** input type for updating data in table "client_meta" */
-export type Client_Meta_Set_Input = {
-  client_id?: InputMaybe<Scalars['uuid']['input']>;
-  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  inn?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-};
-
-/** Streaming cursor of the table "client_meta" */
-export type Client_Meta_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Client_Meta_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Client_Meta_Stream_Cursor_Value_Input = {
-  client_id?: InputMaybe<Scalars['uuid']['input']>;
-  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-  inn?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-};
-
-/** update columns of table "client_meta" */
-export enum Client_Meta_Update_Column {
-  /** column name */
-  ClientId = 'client_id',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  Inn = 'inn',
-  /** column name */
-  UpdatedAt = 'updated_at'
-}
-
-export type Client_Meta_Updates = {
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Client_Meta_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Client_Meta_Bool_Exp;
 };
 
 /** aggregate min on columns */
 export type Client_Min_Fields = {
   __typename?: 'client_min_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
-  fullName?: Maybe<Scalars['String']['output']>;
+  employee_id?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
 /** order by min() on columns of table "client" */
 export type Client_Min_Order_By = {
   created_at?: InputMaybe<Order_By>;
-  fullName?: InputMaybe<Order_By>;
+  employee_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
@@ -387,10 +574,8 @@ export type Client_Obj_Rel_Insert_Input = {
 /** Таблица объектов клиента */
 export type Client_Object = {
   __typename?: 'client_object';
-  /** An array relationship */
-  client: Array<Client>;
-  /** An aggregate relationship */
-  client_aggregate: Client_Aggregate;
+  /** An object relationship */
+  client: Client;
   client_id: Scalars['uuid']['output'];
   created_at: Scalars['timestamptz']['output'];
   id: Scalars['uuid']['output'];
@@ -398,31 +583,22 @@ export type Client_Object = {
   updated_at: Scalars['timestamptz']['output'];
 };
 
-
-/** Таблица объектов клиента */
-export type Client_ObjectClientArgs = {
-  distinct_on?: InputMaybe<Array<Client_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Client_Order_By>>;
-  where?: InputMaybe<Client_Bool_Exp>;
-};
-
-
-/** Таблица объектов клиента */
-export type Client_ObjectClient_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Client_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Client_Order_By>>;
-  where?: InputMaybe<Client_Bool_Exp>;
-};
-
 /** aggregated selection of "client_object" */
 export type Client_Object_Aggregate = {
   __typename?: 'client_object_aggregate';
   aggregate?: Maybe<Client_Object_Aggregate_Fields>;
   nodes: Array<Client_Object>;
+};
+
+export type Client_Object_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Client_Object_Aggregate_Bool_Exp_Count>;
+};
+
+export type Client_Object_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Client_Object_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Client_Object_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "client_object" */
@@ -440,13 +616,26 @@ export type Client_Object_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+/** order by aggregate values of table "client_object" */
+export type Client_Object_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Client_Object_Max_Order_By>;
+  min?: InputMaybe<Client_Object_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "client_object" */
+export type Client_Object_Arr_Rel_Insert_Input = {
+  data: Array<Client_Object_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Client_Object_On_Conflict>;
+};
+
 /** Boolean expression to filter rows from the table "client_object". All fields are combined with a logical 'AND'. */
 export type Client_Object_Bool_Exp = {
   _and?: InputMaybe<Array<Client_Object_Bool_Exp>>;
   _not?: InputMaybe<Client_Object_Bool_Exp>;
   _or?: InputMaybe<Array<Client_Object_Bool_Exp>>;
   client?: InputMaybe<Client_Bool_Exp>;
-  client_aggregate?: InputMaybe<Client_Aggregate_Bool_Exp>;
   client_id?: InputMaybe<Uuid_Comparison_Exp>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -462,7 +651,7 @@ export enum Client_Object_Constraint {
 
 /** input type for inserting data into table "client_object" */
 export type Client_Object_Insert_Input = {
-  client?: InputMaybe<Client_Arr_Rel_Insert_Input>;
+  client?: InputMaybe<Client_Obj_Rel_Insert_Input>;
   client_id?: InputMaybe<Scalars['uuid']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -480,6 +669,15 @@ export type Client_Object_Max_Fields = {
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
+/** order by max() on columns of table "client_object" */
+export type Client_Object_Max_Order_By = {
+  client_id?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
 /** aggregate min on columns */
 export type Client_Object_Min_Fields = {
   __typename?: 'client_object_min_fields';
@@ -488,6 +686,15 @@ export type Client_Object_Min_Fields = {
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** order by min() on columns of table "client_object" */
+export type Client_Object_Min_Order_By = {
+  client_id?: InputMaybe<Order_By>;
+  created_at?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  name?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "client_object" */
@@ -499,13 +706,6 @@ export type Client_Object_Mutation_Response = {
   returning: Array<Client_Object>;
 };
 
-/** input type for inserting object relation for remote table "client_object" */
-export type Client_Object_Obj_Rel_Insert_Input = {
-  data: Client_Object_Insert_Input;
-  /** upsert condition */
-  on_conflict?: InputMaybe<Client_Object_On_Conflict>;
-};
-
 /** on_conflict condition type for table "client_object" */
 export type Client_Object_On_Conflict = {
   constraint: Client_Object_Constraint;
@@ -515,7 +715,7 @@ export type Client_Object_On_Conflict = {
 
 /** Ordering options when selecting data from "client_object". */
 export type Client_Object_Order_By = {
-  client_aggregate?: InputMaybe<Client_Aggregate_Order_By>;
+  client?: InputMaybe<Client_Order_By>;
   client_id?: InputMaybe<Order_By>;
   created_at?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -598,10 +798,14 @@ export type Client_On_Conflict = {
 
 /** Ordering options when selecting data from "client". */
 export type Client_Order_By = {
+  contacts_aggregate?: InputMaybe<Client_Contact_Aggregate_Order_By>;
   created_at?: InputMaybe<Order_By>;
-  fullName?: InputMaybe<Order_By>;
+  employee_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  objects?: InputMaybe<Client_Object_Order_By>;
+  name?: InputMaybe<Order_By>;
+  objects_aggregate?: InputMaybe<Client_Object_Aggregate_Order_By>;
+  responsible_employee?: InputMaybe<Employee_Order_By>;
+  statuses_aggregate?: InputMaybe<Client_Status_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
@@ -615,9 +819,11 @@ export enum Client_Select_Column {
   /** column name */
   CreatedAt = 'created_at',
   /** column name */
-  FullName = 'fullName',
+  EmployeeId = 'employee_id',
   /** column name */
   Id = 'id',
+  /** column name */
+  Name = 'name',
   /** column name */
   UpdatedAt = 'updated_at'
 }
@@ -625,9 +831,385 @@ export enum Client_Select_Column {
 /** input type for updating data in table "client" */
 export type Client_Set_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  fullName?: InputMaybe<Scalars['String']['input']>;
+  employee_id?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** Статусная модель клиента */
+export type Client_Status = {
+  __typename?: 'client_status';
+  /** An object relationship */
+  client: Client;
+  client_id: Scalars['uuid']['output'];
+  id: Scalars['uuid']['output'];
+  is_current: Scalars['Boolean']['output'];
+  status: Client_Status_Enum_Enum;
+  updated_at: Scalars['timestamptz']['output'];
+};
+
+/** aggregated selection of "client_status" */
+export type Client_Status_Aggregate = {
+  __typename?: 'client_status_aggregate';
+  aggregate?: Maybe<Client_Status_Aggregate_Fields>;
+  nodes: Array<Client_Status>;
+};
+
+export type Client_Status_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Client_Status_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Client_Status_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Client_Status_Aggregate_Bool_Exp_Count>;
+};
+
+export type Client_Status_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Client_Status_Select_Column_Client_Status_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Client_Status_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Client_Status_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Client_Status_Select_Column_Client_Status_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Client_Status_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Client_Status_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Client_Status_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Client_Status_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "client_status" */
+export type Client_Status_Aggregate_Fields = {
+  __typename?: 'client_status_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Client_Status_Max_Fields>;
+  min?: Maybe<Client_Status_Min_Fields>;
+};
+
+
+/** aggregate fields of "client_status" */
+export type Client_Status_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Client_Status_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "client_status" */
+export type Client_Status_Aggregate_Order_By = {
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Client_Status_Max_Order_By>;
+  min?: InputMaybe<Client_Status_Min_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "client_status" */
+export type Client_Status_Arr_Rel_Insert_Input = {
+  data: Array<Client_Status_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Client_Status_On_Conflict>;
+};
+
+/** Boolean expression to filter rows from the table "client_status". All fields are combined with a logical 'AND'. */
+export type Client_Status_Bool_Exp = {
+  _and?: InputMaybe<Array<Client_Status_Bool_Exp>>;
+  _not?: InputMaybe<Client_Status_Bool_Exp>;
+  _or?: InputMaybe<Array<Client_Status_Bool_Exp>>;
+  client?: InputMaybe<Client_Bool_Exp>;
+  client_id?: InputMaybe<Uuid_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  is_current?: InputMaybe<Boolean_Comparison_Exp>;
+  status?: InputMaybe<Client_Status_Enum_Enum_Comparison_Exp>;
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "client_status" */
+export enum Client_Status_Constraint {
+  /** unique or primary key constraint on columns "id" */
+  ClientStatusPkey = 'client_status_pkey'
+}
+
+/** ENUM статуса Клиента */
+export type Client_Status_Enum = {
+  __typename?: 'client_status_enum';
+  value: Scalars['String']['output'];
+};
+
+/** aggregated selection of "client_status_enum" */
+export type Client_Status_Enum_Aggregate = {
+  __typename?: 'client_status_enum_aggregate';
+  aggregate?: Maybe<Client_Status_Enum_Aggregate_Fields>;
+  nodes: Array<Client_Status_Enum>;
+};
+
+/** aggregate fields of "client_status_enum" */
+export type Client_Status_Enum_Aggregate_Fields = {
+  __typename?: 'client_status_enum_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Client_Status_Enum_Max_Fields>;
+  min?: Maybe<Client_Status_Enum_Min_Fields>;
+};
+
+
+/** aggregate fields of "client_status_enum" */
+export type Client_Status_Enum_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Client_Status_Enum_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "client_status_enum". All fields are combined with a logical 'AND'. */
+export type Client_Status_Enum_Bool_Exp = {
+  _and?: InputMaybe<Array<Client_Status_Enum_Bool_Exp>>;
+  _not?: InputMaybe<Client_Status_Enum_Bool_Exp>;
+  _or?: InputMaybe<Array<Client_Status_Enum_Bool_Exp>>;
+  value?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "client_status_enum" */
+export enum Client_Status_Enum_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  ClientStatusEnumPkey = 'client_status_enum_pkey'
+}
+
+export enum Client_Status_Enum_Enum {
+  Archive = 'ARCHIVE',
+  Draft = 'DRAFT',
+  InWork = 'IN_WORK'
+}
+
+/** Boolean expression to compare columns of type "client_status_enum_enum". All fields are combined with logical 'AND'. */
+export type Client_Status_Enum_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Client_Status_Enum_Enum>;
+  _in?: InputMaybe<Array<Client_Status_Enum_Enum>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _neq?: InputMaybe<Client_Status_Enum_Enum>;
+  _nin?: InputMaybe<Array<Client_Status_Enum_Enum>>;
+};
+
+/** input type for inserting data into table "client_status_enum" */
+export type Client_Status_Enum_Insert_Input = {
+  value?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type Client_Status_Enum_Max_Fields = {
+  __typename?: 'client_status_enum_max_fields';
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type Client_Status_Enum_Min_Fields = {
+  __typename?: 'client_status_enum_min_fields';
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "client_status_enum" */
+export type Client_Status_Enum_Mutation_Response = {
+  __typename?: 'client_status_enum_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Client_Status_Enum>;
+};
+
+/** on_conflict condition type for table "client_status_enum" */
+export type Client_Status_Enum_On_Conflict = {
+  constraint: Client_Status_Enum_Constraint;
+  update_columns?: Array<Client_Status_Enum_Update_Column>;
+  where?: InputMaybe<Client_Status_Enum_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "client_status_enum". */
+export type Client_Status_Enum_Order_By = {
+  value?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: client_status_enum */
+export type Client_Status_Enum_Pk_Columns_Input = {
+  value: Scalars['String']['input'];
+};
+
+/** select columns of table "client_status_enum" */
+export enum Client_Status_Enum_Select_Column {
+  /** column name */
+  Value = 'value'
+}
+
+/** input type for updating data in table "client_status_enum" */
+export type Client_Status_Enum_Set_Input = {
+  value?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "client_status_enum" */
+export type Client_Status_Enum_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Client_Status_Enum_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Client_Status_Enum_Stream_Cursor_Value_Input = {
+  value?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "client_status_enum" */
+export enum Client_Status_Enum_Update_Column {
+  /** column name */
+  Value = 'value'
+}
+
+export type Client_Status_Enum_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Client_Status_Enum_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Client_Status_Enum_Bool_Exp;
+};
+
+/** input type for inserting data into table "client_status" */
+export type Client_Status_Insert_Input = {
+  client?: InputMaybe<Client_Obj_Rel_Insert_Input>;
+  client_id?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  is_current?: InputMaybe<Scalars['Boolean']['input']>;
+  status?: InputMaybe<Client_Status_Enum_Enum>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** aggregate max on columns */
+export type Client_Status_Max_Fields = {
+  __typename?: 'client_status_max_fields';
+  client_id?: Maybe<Scalars['uuid']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** order by max() on columns of table "client_status" */
+export type Client_Status_Max_Order_By = {
+  client_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Client_Status_Min_Fields = {
+  __typename?: 'client_status_min_fields';
+  client_id?: Maybe<Scalars['uuid']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  updated_at?: Maybe<Scalars['timestamptz']['output']>;
+};
+
+/** order by min() on columns of table "client_status" */
+export type Client_Status_Min_Order_By = {
+  client_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "client_status" */
+export type Client_Status_Mutation_Response = {
+  __typename?: 'client_status_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Client_Status>;
+};
+
+/** on_conflict condition type for table "client_status" */
+export type Client_Status_On_Conflict = {
+  constraint: Client_Status_Constraint;
+  update_columns?: Array<Client_Status_Update_Column>;
+  where?: InputMaybe<Client_Status_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "client_status". */
+export type Client_Status_Order_By = {
+  client?: InputMaybe<Client_Order_By>;
+  client_id?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  is_current?: InputMaybe<Order_By>;
+  status?: InputMaybe<Order_By>;
+  updated_at?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: client_status */
+export type Client_Status_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "client_status" */
+export enum Client_Status_Select_Column {
+  /** column name */
+  ClientId = 'client_id',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  IsCurrent = 'is_current',
+  /** column name */
+  Status = 'status',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+/** select "client_status_aggregate_bool_exp_bool_and_arguments_columns" columns of table "client_status" */
+export enum Client_Status_Select_Column_Client_Status_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  IsCurrent = 'is_current'
+}
+
+/** select "client_status_aggregate_bool_exp_bool_or_arguments_columns" columns of table "client_status" */
+export enum Client_Status_Select_Column_Client_Status_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  IsCurrent = 'is_current'
+}
+
+/** input type for updating data in table "client_status" */
+export type Client_Status_Set_Input = {
+  client_id?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  is_current?: InputMaybe<Scalars['Boolean']['input']>;
+  status?: InputMaybe<Client_Status_Enum_Enum>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** Streaming cursor of the table "client_status" */
+export type Client_Status_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Client_Status_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Client_Status_Stream_Cursor_Value_Input = {
+  client_id?: InputMaybe<Scalars['uuid']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  is_current?: InputMaybe<Scalars['Boolean']['input']>;
+  status?: InputMaybe<Client_Status_Enum_Enum>;
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
+};
+
+/** update columns of table "client_status" */
+export enum Client_Status_Update_Column {
+  /** column name */
+  ClientId = 'client_id',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  IsCurrent = 'is_current',
+  /** column name */
+  Status = 'status',
+  /** column name */
+  UpdatedAt = 'updated_at'
+}
+
+export type Client_Status_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Client_Status_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Client_Status_Bool_Exp;
 };
 
 /** Streaming cursor of the table "client" */
@@ -641,8 +1223,9 @@ export type Client_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Client_Stream_Cursor_Value_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  fullName?: InputMaybe<Scalars['String']['input']>;
+  employee_id?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
@@ -651,9 +1234,11 @@ export enum Client_Update_Column {
   /** column name */
   CreatedAt = 'created_at',
   /** column name */
-  FullName = 'fullName',
+  EmployeeId = 'employee_id',
   /** column name */
   Id = 'id',
+  /** column name */
+  Name = 'name',
   /** column name */
   UpdatedAt = 'updated_at'
 }
@@ -686,855 +1271,37 @@ export type Date_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['date']['input']>>;
 };
 
-/** Таблица сделок */
-export type Deal = {
-  __typename?: 'deal';
-  /** An object relationship */
-  client?: Maybe<Client>;
-  client_id: Scalars['uuid']['output'];
-  /** An object relationship */
-  client_object?: Maybe<Client_Object>;
-  client_object_id: Scalars['uuid']['output'];
-  created_at: Scalars['timestamptz']['output'];
-  employee_count?: Maybe<Scalars['Int']['output']>;
-  /** An array relationship */
-  employees: Array<Deal_Employee>;
-  /** An aggregate relationship */
-  employees_aggregate: Deal_Employee_Aggregate;
-  end_date?: Maybe<Scalars['date']['output']>;
-  id: Scalars['bigint']['output'];
-  shift_pattern?: Maybe<Scalars['String']['output']>;
-  start_date?: Maybe<Scalars['date']['output']>;
-  updated_at: Scalars['timestamptz']['output'];
-};
-
-
-/** Таблица сделок */
-export type DealEmployeesArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Employee_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Employee_Order_By>>;
-  where?: InputMaybe<Deal_Employee_Bool_Exp>;
-};
-
-
-/** Таблица сделок */
-export type DealEmployees_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Employee_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Employee_Order_By>>;
-  where?: InputMaybe<Deal_Employee_Bool_Exp>;
-};
-
-/** aggregated selection of "deal" */
-export type Deal_Aggregate = {
-  __typename?: 'deal_aggregate';
-  aggregate?: Maybe<Deal_Aggregate_Fields>;
-  nodes: Array<Deal>;
-};
-
-export type Deal_Aggregate_Bool_Exp = {
-  count?: InputMaybe<Deal_Aggregate_Bool_Exp_Count>;
-};
-
-export type Deal_Aggregate_Bool_Exp_Count = {
-  arguments?: InputMaybe<Array<Deal_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<Deal_Bool_Exp>;
-  predicate: Int_Comparison_Exp;
-};
-
-/** aggregate fields of "deal" */
-export type Deal_Aggregate_Fields = {
-  __typename?: 'deal_aggregate_fields';
-  avg?: Maybe<Deal_Avg_Fields>;
-  count: Scalars['Int']['output'];
-  max?: Maybe<Deal_Max_Fields>;
-  min?: Maybe<Deal_Min_Fields>;
-  stddev?: Maybe<Deal_Stddev_Fields>;
-  stddev_pop?: Maybe<Deal_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Deal_Stddev_Samp_Fields>;
-  sum?: Maybe<Deal_Sum_Fields>;
-  var_pop?: Maybe<Deal_Var_Pop_Fields>;
-  var_samp?: Maybe<Deal_Var_Samp_Fields>;
-  variance?: Maybe<Deal_Variance_Fields>;
-};
-
-
-/** aggregate fields of "deal" */
-export type Deal_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Deal_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** order by aggregate values of table "deal" */
-export type Deal_Aggregate_Order_By = {
-  avg?: InputMaybe<Deal_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Deal_Max_Order_By>;
-  min?: InputMaybe<Deal_Min_Order_By>;
-  stddev?: InputMaybe<Deal_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Deal_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Deal_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Deal_Sum_Order_By>;
-  var_pop?: InputMaybe<Deal_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Deal_Var_Samp_Order_By>;
-  variance?: InputMaybe<Deal_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "deal" */
-export type Deal_Arr_Rel_Insert_Input = {
-  data: Array<Deal_Insert_Input>;
-  /** upsert condition */
-  on_conflict?: InputMaybe<Deal_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Deal_Avg_Fields = {
-  __typename?: 'deal_avg_fields';
-  employee_count?: Maybe<Scalars['Float']['output']>;
-  id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by avg() on columns of table "deal" */
-export type Deal_Avg_Order_By = {
-  employee_count?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "deal". All fields are combined with a logical 'AND'. */
-export type Deal_Bool_Exp = {
-  _and?: InputMaybe<Array<Deal_Bool_Exp>>;
-  _not?: InputMaybe<Deal_Bool_Exp>;
-  _or?: InputMaybe<Array<Deal_Bool_Exp>>;
-  client?: InputMaybe<Client_Bool_Exp>;
-  client_id?: InputMaybe<Uuid_Comparison_Exp>;
-  client_object?: InputMaybe<Client_Object_Bool_Exp>;
-  client_object_id?: InputMaybe<Uuid_Comparison_Exp>;
-  created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  employee_count?: InputMaybe<Int_Comparison_Exp>;
-  employees?: InputMaybe<Deal_Employee_Bool_Exp>;
-  employees_aggregate?: InputMaybe<Deal_Employee_Aggregate_Bool_Exp>;
-  end_date?: InputMaybe<Date_Comparison_Exp>;
-  id?: InputMaybe<Bigint_Comparison_Exp>;
-  shift_pattern?: InputMaybe<String_Comparison_Exp>;
-  start_date?: InputMaybe<Date_Comparison_Exp>;
-  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "deal" */
-export enum Deal_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  DealPkey = 'deal_pkey'
-}
-
-/** Таблица для many-to-many сделка-сотрудник */
-export type Deal_Employee = {
-  __typename?: 'deal_employee';
-  deal_id: Scalars['bigint']['output'];
-  /** An array relationship */
-  deals: Array<Deal>;
-  /** An aggregate relationship */
-  deals_aggregate: Deal_Aggregate;
-  employee_id: Scalars['uuid']['output'];
-  /** An array relationship */
-  employees: Array<Employee>;
-  /** An aggregate relationship */
-  employees_aggregate: Employee_Aggregate;
-  id: Scalars['uuid']['output'];
-};
-
-
-/** Таблица для many-to-many сделка-сотрудник */
-export type Deal_EmployeeDealsArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Order_By>>;
-  where?: InputMaybe<Deal_Bool_Exp>;
-};
-
-
-/** Таблица для many-to-many сделка-сотрудник */
-export type Deal_EmployeeDeals_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Order_By>>;
-  where?: InputMaybe<Deal_Bool_Exp>;
-};
-
-
-/** Таблица для many-to-many сделка-сотрудник */
-export type Deal_EmployeeEmployeesArgs = {
-  distinct_on?: InputMaybe<Array<Employee_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Employee_Order_By>>;
-  where?: InputMaybe<Employee_Bool_Exp>;
-};
-
-
-/** Таблица для many-to-many сделка-сотрудник */
-export type Deal_EmployeeEmployees_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Employee_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Employee_Order_By>>;
-  where?: InputMaybe<Employee_Bool_Exp>;
-};
-
-/** aggregated selection of "deal_employee" */
-export type Deal_Employee_Aggregate = {
-  __typename?: 'deal_employee_aggregate';
-  aggregate?: Maybe<Deal_Employee_Aggregate_Fields>;
-  nodes: Array<Deal_Employee>;
-};
-
-export type Deal_Employee_Aggregate_Bool_Exp = {
-  count?: InputMaybe<Deal_Employee_Aggregate_Bool_Exp_Count>;
-};
-
-export type Deal_Employee_Aggregate_Bool_Exp_Count = {
-  arguments?: InputMaybe<Array<Deal_Employee_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<Deal_Employee_Bool_Exp>;
-  predicate: Int_Comparison_Exp;
-};
-
-/** aggregate fields of "deal_employee" */
-export type Deal_Employee_Aggregate_Fields = {
-  __typename?: 'deal_employee_aggregate_fields';
-  avg?: Maybe<Deal_Employee_Avg_Fields>;
-  count: Scalars['Int']['output'];
-  max?: Maybe<Deal_Employee_Max_Fields>;
-  min?: Maybe<Deal_Employee_Min_Fields>;
-  stddev?: Maybe<Deal_Employee_Stddev_Fields>;
-  stddev_pop?: Maybe<Deal_Employee_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Deal_Employee_Stddev_Samp_Fields>;
-  sum?: Maybe<Deal_Employee_Sum_Fields>;
-  var_pop?: Maybe<Deal_Employee_Var_Pop_Fields>;
-  var_samp?: Maybe<Deal_Employee_Var_Samp_Fields>;
-  variance?: Maybe<Deal_Employee_Variance_Fields>;
-};
-
-
-/** aggregate fields of "deal_employee" */
-export type Deal_Employee_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Deal_Employee_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-/** order by aggregate values of table "deal_employee" */
-export type Deal_Employee_Aggregate_Order_By = {
-  avg?: InputMaybe<Deal_Employee_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Deal_Employee_Max_Order_By>;
-  min?: InputMaybe<Deal_Employee_Min_Order_By>;
-  stddev?: InputMaybe<Deal_Employee_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Deal_Employee_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Deal_Employee_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Deal_Employee_Sum_Order_By>;
-  var_pop?: InputMaybe<Deal_Employee_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Deal_Employee_Var_Samp_Order_By>;
-  variance?: InputMaybe<Deal_Employee_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "deal_employee" */
-export type Deal_Employee_Arr_Rel_Insert_Input = {
-  data: Array<Deal_Employee_Insert_Input>;
-  /** upsert condition */
-  on_conflict?: InputMaybe<Deal_Employee_On_Conflict>;
-};
-
-/** aggregate avg on columns */
-export type Deal_Employee_Avg_Fields = {
-  __typename?: 'deal_employee_avg_fields';
-  deal_id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by avg() on columns of table "deal_employee" */
-export type Deal_Employee_Avg_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-};
-
-/** Boolean expression to filter rows from the table "deal_employee". All fields are combined with a logical 'AND'. */
-export type Deal_Employee_Bool_Exp = {
-  _and?: InputMaybe<Array<Deal_Employee_Bool_Exp>>;
-  _not?: InputMaybe<Deal_Employee_Bool_Exp>;
-  _or?: InputMaybe<Array<Deal_Employee_Bool_Exp>>;
-  deal_id?: InputMaybe<Bigint_Comparison_Exp>;
-  deals?: InputMaybe<Deal_Bool_Exp>;
-  deals_aggregate?: InputMaybe<Deal_Aggregate_Bool_Exp>;
-  employee_id?: InputMaybe<Uuid_Comparison_Exp>;
-  employees?: InputMaybe<Employee_Bool_Exp>;
-  employees_aggregate?: InputMaybe<Employee_Aggregate_Bool_Exp>;
-  id?: InputMaybe<Uuid_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "deal_employee" */
-export enum Deal_Employee_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  DealEmployeePkey = 'deal_employee_pkey'
-}
-
-/** input type for incrementing numeric columns in table "deal_employee" */
-export type Deal_Employee_Inc_Input = {
-  deal_id?: InputMaybe<Scalars['bigint']['input']>;
-};
-
-/** input type for inserting data into table "deal_employee" */
-export type Deal_Employee_Insert_Input = {
-  deal_id?: InputMaybe<Scalars['bigint']['input']>;
-  deals?: InputMaybe<Deal_Arr_Rel_Insert_Input>;
-  employee_id?: InputMaybe<Scalars['uuid']['input']>;
-  employees?: InputMaybe<Employee_Arr_Rel_Insert_Input>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** aggregate max on columns */
-export type Deal_Employee_Max_Fields = {
-  __typename?: 'deal_employee_max_fields';
-  deal_id?: Maybe<Scalars['bigint']['output']>;
-  employee_id?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** order by max() on columns of table "deal_employee" */
-export type Deal_Employee_Max_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-  employee_id?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Deal_Employee_Min_Fields = {
-  __typename?: 'deal_employee_min_fields';
-  deal_id?: Maybe<Scalars['bigint']['output']>;
-  employee_id?: Maybe<Scalars['uuid']['output']>;
-  id?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** order by min() on columns of table "deal_employee" */
-export type Deal_Employee_Min_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-  employee_id?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "deal_employee" */
-export type Deal_Employee_Mutation_Response = {
-  __typename?: 'deal_employee_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Deal_Employee>;
-};
-
-/** on_conflict condition type for table "deal_employee" */
-export type Deal_Employee_On_Conflict = {
-  constraint: Deal_Employee_Constraint;
-  update_columns?: Array<Deal_Employee_Update_Column>;
-  where?: InputMaybe<Deal_Employee_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "deal_employee". */
-export type Deal_Employee_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-  deals_aggregate?: InputMaybe<Deal_Aggregate_Order_By>;
-  employee_id?: InputMaybe<Order_By>;
-  employees_aggregate?: InputMaybe<Employee_Aggregate_Order_By>;
-  id?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: deal_employee */
-export type Deal_Employee_Pk_Columns_Input = {
-  id: Scalars['uuid']['input'];
-};
-
-/** select columns of table "deal_employee" */
-export enum Deal_Employee_Select_Column {
-  /** column name */
-  DealId = 'deal_id',
-  /** column name */
-  EmployeeId = 'employee_id',
-  /** column name */
-  Id = 'id'
-}
-
-/** input type for updating data in table "deal_employee" */
-export type Deal_Employee_Set_Input = {
-  deal_id?: InputMaybe<Scalars['bigint']['input']>;
-  employee_id?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** aggregate stddev on columns */
-export type Deal_Employee_Stddev_Fields = {
-  __typename?: 'deal_employee_stddev_fields';
-  deal_id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by stddev() on columns of table "deal_employee" */
-export type Deal_Employee_Stddev_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Deal_Employee_Stddev_Pop_Fields = {
-  __typename?: 'deal_employee_stddev_pop_fields';
-  deal_id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by stddev_pop() on columns of table "deal_employee" */
-export type Deal_Employee_Stddev_Pop_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Deal_Employee_Stddev_Samp_Fields = {
-  __typename?: 'deal_employee_stddev_samp_fields';
-  deal_id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by stddev_samp() on columns of table "deal_employee" */
-export type Deal_Employee_Stddev_Samp_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-};
-
-/** Streaming cursor of the table "deal_employee" */
-export type Deal_Employee_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Deal_Employee_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Deal_Employee_Stream_Cursor_Value_Input = {
-  deal_id?: InputMaybe<Scalars['bigint']['input']>;
-  employee_id?: InputMaybe<Scalars['uuid']['input']>;
-  id?: InputMaybe<Scalars['uuid']['input']>;
-};
-
-/** aggregate sum on columns */
-export type Deal_Employee_Sum_Fields = {
-  __typename?: 'deal_employee_sum_fields';
-  deal_id?: Maybe<Scalars['bigint']['output']>;
-};
-
-/** order by sum() on columns of table "deal_employee" */
-export type Deal_Employee_Sum_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "deal_employee" */
-export enum Deal_Employee_Update_Column {
-  /** column name */
-  DealId = 'deal_id',
-  /** column name */
-  EmployeeId = 'employee_id',
-  /** column name */
-  Id = 'id'
-}
-
-export type Deal_Employee_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Deal_Employee_Inc_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Deal_Employee_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Deal_Employee_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Deal_Employee_Var_Pop_Fields = {
-  __typename?: 'deal_employee_var_pop_fields';
-  deal_id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by var_pop() on columns of table "deal_employee" */
-export type Deal_Employee_Var_Pop_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Deal_Employee_Var_Samp_Fields = {
-  __typename?: 'deal_employee_var_samp_fields';
-  deal_id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by var_samp() on columns of table "deal_employee" */
-export type Deal_Employee_Var_Samp_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Deal_Employee_Variance_Fields = {
-  __typename?: 'deal_employee_variance_fields';
-  deal_id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by variance() on columns of table "deal_employee" */
-export type Deal_Employee_Variance_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-};
-
-/** input type for incrementing numeric columns in table "deal" */
-export type Deal_Inc_Input = {
-  employee_count?: InputMaybe<Scalars['Int']['input']>;
-  id?: InputMaybe<Scalars['bigint']['input']>;
-};
-
-/** input type for inserting data into table "deal" */
-export type Deal_Insert_Input = {
-  client?: InputMaybe<Client_Obj_Rel_Insert_Input>;
-  client_id?: InputMaybe<Scalars['uuid']['input']>;
-  client_object?: InputMaybe<Client_Object_Obj_Rel_Insert_Input>;
-  client_object_id?: InputMaybe<Scalars['uuid']['input']>;
-  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  employee_count?: InputMaybe<Scalars['Int']['input']>;
-  employees?: InputMaybe<Deal_Employee_Arr_Rel_Insert_Input>;
-  end_date?: InputMaybe<Scalars['date']['input']>;
-  id?: InputMaybe<Scalars['bigint']['input']>;
-  shift_pattern?: InputMaybe<Scalars['String']['input']>;
-  start_date?: InputMaybe<Scalars['date']['input']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-};
-
-/** aggregate max on columns */
-export type Deal_Max_Fields = {
-  __typename?: 'deal_max_fields';
-  client_id?: Maybe<Scalars['uuid']['output']>;
-  client_object_id?: Maybe<Scalars['uuid']['output']>;
-  created_at?: Maybe<Scalars['timestamptz']['output']>;
-  employee_count?: Maybe<Scalars['Int']['output']>;
-  end_date?: Maybe<Scalars['date']['output']>;
-  id?: Maybe<Scalars['bigint']['output']>;
-  shift_pattern?: Maybe<Scalars['String']['output']>;
-  start_date?: Maybe<Scalars['date']['output']>;
-  updated_at?: Maybe<Scalars['timestamptz']['output']>;
-};
-
-/** order by max() on columns of table "deal" */
-export type Deal_Max_Order_By = {
-  client_id?: InputMaybe<Order_By>;
-  client_object_id?: InputMaybe<Order_By>;
-  created_at?: InputMaybe<Order_By>;
-  employee_count?: InputMaybe<Order_By>;
-  end_date?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  shift_pattern?: InputMaybe<Order_By>;
-  start_date?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** aggregate min on columns */
-export type Deal_Min_Fields = {
-  __typename?: 'deal_min_fields';
-  client_id?: Maybe<Scalars['uuid']['output']>;
-  client_object_id?: Maybe<Scalars['uuid']['output']>;
-  created_at?: Maybe<Scalars['timestamptz']['output']>;
-  employee_count?: Maybe<Scalars['Int']['output']>;
-  end_date?: Maybe<Scalars['date']['output']>;
-  id?: Maybe<Scalars['bigint']['output']>;
-  shift_pattern?: Maybe<Scalars['String']['output']>;
-  start_date?: Maybe<Scalars['date']['output']>;
-  updated_at?: Maybe<Scalars['timestamptz']['output']>;
-};
-
-/** order by min() on columns of table "deal" */
-export type Deal_Min_Order_By = {
-  client_id?: InputMaybe<Order_By>;
-  client_object_id?: InputMaybe<Order_By>;
-  created_at?: InputMaybe<Order_By>;
-  employee_count?: InputMaybe<Order_By>;
-  end_date?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  shift_pattern?: InputMaybe<Order_By>;
-  start_date?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** response of any mutation on the table "deal" */
-export type Deal_Mutation_Response = {
-  __typename?: 'deal_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int']['output'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Deal>;
-};
-
-/** input type for inserting object relation for remote table "deal" */
-export type Deal_Obj_Rel_Insert_Input = {
-  data: Deal_Insert_Input;
-  /** upsert condition */
-  on_conflict?: InputMaybe<Deal_On_Conflict>;
-};
-
-/** on_conflict condition type for table "deal" */
-export type Deal_On_Conflict = {
-  constraint: Deal_Constraint;
-  update_columns?: Array<Deal_Update_Column>;
-  where?: InputMaybe<Deal_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "deal". */
-export type Deal_Order_By = {
-  client?: InputMaybe<Client_Order_By>;
-  client_id?: InputMaybe<Order_By>;
-  client_object?: InputMaybe<Client_Object_Order_By>;
-  client_object_id?: InputMaybe<Order_By>;
-  created_at?: InputMaybe<Order_By>;
-  employee_count?: InputMaybe<Order_By>;
-  employees_aggregate?: InputMaybe<Deal_Employee_Aggregate_Order_By>;
-  end_date?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  shift_pattern?: InputMaybe<Order_By>;
-  start_date?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
-/** primary key columns input for table: deal */
-export type Deal_Pk_Columns_Input = {
-  id: Scalars['bigint']['input'];
-};
-
-/** select columns of table "deal" */
-export enum Deal_Select_Column {
-  /** column name */
-  ClientId = 'client_id',
-  /** column name */
-  ClientObjectId = 'client_object_id',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  EmployeeCount = 'employee_count',
-  /** column name */
-  EndDate = 'end_date',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  ShiftPattern = 'shift_pattern',
-  /** column name */
-  StartDate = 'start_date',
-  /** column name */
-  UpdatedAt = 'updated_at'
-}
-
-/** input type for updating data in table "deal" */
-export type Deal_Set_Input = {
-  client_id?: InputMaybe<Scalars['uuid']['input']>;
-  client_object_id?: InputMaybe<Scalars['uuid']['input']>;
-  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  employee_count?: InputMaybe<Scalars['Int']['input']>;
-  end_date?: InputMaybe<Scalars['date']['input']>;
-  id?: InputMaybe<Scalars['bigint']['input']>;
-  shift_pattern?: InputMaybe<Scalars['String']['input']>;
-  start_date?: InputMaybe<Scalars['date']['input']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-};
-
-/** aggregate stddev on columns */
-export type Deal_Stddev_Fields = {
-  __typename?: 'deal_stddev_fields';
-  employee_count?: Maybe<Scalars['Float']['output']>;
-  id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by stddev() on columns of table "deal" */
-export type Deal_Stddev_Order_By = {
-  employee_count?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Deal_Stddev_Pop_Fields = {
-  __typename?: 'deal_stddev_pop_fields';
-  employee_count?: Maybe<Scalars['Float']['output']>;
-  id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by stddev_pop() on columns of table "deal" */
-export type Deal_Stddev_Pop_Order_By = {
-  employee_count?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Deal_Stddev_Samp_Fields = {
-  __typename?: 'deal_stddev_samp_fields';
-  employee_count?: Maybe<Scalars['Float']['output']>;
-  id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by stddev_samp() on columns of table "deal" */
-export type Deal_Stddev_Samp_Order_By = {
-  employee_count?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-};
-
-/** Streaming cursor of the table "deal" */
-export type Deal_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Deal_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Deal_Stream_Cursor_Value_Input = {
-  client_id?: InputMaybe<Scalars['uuid']['input']>;
-  client_object_id?: InputMaybe<Scalars['uuid']['input']>;
-  created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  employee_count?: InputMaybe<Scalars['Int']['input']>;
-  end_date?: InputMaybe<Scalars['date']['input']>;
-  id?: InputMaybe<Scalars['bigint']['input']>;
-  shift_pattern?: InputMaybe<Scalars['String']['input']>;
-  start_date?: InputMaybe<Scalars['date']['input']>;
-  updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
-};
-
-/** aggregate sum on columns */
-export type Deal_Sum_Fields = {
-  __typename?: 'deal_sum_fields';
-  employee_count?: Maybe<Scalars['Int']['output']>;
-  id?: Maybe<Scalars['bigint']['output']>;
-};
-
-/** order by sum() on columns of table "deal" */
-export type Deal_Sum_Order_By = {
-  employee_count?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-};
-
-/** update columns of table "deal" */
-export enum Deal_Update_Column {
-  /** column name */
-  ClientId = 'client_id',
-  /** column name */
-  ClientObjectId = 'client_object_id',
-  /** column name */
-  CreatedAt = 'created_at',
-  /** column name */
-  EmployeeCount = 'employee_count',
-  /** column name */
-  EndDate = 'end_date',
-  /** column name */
-  Id = 'id',
-  /** column name */
-  ShiftPattern = 'shift_pattern',
-  /** column name */
-  StartDate = 'start_date',
-  /** column name */
-  UpdatedAt = 'updated_at'
-}
-
-export type Deal_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Deal_Inc_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Deal_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Deal_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Deal_Var_Pop_Fields = {
-  __typename?: 'deal_var_pop_fields';
-  employee_count?: Maybe<Scalars['Float']['output']>;
-  id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by var_pop() on columns of table "deal" */
-export type Deal_Var_Pop_Order_By = {
-  employee_count?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-};
-
-/** aggregate var_samp on columns */
-export type Deal_Var_Samp_Fields = {
-  __typename?: 'deal_var_samp_fields';
-  employee_count?: Maybe<Scalars['Float']['output']>;
-  id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by var_samp() on columns of table "deal" */
-export type Deal_Var_Samp_Order_By = {
-  employee_count?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-};
-
-/** aggregate variance on columns */
-export type Deal_Variance_Fields = {
-  __typename?: 'deal_variance_fields';
-  employee_count?: Maybe<Scalars['Float']['output']>;
-  id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by variance() on columns of table "deal" */
-export type Deal_Variance_Order_By = {
-  employee_count?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-};
-
 /** Карточка сотрудника */
 export type Employee = {
   __typename?: 'employee';
   created_at: Scalars['timestamptz']['output'];
-  /** An array relationship */
-  deals: Array<Deal_Employee>;
-  /** An aggregate relationship */
-  deals_aggregate: Deal_Employee_Aggregate;
   fullName?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   /** An array relationship */
-  occupancy: Array<Employee_Occupancy>;
+  responsible_clients: Array<Client>;
   /** An aggregate relationship */
-  occupancy_aggregate: Employee_Occupancy_Aggregate;
+  responsible_clients_aggregate: Client_Aggregate;
   updated_at: Scalars['timestamptz']['output'];
 };
 
 
 /** Карточка сотрудника */
-export type EmployeeDealsArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Employee_Select_Column>>;
+export type EmployeeResponsible_ClientsArgs = {
+  distinct_on?: InputMaybe<Array<Client_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Employee_Order_By>>;
-  where?: InputMaybe<Deal_Employee_Bool_Exp>;
+  order_by?: InputMaybe<Array<Client_Order_By>>;
+  where?: InputMaybe<Client_Bool_Exp>;
 };
 
 
 /** Карточка сотрудника */
-export type EmployeeDeals_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Employee_Select_Column>>;
+export type EmployeeResponsible_Clients_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Client_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Employee_Order_By>>;
-  where?: InputMaybe<Deal_Employee_Bool_Exp>;
-};
-
-
-/** Карточка сотрудника */
-export type EmployeeOccupancyArgs = {
-  distinct_on?: InputMaybe<Array<Employee_Occupancy_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Employee_Occupancy_Order_By>>;
-  where?: InputMaybe<Employee_Occupancy_Bool_Exp>;
-};
-
-
-/** Карточка сотрудника */
-export type EmployeeOccupancy_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Employee_Occupancy_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Employee_Occupancy_Order_By>>;
-  where?: InputMaybe<Employee_Occupancy_Bool_Exp>;
+  order_by?: InputMaybe<Array<Client_Order_By>>;
+  where?: InputMaybe<Client_Bool_Exp>;
 };
 
 /** aggregated selection of "employee" */
@@ -1542,17 +1309,6 @@ export type Employee_Aggregate = {
   __typename?: 'employee_aggregate';
   aggregate?: Maybe<Employee_Aggregate_Fields>;
   nodes: Array<Employee>;
-};
-
-export type Employee_Aggregate_Bool_Exp = {
-  count?: InputMaybe<Employee_Aggregate_Bool_Exp_Count>;
-};
-
-export type Employee_Aggregate_Bool_Exp_Count = {
-  arguments?: InputMaybe<Array<Employee_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<Employee_Bool_Exp>;
-  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "employee" */
@@ -1570,32 +1326,16 @@ export type Employee_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** order by aggregate values of table "employee" */
-export type Employee_Aggregate_Order_By = {
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Employee_Max_Order_By>;
-  min?: InputMaybe<Employee_Min_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "employee" */
-export type Employee_Arr_Rel_Insert_Input = {
-  data: Array<Employee_Insert_Input>;
-  /** upsert condition */
-  on_conflict?: InputMaybe<Employee_On_Conflict>;
-};
-
 /** Boolean expression to filter rows from the table "employee". All fields are combined with a logical 'AND'. */
 export type Employee_Bool_Exp = {
   _and?: InputMaybe<Array<Employee_Bool_Exp>>;
   _not?: InputMaybe<Employee_Bool_Exp>;
   _or?: InputMaybe<Array<Employee_Bool_Exp>>;
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>;
-  deals?: InputMaybe<Deal_Employee_Bool_Exp>;
-  deals_aggregate?: InputMaybe<Deal_Employee_Aggregate_Bool_Exp>;
   fullName?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
-  occupancy?: InputMaybe<Employee_Occupancy_Bool_Exp>;
-  occupancy_aggregate?: InputMaybe<Employee_Occupancy_Aggregate_Bool_Exp>;
+  responsible_clients?: InputMaybe<Client_Bool_Exp>;
+  responsible_clients_aggregate?: InputMaybe<Client_Aggregate_Bool_Exp>;
   updated_at?: InputMaybe<Timestamptz_Comparison_Exp>;
 };
 
@@ -1608,10 +1348,9 @@ export enum Employee_Constraint {
 /** input type for inserting data into table "employee" */
 export type Employee_Insert_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
-  deals?: InputMaybe<Deal_Employee_Arr_Rel_Insert_Input>;
   fullName?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
-  occupancy?: InputMaybe<Employee_Occupancy_Arr_Rel_Insert_Input>;
+  responsible_clients?: InputMaybe<Client_Arr_Rel_Insert_Input>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
 };
 
@@ -1624,14 +1363,6 @@ export type Employee_Max_Fields = {
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
 };
 
-/** order by max() on columns of table "employee" */
-export type Employee_Max_Order_By = {
-  created_at?: InputMaybe<Order_By>;
-  fullName?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
-};
-
 /** aggregate min on columns */
 export type Employee_Min_Fields = {
   __typename?: 'employee_min_fields';
@@ -1639,14 +1370,6 @@ export type Employee_Min_Fields = {
   fullName?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
-};
-
-/** order by min() on columns of table "employee" */
-export type Employee_Min_Order_By = {
-  created_at?: InputMaybe<Order_By>;
-  fullName?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-  updated_at?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "employee" */
@@ -1669,11 +1392,7 @@ export type Employee_Obj_Rel_Insert_Input = {
 export type Employee_Occupancy = {
   __typename?: 'employee_occupancy';
   date: Scalars['date']['output'];
-  /** An object relationship */
-  deal?: Maybe<Deal>;
   deal_id: Scalars['bigint']['output'];
-  /** An object relationship */
-  employee?: Maybe<Employee>;
   employee_id: Scalars['uuid']['output'];
   id: Scalars['uuid']['output'];
 };
@@ -1683,17 +1402,6 @@ export type Employee_Occupancy_Aggregate = {
   __typename?: 'employee_occupancy_aggregate';
   aggregate?: Maybe<Employee_Occupancy_Aggregate_Fields>;
   nodes: Array<Employee_Occupancy>;
-};
-
-export type Employee_Occupancy_Aggregate_Bool_Exp = {
-  count?: InputMaybe<Employee_Occupancy_Aggregate_Bool_Exp_Count>;
-};
-
-export type Employee_Occupancy_Aggregate_Bool_Exp_Count = {
-  arguments?: InputMaybe<Array<Employee_Occupancy_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']['input']>;
-  filter?: InputMaybe<Employee_Occupancy_Bool_Exp>;
-  predicate: Int_Comparison_Exp;
 };
 
 /** aggregate fields of "employee_occupancy" */
@@ -1719,37 +1427,10 @@ export type Employee_Occupancy_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** order by aggregate values of table "employee_occupancy" */
-export type Employee_Occupancy_Aggregate_Order_By = {
-  avg?: InputMaybe<Employee_Occupancy_Avg_Order_By>;
-  count?: InputMaybe<Order_By>;
-  max?: InputMaybe<Employee_Occupancy_Max_Order_By>;
-  min?: InputMaybe<Employee_Occupancy_Min_Order_By>;
-  stddev?: InputMaybe<Employee_Occupancy_Stddev_Order_By>;
-  stddev_pop?: InputMaybe<Employee_Occupancy_Stddev_Pop_Order_By>;
-  stddev_samp?: InputMaybe<Employee_Occupancy_Stddev_Samp_Order_By>;
-  sum?: InputMaybe<Employee_Occupancy_Sum_Order_By>;
-  var_pop?: InputMaybe<Employee_Occupancy_Var_Pop_Order_By>;
-  var_samp?: InputMaybe<Employee_Occupancy_Var_Samp_Order_By>;
-  variance?: InputMaybe<Employee_Occupancy_Variance_Order_By>;
-};
-
-/** input type for inserting array relation for remote table "employee_occupancy" */
-export type Employee_Occupancy_Arr_Rel_Insert_Input = {
-  data: Array<Employee_Occupancy_Insert_Input>;
-  /** upsert condition */
-  on_conflict?: InputMaybe<Employee_Occupancy_On_Conflict>;
-};
-
 /** aggregate avg on columns */
 export type Employee_Occupancy_Avg_Fields = {
   __typename?: 'employee_occupancy_avg_fields';
   deal_id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by avg() on columns of table "employee_occupancy" */
-export type Employee_Occupancy_Avg_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "employee_occupancy". All fields are combined with a logical 'AND'. */
@@ -1758,9 +1439,7 @@ export type Employee_Occupancy_Bool_Exp = {
   _not?: InputMaybe<Employee_Occupancy_Bool_Exp>;
   _or?: InputMaybe<Array<Employee_Occupancy_Bool_Exp>>;
   date?: InputMaybe<Date_Comparison_Exp>;
-  deal?: InputMaybe<Deal_Bool_Exp>;
   deal_id?: InputMaybe<Bigint_Comparison_Exp>;
-  employee?: InputMaybe<Employee_Bool_Exp>;
   employee_id?: InputMaybe<Uuid_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
 };
@@ -1779,9 +1458,7 @@ export type Employee_Occupancy_Inc_Input = {
 /** input type for inserting data into table "employee_occupancy" */
 export type Employee_Occupancy_Insert_Input = {
   date?: InputMaybe<Scalars['date']['input']>;
-  deal?: InputMaybe<Deal_Obj_Rel_Insert_Input>;
   deal_id?: InputMaybe<Scalars['bigint']['input']>;
-  employee?: InputMaybe<Employee_Obj_Rel_Insert_Input>;
   employee_id?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
 };
@@ -1795,14 +1472,6 @@ export type Employee_Occupancy_Max_Fields = {
   id?: Maybe<Scalars['uuid']['output']>;
 };
 
-/** order by max() on columns of table "employee_occupancy" */
-export type Employee_Occupancy_Max_Order_By = {
-  date?: InputMaybe<Order_By>;
-  deal_id?: InputMaybe<Order_By>;
-  employee_id?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
-};
-
 /** aggregate min on columns */
 export type Employee_Occupancy_Min_Fields = {
   __typename?: 'employee_occupancy_min_fields';
@@ -1810,14 +1479,6 @@ export type Employee_Occupancy_Min_Fields = {
   deal_id?: Maybe<Scalars['bigint']['output']>;
   employee_id?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
-};
-
-/** order by min() on columns of table "employee_occupancy" */
-export type Employee_Occupancy_Min_Order_By = {
-  date?: InputMaybe<Order_By>;
-  deal_id?: InputMaybe<Order_By>;
-  employee_id?: InputMaybe<Order_By>;
-  id?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "employee_occupancy" */
@@ -1839,9 +1500,7 @@ export type Employee_Occupancy_On_Conflict = {
 /** Ordering options when selecting data from "employee_occupancy". */
 export type Employee_Occupancy_Order_By = {
   date?: InputMaybe<Order_By>;
-  deal?: InputMaybe<Deal_Order_By>;
   deal_id?: InputMaybe<Order_By>;
-  employee?: InputMaybe<Employee_Order_By>;
   employee_id?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
 };
@@ -1877,31 +1536,16 @@ export type Employee_Occupancy_Stddev_Fields = {
   deal_id?: Maybe<Scalars['Float']['output']>;
 };
 
-/** order by stddev() on columns of table "employee_occupancy" */
-export type Employee_Occupancy_Stddev_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-};
-
 /** aggregate stddev_pop on columns */
 export type Employee_Occupancy_Stddev_Pop_Fields = {
   __typename?: 'employee_occupancy_stddev_pop_fields';
   deal_id?: Maybe<Scalars['Float']['output']>;
 };
 
-/** order by stddev_pop() on columns of table "employee_occupancy" */
-export type Employee_Occupancy_Stddev_Pop_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-};
-
 /** aggregate stddev_samp on columns */
 export type Employee_Occupancy_Stddev_Samp_Fields = {
   __typename?: 'employee_occupancy_stddev_samp_fields';
   deal_id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by stddev_samp() on columns of table "employee_occupancy" */
-export type Employee_Occupancy_Stddev_Samp_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "employee_occupancy" */
@@ -1924,11 +1568,6 @@ export type Employee_Occupancy_Stream_Cursor_Value_Input = {
 export type Employee_Occupancy_Sum_Fields = {
   __typename?: 'employee_occupancy_sum_fields';
   deal_id?: Maybe<Scalars['bigint']['output']>;
-};
-
-/** order by sum() on columns of table "employee_occupancy" */
-export type Employee_Occupancy_Sum_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "employee_occupancy" */
@@ -1958,31 +1597,16 @@ export type Employee_Occupancy_Var_Pop_Fields = {
   deal_id?: Maybe<Scalars['Float']['output']>;
 };
 
-/** order by var_pop() on columns of table "employee_occupancy" */
-export type Employee_Occupancy_Var_Pop_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-};
-
 /** aggregate var_samp on columns */
 export type Employee_Occupancy_Var_Samp_Fields = {
   __typename?: 'employee_occupancy_var_samp_fields';
   deal_id?: Maybe<Scalars['Float']['output']>;
 };
 
-/** order by var_samp() on columns of table "employee_occupancy" */
-export type Employee_Occupancy_Var_Samp_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
-};
-
 /** aggregate variance on columns */
 export type Employee_Occupancy_Variance_Fields = {
   __typename?: 'employee_occupancy_variance_fields';
   deal_id?: Maybe<Scalars['Float']['output']>;
-};
-
-/** order by variance() on columns of table "employee_occupancy" */
-export type Employee_Occupancy_Variance_Order_By = {
-  deal_id?: InputMaybe<Order_By>;
 };
 
 /** on_conflict condition type for table "employee" */
@@ -1995,10 +1619,9 @@ export type Employee_On_Conflict = {
 /** Ordering options when selecting data from "employee". */
 export type Employee_Order_By = {
   created_at?: InputMaybe<Order_By>;
-  deals_aggregate?: InputMaybe<Deal_Employee_Aggregate_Order_By>;
   fullName?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  occupancy_aggregate?: InputMaybe<Employee_Occupancy_Aggregate_Order_By>;
+  responsible_clients_aggregate?: InputMaybe<Client_Aggregate_Order_By>;
   updated_at?: InputMaybe<Order_By>;
 };
 
@@ -2069,22 +1692,22 @@ export type Mutation_Root = {
   delete_client?: Maybe<Client_Mutation_Response>;
   /** delete single row from the table: "client" */
   delete_client_by_pk?: Maybe<Client>;
-  /** delete data from the table: "client_meta" */
-  delete_client_meta?: Maybe<Client_Meta_Mutation_Response>;
-  /** delete single row from the table: "client_meta" */
-  delete_client_meta_by_pk?: Maybe<Client_Meta>;
+  /** delete data from the table: "client_contact" */
+  delete_client_contact?: Maybe<Client_Contact_Mutation_Response>;
+  /** delete single row from the table: "client_contact" */
+  delete_client_contact_by_pk?: Maybe<Client_Contact>;
   /** delete data from the table: "client_object" */
   delete_client_object?: Maybe<Client_Object_Mutation_Response>;
   /** delete single row from the table: "client_object" */
   delete_client_object_by_pk?: Maybe<Client_Object>;
-  /** delete data from the table: "deal" */
-  delete_deal?: Maybe<Deal_Mutation_Response>;
-  /** delete single row from the table: "deal" */
-  delete_deal_by_pk?: Maybe<Deal>;
-  /** delete data from the table: "deal_employee" */
-  delete_deal_employee?: Maybe<Deal_Employee_Mutation_Response>;
-  /** delete single row from the table: "deal_employee" */
-  delete_deal_employee_by_pk?: Maybe<Deal_Employee>;
+  /** delete data from the table: "client_status" */
+  delete_client_status?: Maybe<Client_Status_Mutation_Response>;
+  /** delete single row from the table: "client_status" */
+  delete_client_status_by_pk?: Maybe<Client_Status>;
+  /** delete data from the table: "client_status_enum" */
+  delete_client_status_enum?: Maybe<Client_Status_Enum_Mutation_Response>;
+  /** delete single row from the table: "client_status_enum" */
+  delete_client_status_enum_by_pk?: Maybe<Client_Status_Enum>;
   /** delete data from the table: "employee" */
   delete_employee?: Maybe<Employee_Mutation_Response>;
   /** delete single row from the table: "employee" */
@@ -2095,24 +1718,24 @@ export type Mutation_Root = {
   delete_employee_occupancy_by_pk?: Maybe<Employee_Occupancy>;
   /** insert data into the table: "client" */
   insert_client?: Maybe<Client_Mutation_Response>;
-  /** insert data into the table: "client_meta" */
-  insert_client_meta?: Maybe<Client_Meta_Mutation_Response>;
-  /** insert a single row into the table: "client_meta" */
-  insert_client_meta_one?: Maybe<Client_Meta>;
+  /** insert data into the table: "client_contact" */
+  insert_client_contact?: Maybe<Client_Contact_Mutation_Response>;
+  /** insert a single row into the table: "client_contact" */
+  insert_client_contact_one?: Maybe<Client_Contact>;
   /** insert data into the table: "client_object" */
   insert_client_object?: Maybe<Client_Object_Mutation_Response>;
   /** insert a single row into the table: "client_object" */
   insert_client_object_one?: Maybe<Client_Object>;
   /** insert a single row into the table: "client" */
   insert_client_one?: Maybe<Client>;
-  /** insert data into the table: "deal" */
-  insert_deal?: Maybe<Deal_Mutation_Response>;
-  /** insert data into the table: "deal_employee" */
-  insert_deal_employee?: Maybe<Deal_Employee_Mutation_Response>;
-  /** insert a single row into the table: "deal_employee" */
-  insert_deal_employee_one?: Maybe<Deal_Employee>;
-  /** insert a single row into the table: "deal" */
-  insert_deal_one?: Maybe<Deal>;
+  /** insert data into the table: "client_status" */
+  insert_client_status?: Maybe<Client_Status_Mutation_Response>;
+  /** insert data into the table: "client_status_enum" */
+  insert_client_status_enum?: Maybe<Client_Status_Enum_Mutation_Response>;
+  /** insert a single row into the table: "client_status_enum" */
+  insert_client_status_enum_one?: Maybe<Client_Status_Enum>;
+  /** insert a single row into the table: "client_status" */
+  insert_client_status_one?: Maybe<Client_Status>;
   /** insert data into the table: "employee" */
   insert_employee?: Maybe<Employee_Mutation_Response>;
   /** insert data into the table: "employee_occupancy" */
@@ -2125,32 +1748,32 @@ export type Mutation_Root = {
   update_client?: Maybe<Client_Mutation_Response>;
   /** update single row of the table: "client" */
   update_client_by_pk?: Maybe<Client>;
+  /** update data of the table: "client_contact" */
+  update_client_contact?: Maybe<Client_Contact_Mutation_Response>;
+  /** update single row of the table: "client_contact" */
+  update_client_contact_by_pk?: Maybe<Client_Contact>;
+  /** update multiples rows of table: "client_contact" */
+  update_client_contact_many?: Maybe<Array<Maybe<Client_Contact_Mutation_Response>>>;
   /** update multiples rows of table: "client" */
   update_client_many?: Maybe<Array<Maybe<Client_Mutation_Response>>>;
-  /** update data of the table: "client_meta" */
-  update_client_meta?: Maybe<Client_Meta_Mutation_Response>;
-  /** update single row of the table: "client_meta" */
-  update_client_meta_by_pk?: Maybe<Client_Meta>;
-  /** update multiples rows of table: "client_meta" */
-  update_client_meta_many?: Maybe<Array<Maybe<Client_Meta_Mutation_Response>>>;
   /** update data of the table: "client_object" */
   update_client_object?: Maybe<Client_Object_Mutation_Response>;
   /** update single row of the table: "client_object" */
   update_client_object_by_pk?: Maybe<Client_Object>;
   /** update multiples rows of table: "client_object" */
   update_client_object_many?: Maybe<Array<Maybe<Client_Object_Mutation_Response>>>;
-  /** update data of the table: "deal" */
-  update_deal?: Maybe<Deal_Mutation_Response>;
-  /** update single row of the table: "deal" */
-  update_deal_by_pk?: Maybe<Deal>;
-  /** update data of the table: "deal_employee" */
-  update_deal_employee?: Maybe<Deal_Employee_Mutation_Response>;
-  /** update single row of the table: "deal_employee" */
-  update_deal_employee_by_pk?: Maybe<Deal_Employee>;
-  /** update multiples rows of table: "deal_employee" */
-  update_deal_employee_many?: Maybe<Array<Maybe<Deal_Employee_Mutation_Response>>>;
-  /** update multiples rows of table: "deal" */
-  update_deal_many?: Maybe<Array<Maybe<Deal_Mutation_Response>>>;
+  /** update data of the table: "client_status" */
+  update_client_status?: Maybe<Client_Status_Mutation_Response>;
+  /** update single row of the table: "client_status" */
+  update_client_status_by_pk?: Maybe<Client_Status>;
+  /** update data of the table: "client_status_enum" */
+  update_client_status_enum?: Maybe<Client_Status_Enum_Mutation_Response>;
+  /** update single row of the table: "client_status_enum" */
+  update_client_status_enum_by_pk?: Maybe<Client_Status_Enum>;
+  /** update multiples rows of table: "client_status_enum" */
+  update_client_status_enum_many?: Maybe<Array<Maybe<Client_Status_Enum_Mutation_Response>>>;
+  /** update multiples rows of table: "client_status" */
+  update_client_status_many?: Maybe<Array<Maybe<Client_Status_Mutation_Response>>>;
   /** update data of the table: "employee" */
   update_employee?: Maybe<Employee_Mutation_Response>;
   /** update single row of the table: "employee" */
@@ -2179,13 +1802,13 @@ export type Mutation_RootDelete_Client_By_PkArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Client_MetaArgs = {
-  where: Client_Meta_Bool_Exp;
+export type Mutation_RootDelete_Client_ContactArgs = {
+  where: Client_Contact_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_Client_Meta_By_PkArgs = {
+export type Mutation_RootDelete_Client_Contact_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -2203,26 +1826,26 @@ export type Mutation_RootDelete_Client_Object_By_PkArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_DealArgs = {
-  where: Deal_Bool_Exp;
+export type Mutation_RootDelete_Client_StatusArgs = {
+  where: Client_Status_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootDelete_Deal_By_PkArgs = {
-  id: Scalars['bigint']['input'];
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Deal_EmployeeArgs = {
-  where: Deal_Employee_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Deal_Employee_By_PkArgs = {
+export type Mutation_RootDelete_Client_Status_By_PkArgs = {
   id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Client_Status_EnumArgs = {
+  where: Client_Status_Enum_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Client_Status_Enum_By_PkArgs = {
+  value: Scalars['String']['input'];
 };
 
 
@@ -2258,16 +1881,16 @@ export type Mutation_RootInsert_ClientArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Client_MetaArgs = {
-  objects: Array<Client_Meta_Insert_Input>;
-  on_conflict?: InputMaybe<Client_Meta_On_Conflict>;
+export type Mutation_RootInsert_Client_ContactArgs = {
+  objects: Array<Client_Contact_Insert_Input>;
+  on_conflict?: InputMaybe<Client_Contact_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_Client_Meta_OneArgs = {
-  object: Client_Meta_Insert_Input;
-  on_conflict?: InputMaybe<Client_Meta_On_Conflict>;
+export type Mutation_RootInsert_Client_Contact_OneArgs = {
+  object: Client_Contact_Insert_Input;
+  on_conflict?: InputMaybe<Client_Contact_On_Conflict>;
 };
 
 
@@ -2293,30 +1916,30 @@ export type Mutation_RootInsert_Client_OneArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_DealArgs = {
-  objects: Array<Deal_Insert_Input>;
-  on_conflict?: InputMaybe<Deal_On_Conflict>;
+export type Mutation_RootInsert_Client_StatusArgs = {
+  objects: Array<Client_Status_Insert_Input>;
+  on_conflict?: InputMaybe<Client_Status_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_Deal_EmployeeArgs = {
-  objects: Array<Deal_Employee_Insert_Input>;
-  on_conflict?: InputMaybe<Deal_Employee_On_Conflict>;
+export type Mutation_RootInsert_Client_Status_EnumArgs = {
+  objects: Array<Client_Status_Enum_Insert_Input>;
+  on_conflict?: InputMaybe<Client_Status_Enum_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_Deal_Employee_OneArgs = {
-  object: Deal_Employee_Insert_Input;
-  on_conflict?: InputMaybe<Deal_Employee_On_Conflict>;
+export type Mutation_RootInsert_Client_Status_Enum_OneArgs = {
+  object: Client_Status_Enum_Insert_Input;
+  on_conflict?: InputMaybe<Client_Status_Enum_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_Deal_OneArgs = {
-  object: Deal_Insert_Input;
-  on_conflict?: InputMaybe<Deal_On_Conflict>;
+export type Mutation_RootInsert_Client_Status_OneArgs = {
+  object: Client_Status_Insert_Input;
+  on_conflict?: InputMaybe<Client_Status_On_Conflict>;
 };
 
 
@@ -2363,28 +1986,28 @@ export type Mutation_RootUpdate_Client_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Client_ContactArgs = {
+  _set?: InputMaybe<Client_Contact_Set_Input>;
+  where: Client_Contact_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Client_Contact_By_PkArgs = {
+  _set?: InputMaybe<Client_Contact_Set_Input>;
+  pk_columns: Client_Contact_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Client_Contact_ManyArgs = {
+  updates: Array<Client_Contact_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_Client_ManyArgs = {
   updates: Array<Client_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Client_MetaArgs = {
-  _set?: InputMaybe<Client_Meta_Set_Input>;
-  where: Client_Meta_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Client_Meta_By_PkArgs = {
-  _set?: InputMaybe<Client_Meta_Set_Input>;
-  pk_columns: Client_Meta_Pk_Columns_Input;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Client_Meta_ManyArgs = {
-  updates: Array<Client_Meta_Updates>;
 };
 
 
@@ -2409,46 +2032,42 @@ export type Mutation_RootUpdate_Client_Object_ManyArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdate_DealArgs = {
-  _inc?: InputMaybe<Deal_Inc_Input>;
-  _set?: InputMaybe<Deal_Set_Input>;
-  where: Deal_Bool_Exp;
+export type Mutation_RootUpdate_Client_StatusArgs = {
+  _set?: InputMaybe<Client_Status_Set_Input>;
+  where: Client_Status_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Deal_By_PkArgs = {
-  _inc?: InputMaybe<Deal_Inc_Input>;
-  _set?: InputMaybe<Deal_Set_Input>;
-  pk_columns: Deal_Pk_Columns_Input;
+export type Mutation_RootUpdate_Client_Status_By_PkArgs = {
+  _set?: InputMaybe<Client_Status_Set_Input>;
+  pk_columns: Client_Status_Pk_Columns_Input;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Deal_EmployeeArgs = {
-  _inc?: InputMaybe<Deal_Employee_Inc_Input>;
-  _set?: InputMaybe<Deal_Employee_Set_Input>;
-  where: Deal_Employee_Bool_Exp;
+export type Mutation_RootUpdate_Client_Status_EnumArgs = {
+  _set?: InputMaybe<Client_Status_Enum_Set_Input>;
+  where: Client_Status_Enum_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Deal_Employee_By_PkArgs = {
-  _inc?: InputMaybe<Deal_Employee_Inc_Input>;
-  _set?: InputMaybe<Deal_Employee_Set_Input>;
-  pk_columns: Deal_Employee_Pk_Columns_Input;
+export type Mutation_RootUpdate_Client_Status_Enum_By_PkArgs = {
+  _set?: InputMaybe<Client_Status_Enum_Set_Input>;
+  pk_columns: Client_Status_Enum_Pk_Columns_Input;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Deal_Employee_ManyArgs = {
-  updates: Array<Deal_Employee_Updates>;
+export type Mutation_RootUpdate_Client_Status_Enum_ManyArgs = {
+  updates: Array<Client_Status_Enum_Updates>;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Deal_ManyArgs = {
-  updates: Array<Deal_Updates>;
+export type Mutation_RootUpdate_Client_Status_ManyArgs = {
+  updates: Array<Client_Status_Updates>;
 };
 
 
@@ -2511,36 +2130,36 @@ export enum Order_By {
 
 export type Query_Root = {
   __typename?: 'query_root';
-  /** An array relationship */
+  /** fetch data from the table: "client" */
   client: Array<Client>;
-  /** An aggregate relationship */
+  /** fetch aggregated fields from the table: "client" */
   client_aggregate: Client_Aggregate;
   /** fetch data from the table: "client" using primary key columns */
   client_by_pk?: Maybe<Client>;
-  /** fetch data from the table: "client_meta" */
-  client_meta: Array<Client_Meta>;
-  /** fetch aggregated fields from the table: "client_meta" */
-  client_meta_aggregate: Client_Meta_Aggregate;
-  /** fetch data from the table: "client_meta" using primary key columns */
-  client_meta_by_pk?: Maybe<Client_Meta>;
+  /** fetch data from the table: "client_contact" */
+  client_contact: Array<Client_Contact>;
+  /** fetch aggregated fields from the table: "client_contact" */
+  client_contact_aggregate: Client_Contact_Aggregate;
+  /** fetch data from the table: "client_contact" using primary key columns */
+  client_contact_by_pk?: Maybe<Client_Contact>;
   /** fetch data from the table: "client_object" */
   client_object: Array<Client_Object>;
   /** fetch aggregated fields from the table: "client_object" */
   client_object_aggregate: Client_Object_Aggregate;
   /** fetch data from the table: "client_object" using primary key columns */
   client_object_by_pk?: Maybe<Client_Object>;
-  /** fetch data from the table: "deal" */
-  deal: Array<Deal>;
-  /** fetch aggregated fields from the table: "deal" */
-  deal_aggregate: Deal_Aggregate;
-  /** fetch data from the table: "deal" using primary key columns */
-  deal_by_pk?: Maybe<Deal>;
-  /** fetch data from the table: "deal_employee" */
-  deal_employee: Array<Deal_Employee>;
-  /** fetch aggregated fields from the table: "deal_employee" */
-  deal_employee_aggregate: Deal_Employee_Aggregate;
-  /** fetch data from the table: "deal_employee" using primary key columns */
-  deal_employee_by_pk?: Maybe<Deal_Employee>;
+  /** fetch data from the table: "client_status" */
+  client_status: Array<Client_Status>;
+  /** fetch aggregated fields from the table: "client_status" */
+  client_status_aggregate: Client_Status_Aggregate;
+  /** fetch data from the table: "client_status" using primary key columns */
+  client_status_by_pk?: Maybe<Client_Status>;
+  /** fetch data from the table: "client_status_enum" */
+  client_status_enum: Array<Client_Status_Enum>;
+  /** fetch aggregated fields from the table: "client_status_enum" */
+  client_status_enum_aggregate: Client_Status_Enum_Aggregate;
+  /** fetch data from the table: "client_status_enum" using primary key columns */
+  client_status_enum_by_pk?: Maybe<Client_Status_Enum>;
   /** fetch data from the table: "employee" */
   employee: Array<Employee>;
   /** fetch aggregated fields from the table: "employee" */
@@ -2579,25 +2198,25 @@ export type Query_RootClient_By_PkArgs = {
 };
 
 
-export type Query_RootClient_MetaArgs = {
-  distinct_on?: InputMaybe<Array<Client_Meta_Select_Column>>;
+export type Query_RootClient_ContactArgs = {
+  distinct_on?: InputMaybe<Array<Client_Contact_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Client_Meta_Order_By>>;
-  where?: InputMaybe<Client_Meta_Bool_Exp>;
+  order_by?: InputMaybe<Array<Client_Contact_Order_By>>;
+  where?: InputMaybe<Client_Contact_Bool_Exp>;
 };
 
 
-export type Query_RootClient_Meta_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Client_Meta_Select_Column>>;
+export type Query_RootClient_Contact_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Client_Contact_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Client_Meta_Order_By>>;
-  where?: InputMaybe<Client_Meta_Bool_Exp>;
+  order_by?: InputMaybe<Array<Client_Contact_Order_By>>;
+  where?: InputMaybe<Client_Contact_Bool_Exp>;
 };
 
 
-export type Query_RootClient_Meta_By_PkArgs = {
+export type Query_RootClient_Contact_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -2625,49 +2244,49 @@ export type Query_RootClient_Object_By_PkArgs = {
 };
 
 
-export type Query_RootDealArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Select_Column>>;
+export type Query_RootClient_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Client_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Order_By>>;
-  where?: InputMaybe<Deal_Bool_Exp>;
+  order_by?: InputMaybe<Array<Client_Status_Order_By>>;
+  where?: InputMaybe<Client_Status_Bool_Exp>;
 };
 
 
-export type Query_RootDeal_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Select_Column>>;
+export type Query_RootClient_Status_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Client_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Order_By>>;
-  where?: InputMaybe<Deal_Bool_Exp>;
+  order_by?: InputMaybe<Array<Client_Status_Order_By>>;
+  where?: InputMaybe<Client_Status_Bool_Exp>;
 };
 
 
-export type Query_RootDeal_By_PkArgs = {
-  id: Scalars['bigint']['input'];
-};
-
-
-export type Query_RootDeal_EmployeeArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Employee_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Employee_Order_By>>;
-  where?: InputMaybe<Deal_Employee_Bool_Exp>;
-};
-
-
-export type Query_RootDeal_Employee_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Employee_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Employee_Order_By>>;
-  where?: InputMaybe<Deal_Employee_Bool_Exp>;
-};
-
-
-export type Query_RootDeal_Employee_By_PkArgs = {
+export type Query_RootClient_Status_By_PkArgs = {
   id: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootClient_Status_EnumArgs = {
+  distinct_on?: InputMaybe<Array<Client_Status_Enum_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Client_Status_Enum_Order_By>>;
+  where?: InputMaybe<Client_Status_Enum_Bool_Exp>;
+};
+
+
+export type Query_RootClient_Status_Enum_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Client_Status_Enum_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Client_Status_Enum_Order_By>>;
+  where?: InputMaybe<Client_Status_Enum_Bool_Exp>;
+};
+
+
+export type Query_RootClient_Status_Enum_By_PkArgs = {
+  value: Scalars['String']['input'];
 };
 
 
@@ -2718,20 +2337,20 @@ export type Query_RootEmployee_Occupancy_By_PkArgs = {
 
 export type Subscription_Root = {
   __typename?: 'subscription_root';
-  /** An array relationship */
+  /** fetch data from the table: "client" */
   client: Array<Client>;
-  /** An aggregate relationship */
+  /** fetch aggregated fields from the table: "client" */
   client_aggregate: Client_Aggregate;
   /** fetch data from the table: "client" using primary key columns */
   client_by_pk?: Maybe<Client>;
-  /** fetch data from the table: "client_meta" */
-  client_meta: Array<Client_Meta>;
-  /** fetch aggregated fields from the table: "client_meta" */
-  client_meta_aggregate: Client_Meta_Aggregate;
-  /** fetch data from the table: "client_meta" using primary key columns */
-  client_meta_by_pk?: Maybe<Client_Meta>;
-  /** fetch data from the table in a streaming manner: "client_meta" */
-  client_meta_stream: Array<Client_Meta>;
+  /** fetch data from the table: "client_contact" */
+  client_contact: Array<Client_Contact>;
+  /** fetch aggregated fields from the table: "client_contact" */
+  client_contact_aggregate: Client_Contact_Aggregate;
+  /** fetch data from the table: "client_contact" using primary key columns */
+  client_contact_by_pk?: Maybe<Client_Contact>;
+  /** fetch data from the table in a streaming manner: "client_contact" */
+  client_contact_stream: Array<Client_Contact>;
   /** fetch data from the table: "client_object" */
   client_object: Array<Client_Object>;
   /** fetch aggregated fields from the table: "client_object" */
@@ -2740,24 +2359,24 @@ export type Subscription_Root = {
   client_object_by_pk?: Maybe<Client_Object>;
   /** fetch data from the table in a streaming manner: "client_object" */
   client_object_stream: Array<Client_Object>;
+  /** fetch data from the table: "client_status" */
+  client_status: Array<Client_Status>;
+  /** fetch aggregated fields from the table: "client_status" */
+  client_status_aggregate: Client_Status_Aggregate;
+  /** fetch data from the table: "client_status" using primary key columns */
+  client_status_by_pk?: Maybe<Client_Status>;
+  /** fetch data from the table: "client_status_enum" */
+  client_status_enum: Array<Client_Status_Enum>;
+  /** fetch aggregated fields from the table: "client_status_enum" */
+  client_status_enum_aggregate: Client_Status_Enum_Aggregate;
+  /** fetch data from the table: "client_status_enum" using primary key columns */
+  client_status_enum_by_pk?: Maybe<Client_Status_Enum>;
+  /** fetch data from the table in a streaming manner: "client_status_enum" */
+  client_status_enum_stream: Array<Client_Status_Enum>;
+  /** fetch data from the table in a streaming manner: "client_status" */
+  client_status_stream: Array<Client_Status>;
   /** fetch data from the table in a streaming manner: "client" */
   client_stream: Array<Client>;
-  /** fetch data from the table: "deal" */
-  deal: Array<Deal>;
-  /** fetch aggregated fields from the table: "deal" */
-  deal_aggregate: Deal_Aggregate;
-  /** fetch data from the table: "deal" using primary key columns */
-  deal_by_pk?: Maybe<Deal>;
-  /** fetch data from the table: "deal_employee" */
-  deal_employee: Array<Deal_Employee>;
-  /** fetch aggregated fields from the table: "deal_employee" */
-  deal_employee_aggregate: Deal_Employee_Aggregate;
-  /** fetch data from the table: "deal_employee" using primary key columns */
-  deal_employee_by_pk?: Maybe<Deal_Employee>;
-  /** fetch data from the table in a streaming manner: "deal_employee" */
-  deal_employee_stream: Array<Deal_Employee>;
-  /** fetch data from the table in a streaming manner: "deal" */
-  deal_stream: Array<Deal>;
   /** fetch data from the table: "employee" */
   employee: Array<Employee>;
   /** fetch aggregated fields from the table: "employee" */
@@ -2800,33 +2419,33 @@ export type Subscription_RootClient_By_PkArgs = {
 };
 
 
-export type Subscription_RootClient_MetaArgs = {
-  distinct_on?: InputMaybe<Array<Client_Meta_Select_Column>>;
+export type Subscription_RootClient_ContactArgs = {
+  distinct_on?: InputMaybe<Array<Client_Contact_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Client_Meta_Order_By>>;
-  where?: InputMaybe<Client_Meta_Bool_Exp>;
+  order_by?: InputMaybe<Array<Client_Contact_Order_By>>;
+  where?: InputMaybe<Client_Contact_Bool_Exp>;
 };
 
 
-export type Subscription_RootClient_Meta_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Client_Meta_Select_Column>>;
+export type Subscription_RootClient_Contact_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Client_Contact_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Client_Meta_Order_By>>;
-  where?: InputMaybe<Client_Meta_Bool_Exp>;
+  order_by?: InputMaybe<Array<Client_Contact_Order_By>>;
+  where?: InputMaybe<Client_Contact_Bool_Exp>;
 };
 
 
-export type Subscription_RootClient_Meta_By_PkArgs = {
+export type Subscription_RootClient_Contact_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
 
-export type Subscription_RootClient_Meta_StreamArgs = {
+export type Subscription_RootClient_Contact_StreamArgs = {
   batch_size: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<Client_Meta_Stream_Cursor_Input>>;
-  where?: InputMaybe<Client_Meta_Bool_Exp>;
+  cursor: Array<InputMaybe<Client_Contact_Stream_Cursor_Input>>;
+  where?: InputMaybe<Client_Contact_Bool_Exp>;
 };
 
 
@@ -2860,70 +2479,70 @@ export type Subscription_RootClient_Object_StreamArgs = {
 };
 
 
-export type Subscription_RootClient_StreamArgs = {
-  batch_size: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<Client_Stream_Cursor_Input>>;
-  where?: InputMaybe<Client_Bool_Exp>;
-};
-
-
-export type Subscription_RootDealArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Select_Column>>;
+export type Subscription_RootClient_StatusArgs = {
+  distinct_on?: InputMaybe<Array<Client_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Order_By>>;
-  where?: InputMaybe<Deal_Bool_Exp>;
+  order_by?: InputMaybe<Array<Client_Status_Order_By>>;
+  where?: InputMaybe<Client_Status_Bool_Exp>;
 };
 
 
-export type Subscription_RootDeal_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Select_Column>>;
+export type Subscription_RootClient_Status_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Client_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Order_By>>;
-  where?: InputMaybe<Deal_Bool_Exp>;
+  order_by?: InputMaybe<Array<Client_Status_Order_By>>;
+  where?: InputMaybe<Client_Status_Bool_Exp>;
 };
 
 
-export type Subscription_RootDeal_By_PkArgs = {
-  id: Scalars['bigint']['input'];
-};
-
-
-export type Subscription_RootDeal_EmployeeArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Employee_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Employee_Order_By>>;
-  where?: InputMaybe<Deal_Employee_Bool_Exp>;
-};
-
-
-export type Subscription_RootDeal_Employee_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Deal_Employee_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Deal_Employee_Order_By>>;
-  where?: InputMaybe<Deal_Employee_Bool_Exp>;
-};
-
-
-export type Subscription_RootDeal_Employee_By_PkArgs = {
+export type Subscription_RootClient_Status_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
 
-export type Subscription_RootDeal_Employee_StreamArgs = {
-  batch_size: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<Deal_Employee_Stream_Cursor_Input>>;
-  where?: InputMaybe<Deal_Employee_Bool_Exp>;
+export type Subscription_RootClient_Status_EnumArgs = {
+  distinct_on?: InputMaybe<Array<Client_Status_Enum_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Client_Status_Enum_Order_By>>;
+  where?: InputMaybe<Client_Status_Enum_Bool_Exp>;
 };
 
 
-export type Subscription_RootDeal_StreamArgs = {
+export type Subscription_RootClient_Status_Enum_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Client_Status_Enum_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Client_Status_Enum_Order_By>>;
+  where?: InputMaybe<Client_Status_Enum_Bool_Exp>;
+};
+
+
+export type Subscription_RootClient_Status_Enum_By_PkArgs = {
+  value: Scalars['String']['input'];
+};
+
+
+export type Subscription_RootClient_Status_Enum_StreamArgs = {
   batch_size: Scalars['Int']['input'];
-  cursor: Array<InputMaybe<Deal_Stream_Cursor_Input>>;
-  where?: InputMaybe<Deal_Bool_Exp>;
+  cursor: Array<InputMaybe<Client_Status_Enum_Stream_Cursor_Input>>;
+  where?: InputMaybe<Client_Status_Enum_Bool_Exp>;
+};
+
+
+export type Subscription_RootClient_Status_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Client_Status_Stream_Cursor_Input>>;
+  where?: InputMaybe<Client_Status_Bool_Exp>;
+};
+
+
+export type Subscription_RootClient_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Client_Stream_Cursor_Input>>;
+  where?: InputMaybe<Client_Bool_Exp>;
 };
 
 
@@ -3012,13 +2631,24 @@ export type Uuid_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['uuid']['input']>>;
 };
 
-export type ClientsQueryVariables = Exact<{
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
+export type ClientQueryVariables = Exact<{
+  id: Scalars['uuid']['input'];
 }>;
 
 
-export type ClientsQuery = { __typename?: 'query_root', client: Array<{ __typename?: 'client', id: any, created_at: any, updated_at: any, fullName: string, objects?: { __typename?: 'client_object', name: string } | null }> };
+export type ClientQuery = { __typename?: 'query_root', client_by_pk?: { __typename?: 'client', id: any, created_at: any, updated_at: any, name: string, contacts: Array<{ __typename?: 'client_contact', id: any, name: string, email?: string | null, phone?: string | null, is_main: boolean }>, responsible_employee?: { __typename?: 'employee', fullName?: string | null } | null, statuses: Array<{ __typename?: 'client_status', status: Client_Status_Enum_Enum, updated_at: any, is_current: boolean }> } | null };
+
+export type ClientsQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  distinct_on?: InputMaybe<Array<Client_Select_Column> | Client_Select_Column>;
+  order_by?: InputMaybe<Array<Client_Order_By> | Client_Order_By>;
+  where?: InputMaybe<Client_Bool_Exp>;
+}>;
 
 
-export const ClientsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Clients"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"client"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"objects"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<ClientsQuery, ClientsQueryVariables>;
+export type ClientsQuery = { __typename?: 'query_root', client_aggregate: { __typename?: 'client_aggregate', aggregate?: { __typename?: 'client_aggregate_fields', count: number } | null }, client: Array<{ __typename?: 'client', id: any, name: string, statuses: Array<{ __typename?: 'client_status', is_current: boolean, status: Client_Status_Enum_Enum }>, contacts: Array<{ __typename?: 'client_contact', is_main: boolean, phone?: string | null }>, responsible_employee?: { __typename?: 'employee', fullName?: string | null } | null }> };
+
+
+export const ClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Client"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"client_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contacts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"is_main"}}]}},{"kind":"Field","name":{"kind":"Name","value":"responsible_employee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fullName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"statuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"is_current"}}]}}]}}]}}]} as unknown as DocumentNode<ClientQuery, ClientQueryVariables>;
+export const ClientsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Clients"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"distinct_on"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"client_select_column"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"order_by"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"client_order_by"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"client_bool_exp"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"client_aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"client"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"distinct_on"},"value":{"kind":"Variable","name":{"kind":"Name","value":"distinct_on"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"Variable","name":{"kind":"Name","value":"order_by"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"statuses"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"is_current"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"is_current"}},{"kind":"Field","name":{"kind":"Name","value":"status"}}]}},{"kind":"Field","name":{"kind":"Name","value":"contacts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"is_main"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"is_main"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}},{"kind":"Field","name":{"kind":"Name","value":"responsible_employee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fullName"}}]}}]}}]}}]} as unknown as DocumentNode<ClientsQuery, ClientsQueryVariables>;

@@ -1,9 +1,11 @@
 import { Button } from 'antd';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { ClientCard } from 'src/features/ClientCard';
+import { useTitle } from 'src/shared/lib/browser/dom';
 import { MiniCalendar } from 'src/shared/ui/mini-calendar';
 
 export default function ClientsCardPage() {
-  const { id } = useParams<{ id: string }>();
+  useTitle('Клиенты');
   const navigate = useNavigate();
 
   return (
@@ -11,8 +13,7 @@ export default function ClientsCardPage() {
       <Button type="link" onClick={() => navigate('/clients')}>
         Назад
       </Button>
-      <h1>ClientsPage</h1>
-      <div>ID: {id}</div>
+      <ClientCard />
       <MiniCalendar />
     </div>
   );
