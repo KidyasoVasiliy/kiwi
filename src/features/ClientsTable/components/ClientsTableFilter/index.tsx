@@ -1,7 +1,7 @@
 import { Button, Col, Form, Input, Row } from 'antd';
+import { useForm } from 'antd/es/form/Form';
 import debounce from 'lodash.debounce';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Client_Bool_Exp, InputMaybe } from 'src/__gql__/graphql';
+import React, { useMemo } from 'react';
 import { DirectoryClientIndustrySelect } from 'src/features/DirectoryClientIndustrySelect';
 import { DirectoryClientIndustrySelectValue } from 'src/features/DirectoryClientIndustrySelect';
 import {
@@ -13,8 +13,6 @@ import {
   EmployeeSelectValue,
 } from 'src/features/EmployeeSelect';
 
-import { useClientsCount } from './hooks/useClientsCount';
-
 export type ClientsTableFilterType = {
   search?: string;
   status?: DirectoryClientStatusSelectValue[];
@@ -23,78 +21,25 @@ export type ClientsTableFilterType = {
 };
 
 type Props = {
+  isFetching: boolean;
   onFinish: (values: ClientsTableFilterType) => void;
 };
 
-export const ClientsTableFilter: React.FC<Props> = ({ onFinish }) => {
-  const { fetchClientCount } = useClientsCount();
+export const ClientsTableFilter: React.FC<Props> = ({
+  onFinish,
+  isFetching,
+}) => {
+  const [form] = useForm();
 
-  const [fetching, setFetching] = useState(false);
-  const [count, setCount] = useState<number | undefined>(undefined);
-  const fetchRef = useRef(0);
-
-  const loadOptions = useCallback(
-    (values: ClientsTableFilterType) => {
-      fetchRef.current += 1;
-      const fetchId = fetchRef.current;
-      setCount(undefined);
-      setFetching(true);
-
-      const where: InputMaybe<Client_Bool_Exp> = {};
-
-      if (values.responsible_employee?.length) {
-        where.responsible_employee = {
-          _or: values.responsible_employee?.map((item) => ({
-            id: { _eq: item.value },
-          })),
-        };
-      }
-
-      if (values.industry?.length) {
-        where.industries = {
-          industry: {
-            _or: values.industry?.map((item) => ({
-              id: { _eq: item.value },
-            })),
-          },
-        };
-      }
-
-      if (values.status?.length) {
-        where.statuses = {
-          is_current: { _eq: true },
-          status: {
-            _or: values.status?.map((item) => ({
-              id: { _eq: item.value },
-            })),
-          },
-        };
-      }
-
-      fetchClientCount({
-        where,
-      }).then((_count) => {
-        if (fetchId !== fetchRef.current) {
-          return;
-        }
-
-        setCount(_count);
-        setFetching(false);
-      });
-    },
-    [fetchClientCount],
-  );
-
-  const debounceFetcher = useMemo(() => {
-    return debounce(loadOptions, 800);
-  }, [loadOptions]);
+  const debounceSubmit = useMemo(() => {
+    return debounce(form.submit, 800);
+  }, [form.submit]);
 
   return (
     <Form<ClientsTableFilterType>
+      form={form}
       name="ClientsTableFilter"
-      onValuesChange={(_, values) => {
-        debounceFetcher(values);
-      }}
+      onValuesChange={debounceSubmit}
       initialValues={{
         search: '',
         status: [],
@@ -104,7 +49,7 @@ export const ClientsTableFilter: React.FC<Props> = ({ onFinish }) => {
       onFinish={onFinish}
       autoComplete="off"
     >
-      <Row gutter={24}>
+      <Row gutter={16}>
         <Col flex="auto">
           <Form.Item name="search">
             <Input.Search
@@ -139,12 +84,10 @@ export const ClientsTableFilter: React.FC<Props> = ({ onFinish }) => {
             <Button
               type="primary"
               htmlType="submit"
-              loading={fetching}
-              disabled={count === 0}
+              loading={isFetching}
+              style={{ width: 180 }}
             >
-              {count === 0 && 'Не найдено'}
-              {!!count && `Показать ${count}`}
-              {count !== 0 && !count && 'Показать'}
+              Показать
             </Button>
           </Form.Item>
         </Col>

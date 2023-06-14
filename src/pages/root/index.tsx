@@ -49,47 +49,39 @@ const items: MenuItem[] = [
 ];
 
 const RootPage: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const {
-    token: { colorBgContainer },
+    token: { colorBgLayout },
   } = theme.useToken();
   const location = useLocation();
   const navigate = useNavigate();
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-      >
-        <div
-          style={{
-            height: '32px',
-            margin: '16px',
-            background: 'rgba(255,255,255,.2)',
-            borderRadius: '6px',
-          }}
-        />
-        <Menu
-          theme="dark"
-          defaultSelectedKeys={initiNav(location.pathname)}
-          mode="inline"
-          items={items}
-          onClick={({ key }) => {
-            console.log(key);
-            navigate(key);
-          }}
-        />
-      </Sider>
-      <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+      <Header style={{ background: '#001529', height: 48 }} />
+      <Layout hasSider>
+        <Sider
+          theme="light"
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value) => setCollapsed(value)}
+        >
+          <Menu
+            theme="light"
+            defaultSelectedKeys={initiNav(location.pathname)}
+            mode="inline"
+            items={items}
+            onClick={({ key }) => {
+              console.log(key);
+              navigate(key);
+            }}
+          />
+        </Sider>
+
         <Content
           style={{
-            padding: 24,
-            margin: 24,
-            minHeight: 280,
-            background: colorBgContainer,
+            padding: '0 24px 24px',
+            background: colorBgLayout,
           }}
         >
           <Outlet />

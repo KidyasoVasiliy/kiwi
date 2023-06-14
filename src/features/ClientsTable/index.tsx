@@ -1,5 +1,6 @@
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
+import { Badge, Button, Space, Table, Tag, Tooltip, Typography } from 'antd';
+import { Footer } from 'antd/es/layout/layout';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
 import React, { useState } from 'react';
@@ -141,7 +142,10 @@ export const ClientsTable: React.FC = () => {
 
   return (
     <>
-      <ClientsTableFilter onFinish={handleSubmitFilter} />
+      <ClientsTableFilter
+        isFetching={isFetching}
+        onFinish={handleSubmitFilter}
+      />
       <Table
         loading={isFetching}
         columns={columns.concat([
@@ -196,6 +200,7 @@ export const ClientsTable: React.FC = () => {
           current,
           pageSize,
           total,
+          showTotal: () => <Typography.Text>Всего {total}</Typography.Text>,
           position: ['bottomCenter'],
           defaultPageSize: 10,
           pageSizeOptions: [10, 20, 50],
