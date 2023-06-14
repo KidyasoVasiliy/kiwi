@@ -1,14 +1,13 @@
 import { Badge, Card, List, Typography } from 'antd';
 import dayjs from 'dayjs';
-import { redirect, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { useClientCard } from './hooks/useClientCard';
 
 export function ClientCard() {
   const { id } = useParams<{ id: string }>();
   if (!id) {
-    redirect('/');
-    return null;
+    throw new Error('id not found');
   }
 
   const { isLoading, data } = useClientCard({ id });

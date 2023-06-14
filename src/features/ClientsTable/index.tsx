@@ -12,6 +12,10 @@ import {
   getPageSize,
 } from 'src/shared/lib/pagination';
 
+import {
+  ClientsTableFilter,
+  ClientsTableFilterType,
+} from './components/ClientsTableFilter';
 import { useClientsTable, ClientsTableDataType } from './hooks/useClients';
 
 const columns: ColumnsType<ClientsTableDataType> = [
@@ -96,45 +100,66 @@ export const ClientsTable: React.FC = () => {
   const pageSize = getPageSize(offset, limit);
   const total = data?.pagination?.count;
 
+  const handleSubmitFilter = (values: ClientsTableFilterType) => {
+    setTableParams((prev) => {
+      return {
+        ...prev,
+        offset: 0,
+        where: values.responsible_employee?.length
+          ? {
+              responsible_employee: {
+                _or: values.responsible_employee?.map((item) => ({
+                  id: { _eq: item.value },
+                })),
+              },
+            }
+          : undefined,
+      };
+    });
+  };
+
   return (
-    <Table
-      loading={isFetching}
-      columns={columns.concat({
-        title: 'Действия',
-        key: 'action',
-        width: 130,
-        align: 'center',
-        render: (_, record) => (
-          <Space size="middle">
-            <Tooltip title="Открыть клиента">
-              <Button
-                shape="circle"
-                icon={<EyeOutlined />}
-                onClick={() => navigate(record.id, { relative: 'path' })}
-              />
-            </Tooltip>
-            <Tooltip title="Редактировать клиента">
-              <Button
-                shape="circle"
-                icon={<EditOutlined />}
-                onClick={() => navigate(record.id, { relative: 'path' })}
-              />
-            </Tooltip>
-          </Space>
-        ),
-      })}
-      dataSource={data?.list}
-      pagination={{
-        current,
-        pageSize,
-        total,
-        position: ['bottomCenter'],
-        defaultPageSize: 10,
-        pageSizeOptions: [10, 20, 50],
-        showSizeChanger: true,
-      }}
-      showSorterTooltip
-      onChange={handleTableChange}
-    />
+    <>
+      <ClientsTableFilter onFinish={handleSubmitFilter} />
+      <Table
+        loading={isFetching}
+        columns={columns.concat({
+          title: 'Действия',
+          key: 'action',
+          width: 130,
+          align: 'center',
+          render: (_, record) => (
+            <Space size="middle">
+              <Tooltip title="Открыть клиента">
+                <Button
+                  shape="circle"
+                  icon={<EyeOutlined />}
+                  onClick={() => navigate(record.id, { relative: 'path' })}
+                />
+              </Tooltip>
+              <Tooltip title="Редактировать клиента">
+                <Button
+                  shape="circle"
+                  icon={<EditOutlined />}
+                  onClick={() => navigate(record.id, { relative: 'path' })}
+                />
+              </Tooltip>
+            </Space>
+          ),
+        })}
+        dataSource={data?.list}
+        pagination={{
+          current,
+          pageSize,
+          total,
+          position: ['bottomCenter'],
+          defaultPageSize: 10,
+          pageSizeOptions: [10, 20, 50],
+          showSizeChanger: true,
+        }}
+        showSorterTooltip
+        onChange={handleTableChange}
+      />
+    </>
   );
 };
