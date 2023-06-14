@@ -4,56 +4,57 @@ import { SelectProps } from 'antd';
 import { DefaultOptionType } from 'antd/es/select';
 import React from 'react';
 import {
-  EmployeeSelectQuery,
-  EmployeeSelectQueryVariables,
+  DirectoryClientIndustrySelectQuery,
+  DirectoryClientIndustrySelectQueryVariables,
 } from 'src/__gql__/graphql';
 import { DebounceSelect } from 'src/components/Deb';
 import { graphQLClient, gql } from 'src/shared/app';
 
 const queryDocument: TypedDocumentNode<
-  EmployeeSelectQuery,
-  EmployeeSelectQueryVariables
+  DirectoryClientIndustrySelectQuery,
+  DirectoryClientIndustrySelectQueryVariables
 > = gql`
-  query EmployeeSelect($limit: Int, $offset: Int, $where: employee_bool_exp) {
-    employee(where: $where, limit: $limit, offset: $offset) {
-      fullName
+  query DirectoryClientIndustrySelect(
+    $limit: Int
+    $offset: Int
+    $where: directory_client_industry_bool_exp
+  ) {
+    directory_client_industry(where: $where, limit: $limit, offset: $offset) {
       id
+      name
     }
   }
 `;
 
-export type EmployeeSelectValue = {
+export type DirectoryClientIndustrySelectValue = {
   key: string;
   label: string;
   value: string;
 };
 
-export const EmployeeSelect: React.FC<SelectProps<EmployeeSelectValue[]>> = ({
-  value,
-  onChange,
-}) => {
+export const DirectoryClientIndustrySelect: React.FC<
+  SelectProps<DirectoryClientIndustrySelectValue[]>
+> = ({ value, onChange }) => {
   const queryClient = useQueryClient();
 
-  const fetchOptions = async (fullName?: string) => {
+  const fetchOptions = async (name?: string) => {
     const result = await queryClient.ensureQueryData({
-      queryKey: ['EmployeeSelect', fullName],
+      queryKey: ['DirectoryClientIndustrySelect', name],
       queryFn: async () =>
         graphQLClient.request(
           queryDocument,
-          fullName
+          name
             ? {
-                where: fullName
-                  ? { fullName: { _ilike: `%${fullName}%` } }
-                  : undefined,
+                where: name ? { name: { _ilike: `%${name}%` } } : undefined,
               }
             : { limit: 50, offset: 0 },
         ),
       cacheTime: 300000, // 5 min
     });
 
-    return result.employee.map(({ id, fullName }) => ({
+    return result.directory_client_industry.map(({ id, name }) => ({
       key: id,
-      label: fullName,
+      label: name,
       value: id,
     }));
   };
@@ -62,13 +63,13 @@ export const EmployeeSelect: React.FC<SelectProps<EmployeeSelectValue[]>> = ({
     <DebounceSelect
       mode="multiple"
       value={value}
-      placeholder="Ответственный"
+      placeholder="Отрасль"
       fetchOptions={fetchOptions}
       onChange={(newValue, newOption) => {
         if (!onChange) return; // typeguard
 
         onChange(
-          newValue as EmployeeSelectValue[],
+          newValue as DirectoryClientIndustrySelectValue[],
           newOption as DefaultOptionType[],
         );
       }}

@@ -29,15 +29,21 @@ const clientsQueryDoc: TypedDocumentNode<
       id
       name
       statuses(where: { is_current: { _eq: true } }) {
-        is_current
-        status
+        status {
+          name
+          color
+        }
       }
       contacts(where: { is_main: { _eq: true } }) {
-        is_main
         phone
       }
       responsible_employee {
         fullName
+      }
+      industries {
+        industry {
+          name
+        }
       }
     }
   }
@@ -45,13 +51,14 @@ const clientsQueryDoc: TypedDocumentNode<
 
 const mapClientsTable = (list: ClientsQuery['client'] = []) => {
   const newList = list.map(
-    ({ statuses, contacts, responsible_employee, ...rest }) => {
+    ({ statuses, contacts, responsible_employee, industries, ...rest }) => {
       return {
         key: rest.id,
         ...rest,
         status: statuses[0]?.status,
         contact: contacts[0]?.phone,
         responsible_employee: responsible_employee?.fullName,
+        industries: industries.map((industry) => industry.industry),
       };
     },
   );

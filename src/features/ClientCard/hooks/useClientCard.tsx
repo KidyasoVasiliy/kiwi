@@ -24,7 +24,10 @@ const clientQueryDoc: TypedDocumentNode<
         fullName
       }
       statuses {
-        status
+        status {
+          name
+          color
+        }
         updated_at
         is_current
       }

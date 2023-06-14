@@ -1,10 +1,15 @@
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
-import { Badge, Button, Space, Table, Tooltip } from 'antd';
+import { Badge, Button, Space, Table, Tag, Tooltip } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ClientsQueryVariables, Order_By } from 'src/__gql__/graphql';
+import {
+  Client_Bool_Exp,
+  ClientsQueryVariables,
+  InputMaybe,
+  Order_By,
+} from 'src/__gql__/graphql';
 import {
   getOffset,
   getLimit,
@@ -42,12 +47,6 @@ const columns: ColumnsType<ClientsTableDataType> = [
     title: 'Контакты',
     dataIndex: 'contact',
     key: 'contact',
-  },
-  {
-    title: 'Статус',
-    key: 'status',
-    dataIndex: 'status',
-    render: (_, { status }) => <Badge status="success" text={status} />,
   },
 ];
 
@@ -101,19 +100,41 @@ export const ClientsTable: React.FC = () => {
   const total = data?.pagination?.count;
 
   const handleSubmitFilter = (values: ClientsTableFilterType) => {
+    const where: InputMaybe<Client_Bool_Exp> = {};
+    if (values.responsible_employee?.length) {
+      where.responsible_employee = {
+        _or: values.responsible_employee?.map((item) => ({
+          id: { _eq: item.value },
+        })),
+      };
+    }
+
+    if (values.industry?.length) {
+      where.industries = {
+        industry: {
+          _or: values.industry?.map((item) => ({
+            id: { _eq: item.value },
+          })),
+        },
+      };
+    }
+
+    if (values.status?.length) {
+      where.statuses = {
+        is_current: { _eq: true },
+        status: {
+          _or: values.status?.map((item) => ({
+            id: { _eq: item.value },
+          })),
+        },
+      };
+    }
+
     setTableParams((prev) => {
       return {
         ...prev,
         offset: 0,
-        where: values.responsible_employee?.length
-          ? {
-              responsible_employee: {
-                _or: values.responsible_employee?.map((item) => ({
-                  id: { _eq: item.value },
-                })),
-              },
-            }
-          : undefined,
+        where,
       };
     });
   };
@@ -123,30 +144,53 @@ export const ClientsTable: React.FC = () => {
       <ClientsTableFilter onFinish={handleSubmitFilter} />
       <Table
         loading={isFetching}
-        columns={columns.concat({
-          title: 'Действия',
-          key: 'action',
-          width: 130,
-          align: 'center',
-          render: (_, record) => (
-            <Space size="middle">
-              <Tooltip title="Открыть клиента">
-                <Button
-                  shape="circle"
-                  icon={<EyeOutlined />}
-                  onClick={() => navigate(record.id, { relative: 'path' })}
-                />
-              </Tooltip>
-              <Tooltip title="Редактировать клиента">
-                <Button
-                  shape="circle"
-                  icon={<EditOutlined />}
-                  onClick={() => navigate(record.id, { relative: 'path' })}
-                />
-              </Tooltip>
-            </Space>
-          ),
-        })}
+        columns={columns.concat([
+          {
+            title: 'Отрасль',
+            dataIndex: 'industries',
+            key: 'industries',
+            render: (_, { industries }) => (
+              <>
+                {industries.map(({ name }) => (
+                  <Tag color="volcano" key={name}>
+                    {name.toUpperCase()}
+                  </Tag>
+                ))}
+              </>
+            ),
+          },
+          {
+            title: 'Статус',
+            key: 'status',
+            dataIndex: 'status',
+            render: (_, { status }) =>
+              status ? <Badge text={status.name} color={status.color} /> : null,
+          },
+          {
+            title: 'Действия',
+            key: 'action',
+            width: 130,
+            align: 'center',
+            render: (_, record) => (
+              <Space size="middle">
+                <Tooltip title="Открыть клиента">
+                  <Button
+                    shape="circle"
+                    icon={<EyeOutlined />}
+                    onClick={() => navigate(record.id, { relative: 'path' })}
+                  />
+                </Tooltip>
+                <Tooltip title="Редактировать клиента">
+                  <Button
+                    shape="circle"
+                    icon={<EditOutlined />}
+                    onClick={() => navigate(record.id, { relative: 'path' })}
+                  />
+                </Tooltip>
+              </Space>
+            ),
+          },
+        ])}
         dataSource={data?.list}
         pagination={{
           current,

@@ -1,6 +1,13 @@
-import { Button, Col, Form, Input, Row, Spin } from 'antd';
+import { Button, Col, Form, Input, Row } from 'antd';
 import debounce from 'lodash.debounce';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Client_Bool_Exp, InputMaybe } from 'src/__gql__/graphql';
+import { DirectoryClientIndustrySelect } from 'src/features/DirectoryClientIndustrySelect';
+import { DirectoryClientIndustrySelectValue } from 'src/features/DirectoryClientIndustrySelect';
+import {
+  DirectoryClientStatusSelect,
+  DirectoryClientStatusSelectValue,
+} from 'src/features/DirectoryClientStatusSelect';
 import {
   EmployeeSelect,
   EmployeeSelectValue,
@@ -10,8 +17,8 @@ import { useClientsCount } from './hooks/useClientsCount';
 
 export type ClientsTableFilterType = {
   search?: string;
-  status?: string;
-  industry?: string;
+  status?: DirectoryClientStatusSelectValue[];
+  industry?: DirectoryClientIndustrySelectValue[];
   responsible_employee?: EmployeeSelectValue[];
 };
 
@@ -33,16 +40,39 @@ export const ClientsTableFilter: React.FC<Props> = ({ onFinish }) => {
       setCount(undefined);
       setFetching(true);
 
+      const where: InputMaybe<Client_Bool_Exp> = {};
+
+      if (values.responsible_employee?.length) {
+        where.responsible_employee = {
+          _or: values.responsible_employee?.map((item) => ({
+            id: { _eq: item.value },
+          })),
+        };
+      }
+
+      if (values.industry?.length) {
+        where.industries = {
+          industry: {
+            _or: values.industry?.map((item) => ({
+              id: { _eq: item.value },
+            })),
+          },
+        };
+      }
+
+      if (values.status?.length) {
+        where.statuses = {
+          is_current: { _eq: true },
+          status: {
+            _or: values.status?.map((item) => ({
+              id: { _eq: item.value },
+            })),
+          },
+        };
+      }
+
       fetchClientCount({
-        where: values.responsible_employee?.length
-          ? {
-              responsible_employee: {
-                _or: values.responsible_employee?.map((item) => ({
-                  id: { _eq: item.value },
-                })),
-              },
-            }
-          : undefined,
+        where,
       }).then((_count) => {
         if (fetchId !== fetchRef.current) {
           return;
@@ -67,8 +97,8 @@ export const ClientsTableFilter: React.FC<Props> = ({ onFinish }) => {
       }}
       initialValues={{
         search: '',
-        status: '',
-        industry: '',
+        status: [],
+        industry: [],
         responsible_employee: [],
       }}
       onFinish={onFinish}
@@ -86,19 +116,23 @@ export const ClientsTableFilter: React.FC<Props> = ({ onFinish }) => {
           </Form.Item>
         </Col>
 
-        <Form.Item name="status">
-          <Input placeholder="Статус" /> {/* todo */}
-        </Form.Item>
+        <Col span={4}>
+          <Form.Item name="status">
+            <DirectoryClientStatusSelect />
+          </Form.Item>
+        </Col>
 
-        <Col span={6}>
+        <Col span={4}>
           <Form.Item name="responsible_employee">
             <EmployeeSelect />
           </Form.Item>
         </Col>
 
-        <Form.Item name="industry">
-          <Input placeholder="Отрасль" /> {/* todo */}
-        </Form.Item>
+        <Col span={4}>
+          <Form.Item name="industry">
+            <DirectoryClientIndustrySelect />
+          </Form.Item>
+        </Col>
 
         <Col>
           <Form.Item>

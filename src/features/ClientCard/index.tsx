@@ -37,9 +37,9 @@ export function ClientCard() {
           renderItem={(item) => (
             <List.Item>
               {item.is_current ? (
-                <Badge status="success" text={item.status} />
+                <Badge text={item.status.name} color={item.status.color} />
               ) : (
-                <Typography.Text>{item.status}</Typography.Text>
+                <Typography.Text>{item.status.name}</Typography.Text>
               )}
               <Typography.Text type="secondary">
                 от {dayjs(item.updated_at).format('DD/MM/YYYY')}
