@@ -13,6 +13,8 @@ import {
   EmployeeSelectValue,
 } from 'src/features/EmployeeSelect';
 
+import { useClientsTableFilterCount } from './hooks/useClientsTableFilterCount';
+
 export type ClientsTableFilterType = {
   search?: string;
   status?: DirectoryClientStatusSelectValue[];
@@ -25,21 +27,16 @@ type Props = {
   onFinish: (values: ClientsTableFilterType) => void;
 };
 
-export const ClientsTableFilter: React.FC<Props> = ({
-  onFinish,
-  isFetching,
-}) => {
+export const ClientsTableFilter: React.FC<Props> = ({ onFinish }) => {
   const [form] = useForm();
-
-  const debounceSubmit = useMemo(() => {
-    return debounce(form.submit, 800);
-  }, [form.submit]);
+  const { isFetching, debounceFetcher, submitText, isEmpty } =
+    useClientsTableFilterCount();
 
   return (
     <Form<ClientsTableFilterType>
       form={form}
       name="ClientsTableFilter"
-      onValuesChange={debounceSubmit}
+      onValuesChange={debounceFetcher}
       initialValues={{
         search: '',
         status: [],
@@ -84,10 +81,11 @@ export const ClientsTableFilter: React.FC<Props> = ({
             <Button
               type="primary"
               htmlType="submit"
+              disabled={isEmpty}
               loading={isFetching}
               style={{ width: 180 }}
             >
-              Показать
+              {submitText}
             </Button>
           </Form.Item>
         </Col>

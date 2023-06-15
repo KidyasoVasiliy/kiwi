@@ -1,14 +1,12 @@
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { useQueryClient } from '@tanstack/react-query';
 import { SelectProps } from 'antd';
-import { DefaultOptionType } from 'antd/es/select';
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   EmployeeSelectQuery,
   EmployeeSelectQueryVariables,
 } from 'src/__gql__/graphql';
 import { DebounceSelect } from 'src/components/Deb';
-import { graphQLClient, gql } from 'src/shared/app';
+import { gql } from 'src/shared/app';
 
 const queryDocument: TypedDocumentNode<
   EmployeeSelectQuery,
@@ -28,50 +26,26 @@ export type EmployeeSelectValue = {
   value: string;
 };
 
-export const EmployeeSelect: React.FC<SelectProps<EmployeeSelectValue[]>> = ({
-  value,
-  onChange,
-}) => {
-  const queryClient = useQueryClient();
-
-  const fetchOptions = async (fullName?: string) => {
-    const result = await queryClient.ensureQueryData({
-      queryKey: ['EmployeeSelect', fullName],
-      queryFn: async () =>
-        graphQLClient.request(
-          queryDocument,
-          fullName
-            ? {
-                where: fullName
-                  ? { fullName: { _ilike: `%${fullName}%` } }
-                  : undefined,
-              }
-            : { limit: 50, offset: 0 },
-        ),
-      cacheTime: 300000, // 5 min
-    });
-
-    return result.employee.map(({ id, fullName }) => ({
-      key: id,
-      label: fullName,
-      value: id,
-    }));
-  };
-
+export const EmployeeSelect: React.FC<
+  SelectProps<EmployeeSelectValue | EmployeeSelectValue[]>
+> = ({ value, onChange }) => {
   return (
-    <DebounceSelect
+    <DebounceSelect<EmployeeSelectQuery>
       mode="multiple"
-      value={value}
       placeholder="Ответственный"
-      fetchOptions={fetchOptions}
-      onChange={(newValue, newOption) => {
-        if (!onChange) return; // typeguard
-
-        onChange(
-          newValue as EmployeeSelectValue[],
-          newOption as DefaultOptionType[],
-        );
-      }}
+      value={value}
+      queryDocument={queryDocument}
+      selectName="EmployeeSelect"
+      getOptions={useCallback(
+        (result) =>
+          result.employee.map(({ id, fullName }) => ({
+            key: id,
+            label: fullName ?? 'Без имени',
+            value: id,
+          })),
+        [],
+      )}
+      onChange={onChange}
     />
   );
 };

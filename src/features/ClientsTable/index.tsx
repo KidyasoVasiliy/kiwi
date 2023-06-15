@@ -22,6 +22,7 @@ import {
   ClientsTableFilter,
   ClientsTableFilterType,
 } from './components/ClientsTableFilter';
+import { getClientBoolExp } from './helpers/getCountClientBoolExp';
 import { useClientsTable, ClientsTableDataType } from './hooks/useClients';
 
 const columns: ColumnsType<ClientsTableDataType> = [
@@ -101,43 +102,11 @@ export const ClientsTable: React.FC = () => {
   const total = data?.pagination?.count;
 
   const handleSubmitFilter = (values: ClientsTableFilterType) => {
-    const where: InputMaybe<Client_Bool_Exp> = {};
-    if (values.responsible_employee?.length) {
-      where.responsible_employee = {
-        _or: values.responsible_employee?.map((item) => ({
-          id: { _eq: item.value },
-        })),
-      };
-    }
-
-    if (values.industry?.length) {
-      where.industries = {
-        industry: {
-          _or: values.industry?.map((item) => ({
-            id: { _eq: item.value },
-          })),
-        },
-      };
-    }
-
-    if (values.status?.length) {
-      where.statuses = {
-        is_current: { _eq: true },
-        status: {
-          _or: values.status?.map((item) => ({
-            id: { _eq: item.value },
-          })),
-        },
-      };
-    }
-
-    setTableParams((prev) => {
-      return {
-        ...prev,
-        offset: 0,
-        where,
-      };
-    });
+    setTableParams((prev) => ({
+      ...prev,
+      offset: 0,
+      where: getClientBoolExp(values),
+    }));
   };
 
   return (

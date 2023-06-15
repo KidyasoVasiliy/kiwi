@@ -1,58 +1,60 @@
-import { SmileOutlined } from '@ant-design/icons';
+import { TypedDocumentNode } from '@graphql-typed-document-node/core';
+import { useQueryClient } from '@tanstack/react-query';
 import { Select, Spin } from 'antd';
-import type { SelectProps } from 'antd/es/select';
-import debounce from 'lodash.debounce';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import type { DefaultOptionType, SelectProps } from 'antd/es/select';
+import { useCallback, useRef, useState } from 'react';
+import { graphQLClient } from 'src/shared/app';
 
-export interface DebounceSelectProps<ValueType>
-  extends Omit<SelectProps<ValueType | ValueType[]>, 'options' | 'children'> {
-  fetchOptions: (search?: string) => Promise<ValueType[]>;
-  debounceTimeout?: number;
+export interface DebounceSelectProps<T> extends SelectProps {
+  selectName: string;
+  queryDocument: TypedDocumentNode;
+  getOptions: (result: T) => DefaultOptionType[];
 }
 
-export function DebounceSelect<
-  ValueType extends {
-    key?: string;
-    label: React.ReactNode;
-    value: string | number;
-  },
->({
-  fetchOptions,
-  debounceTimeout = 800,
+export function DebounceSelect<T extends object>({
+  selectName,
+  onChange,
+  queryDocument,
+  getOptions,
   ...props
-}: DebounceSelectProps<ValueType>) {
+}: DebounceSelectProps<T>) {
+  const queryClient = useQueryClient();
+
   const [fetching, setFetching] = useState(false);
-  const [options, setOptions] = useState<ValueType[]>([]);
+  const [options, setOptions] = useState<DefaultOptionType[]>([]);
   const fetchRef = useRef(0);
 
-  const loadOptions = useCallback(
-    (value?: string) => {
-      fetchRef.current += 1;
-      const fetchId = fetchRef.current;
-      setOptions([]);
-      setFetching(true);
+  const fetchOptions = useCallback(async () => {
+    const result: T = await queryClient.ensureQueryData({
+      queryKey: [selectName],
+      queryFn: async () => graphQLClient.request(queryDocument, {}),
+      cacheTime: 300000 * 3, // 15 min
+    });
 
-      fetchOptions(value).then((newOptions) => {
-        if (fetchId !== fetchRef.current) {
-          return;
-        }
+    return getOptions(result);
+  }, [getOptions, queryClient, queryDocument, selectName]);
 
-        setOptions(newOptions);
-        setFetching(false);
-      });
-    },
-    [fetchOptions],
-  );
+  const loadOptions = useCallback(() => {
+    fetchRef.current += 1;
+    const fetchId = fetchRef.current;
+    setOptions([]);
+    setFetching(true);
 
-  const debounceFetcher = useMemo(() => {
-    return debounce(loadOptions, debounceTimeout);
-  }, [loadOptions, debounceTimeout]);
+    fetchOptions().then((newOptions) => {
+      if (fetchId !== fetchRef.current) {
+        return;
+      }
+
+      setOptions(newOptions);
+      setFetching(false);
+    });
+  }, [fetchOptions]);
 
   return (
     <Select
+      {...props}
+      allowClear
       labelInValue
-      filterOption={false}
-      onSearch={debounceFetcher}
       notFoundContent={
         <div style={{ textAlign: 'center' }}>
           {fetching ? (
@@ -62,9 +64,28 @@ export function DebounceSelect<
           )}
         </div>
       }
-      {...props}
+      onChange={(newValue, newOption) => {
+        if (!onChange) return; // typeguard
+        if (Array.isArray(newValue)) {
+          onChange(
+            newValue as DefaultOptionType[],
+            newOption as DefaultOptionType[],
+          );
+        } else {
+          onChange(
+            newValue as DefaultOptionType,
+            newOption as DefaultOptionType,
+          );
+        }
+      }}
       options={options}
       onFocus={() => loadOptions()}
+      filterOption={(input, option) => {
+        if (typeof option?.label === 'string') {
+          return !!option?.label.match(new RegExp(input, 'i'));
+        }
+        return false;
+      }}
     />
   );
 }

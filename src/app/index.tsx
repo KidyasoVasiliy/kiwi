@@ -46,7 +46,13 @@ const router = createBrowserRouter([
 ]);
 
 export const App = () => (
-  <QueryClientProvider client={new QueryClient()}>
+  <QueryClientProvider
+    client={
+      new QueryClient({
+        defaultOptions: { queries: { refetchOnWindowFocus: false } },
+      })
+    }
+  >
     <RouterProvider router={router} />
   </QueryClientProvider>
 );

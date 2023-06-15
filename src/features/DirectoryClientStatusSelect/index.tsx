@@ -1,14 +1,12 @@
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
-import { useQueryClient } from '@tanstack/react-query';
 import { SelectProps } from 'antd';
-import { DefaultOptionType } from 'antd/es/select';
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   DirectoryClientStatusSelectQuery,
   DirectoryClientStatusSelectQueryVariables,
 } from 'src/__gql__/graphql';
 import { DebounceSelect } from 'src/components/Deb';
-import { graphQLClient, gql } from 'src/shared/app';
+import { gql } from 'src/shared/app';
 
 const queryDocument: TypedDocumentNode<
   DirectoryClientStatusSelectQuery,
@@ -35,44 +33,23 @@ export type DirectoryClientStatusSelectValue = {
 export const DirectoryClientStatusSelect: React.FC<
   SelectProps<DirectoryClientStatusSelectValue[]>
 > = ({ value, onChange }) => {
-  const queryClient = useQueryClient();
-
-  const fetchOptions = async (name?: string) => {
-    const result = await queryClient.ensureQueryData({
-      queryKey: ['DirectoryClientStatusSelect', name],
-      queryFn: async () =>
-        graphQLClient.request(
-          queryDocument,
-          name
-            ? {
-                where: name ? { name: { _ilike: `%${name}%` } } : undefined,
-              }
-            : { limit: 50, offset: 0 },
-        ),
-      cacheTime: 300000, // 5 min
-    });
-
-    return result.directory_client_status.map(({ id, name }) => ({
-      key: id,
-      label: name,
-      value: id,
-    }));
-  };
-
   return (
-    <DebounceSelect
+    <DebounceSelect<DirectoryClientStatusSelectQuery>
       mode="multiple"
-      value={value}
       placeholder="Статус"
-      fetchOptions={fetchOptions}
-      onChange={(newValue, newOption) => {
-        if (!onChange) return; // typeguard
-
-        onChange(
-          newValue as DirectoryClientStatusSelectValue[],
-          newOption as DefaultOptionType[],
-        );
-      }}
+      value={value}
+      queryDocument={queryDocument}
+      selectName="DirectoryClientStatusSelect"
+      getOptions={useCallback(
+        (result) =>
+          result.directory_client_status.map(({ id, name }) => ({
+            key: id,
+            label: name,
+            value: id,
+          })),
+        [],
+      )}
+      onChange={onChange}
     />
   );
 };
