@@ -1,16 +1,11 @@
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { Badge, Button, Space, Table, Tag, Tooltip, Typography } from 'antd';
-import { Footer } from 'antd/es/layout/layout';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
+import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Client_Bool_Exp,
-  ClientsQueryVariables,
-  InputMaybe,
-  Order_By,
-} from 'src/__gql__/graphql';
+import { ClientsQueryVariables, Order_By } from 'src/__gql__/graphql';
 import {
   getOffset,
   getLimit,
@@ -30,10 +25,18 @@ const columns: ColumnsType<ClientsTableDataType> = [
     title: 'Наименование',
     dataIndex: 'name',
     key: 'name',
-    render: (text, { id }) => (
-      <Link to={id} relative="path">
-        {text}
-      </Link>
+    render: (text, { id, updated_at }) => (
+      <Space direction="vertical" size="small">
+        <Link to={id} relative="path">
+          {text}
+        </Link>
+        {/* <Typography.Text type="secondary">
+          Создан {dayjs(created_at).format('DD/MM/YYYY HH:mm')}
+        </Typography.Text> */}
+        <Typography.Text type="secondary">
+          от {dayjs(updated_at).format('DD/MM/YYYY HH:mm')}
+        </Typography.Text>
+      </Space>
     ),
     sorter: true,
     showSorterTooltip: { title: 'Сортировка по наименованию клиента' },
@@ -45,18 +48,13 @@ const columns: ColumnsType<ClientsTableDataType> = [
     sorter: true,
     showSorterTooltip: { title: 'Сортировка по имени сотрудника' },
   },
-  {
-    title: 'Контакты',
-    dataIndex: 'contact',
-    key: 'contact',
-  },
 ];
 
 export const ClientsTable: React.FC = () => {
   const navigate = useNavigate();
 
   const [tableParams, setTableParams] = useState<ClientsQueryVariables>({
-    order_by: null,
+    order_by: { updated_at: Order_By.Desc },
     distinct_on: null,
     where: null,
     offset: 0,
@@ -89,7 +87,7 @@ export const ClientsTable: React.FC = () => {
         order_by = { responsible_employee: { fullName: sortDirection } };
         break;
       default:
-        order_by = null;
+        order_by = { updated_at: Order_By.Desc };
     }
 
     setTableParams((prev) => ({ ...prev, offset, limit, order_by }));
@@ -124,8 +122,8 @@ export const ClientsTable: React.FC = () => {
             key: 'industries',
             render: (_, { industries }) => (
               <>
-                {industries.map(({ name }) => (
-                  <Tag color="volcano" key={name}>
+                {industries.map(({ name, color }) => (
+                  <Tag color={color} key={name}>
                     {name.toUpperCase()}
                   </Tag>
                 ))}
@@ -145,22 +143,13 @@ export const ClientsTable: React.FC = () => {
             width: 130,
             align: 'center',
             render: (_, record) => (
-              <Space size="middle">
-                <Tooltip title="Открыть клиента">
-                  <Button
-                    shape="circle"
-                    icon={<EyeOutlined />}
-                    onClick={() => navigate(record.id, { relative: 'path' })}
-                  />
-                </Tooltip>
-                <Tooltip title="Редактировать клиента">
-                  <Button
-                    shape="circle"
-                    icon={<EditOutlined />}
-                    onClick={() => navigate(record.id, { relative: 'path' })}
-                  />
-                </Tooltip>
-              </Space>
+              <Tooltip title="Редактировать клиента">
+                <Button
+                  type="link"
+                  icon={<EditOutlined />}
+                  onClick={() => navigate(record.id, { relative: 'path' })}
+                />
+              </Tooltip>
             ),
           },
         ])}

@@ -32,12 +32,11 @@ export type DirectoryClientIndustrySelectValue = {
 
 export const DirectoryClientIndustrySelect: React.FC<
   SelectProps<DirectoryClientIndustrySelectValue[]>
-> = ({ value, onChange }) => {
+> = (props) => {
   return (
     <DebounceSelect<DirectoryClientIndustrySelectQuery>
-      mode="multiple"
+      {...props}
       placeholder="Отрасль"
-      value={value}
       queryDocument={queryDocument}
       selectName="DirectoryClientIndustrySelect"
       getOptions={useCallback(
@@ -49,7 +48,6 @@ export const DirectoryClientIndustrySelect: React.FC<
           })),
         [],
       )}
-      onChange={onChange}
     />
   );
 };

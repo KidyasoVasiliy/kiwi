@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import ClientsPage from 'src/pages/clients';
 import ClientsCardPage from 'src/pages/clientsCard';
-// import ClientsFormPage from 'src/pages/clientsForm';
+import ClientsFormPage from 'src/pages/clientsForm';
 // import DealPage from 'src/pages/deal';
 // import DealFormPage from 'src/pages/dealForm';
 // import DealProcessPage from 'src/pages/dealProcess';
@@ -28,7 +28,7 @@ const router = createBrowserRouter([
       // { path: 'deal/create', element: <DealFormPage /> },
       // { path: 'deal/process', element: <DealProcessPage /> },
       { path: 'clients', element: <ClientsPage /> },
-      // { path: 'clients/create', element: <ClientsFormPage /> },
+      { path: 'clients/create', element: <ClientsFormPage /> },
       { path: 'clients/:id', element: <ClientsCardPage /> },
       // { path: 'objects', element: <ObjectsPage /> },
       // { path: 'objects/create', element: <ObjectsFormPage /> },

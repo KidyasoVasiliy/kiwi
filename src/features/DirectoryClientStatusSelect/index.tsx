@@ -32,12 +32,11 @@ export type DirectoryClientStatusSelectValue = {
 
 export const DirectoryClientStatusSelect: React.FC<
   SelectProps<DirectoryClientStatusSelectValue[]>
-> = ({ value, onChange }) => {
+> = (props) => {
   return (
     <DebounceSelect<DirectoryClientStatusSelectQuery>
-      mode="multiple"
+      {...props}
       placeholder="Статус"
-      value={value}
       queryDocument={queryDocument}
       selectName="DirectoryClientStatusSelect"
       getOptions={useCallback(
@@ -49,7 +48,6 @@ export const DirectoryClientStatusSelect: React.FC<
           })),
         [],
       )}
-      onChange={onChange}
     />
   );
 };

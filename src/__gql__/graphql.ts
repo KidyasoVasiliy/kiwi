@@ -1369,42 +1369,20 @@ export type Date_Comparison_Exp = {
 /** Справочник отраслей клиента */
 export type Directory_Client_Industry = {
   __typename?: 'directory_client_industry';
-  /** An array relationship */
-  clients: Array<Client_Directory_Client_Industry>;
-  /** An aggregate relationship */
-  clients_aggregate: Client_Directory_Client_Industry_Aggregate;
+  color: Scalars['String']['output'];
+  comment?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   name: Scalars['String']['output'];
 };
 
-
-/** Справочник отраслей клиента */
-export type Directory_Client_IndustryClientsArgs = {
-  distinct_on?: InputMaybe<Array<Client_Directory_Client_Industry_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Client_Directory_Client_Industry_Order_By>>;
-  where?: InputMaybe<Client_Directory_Client_Industry_Bool_Exp>;
-};
-
-
-/** Справочник отраслей клиента */
-export type Directory_Client_IndustryClients_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Client_Directory_Client_Industry_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  order_by?: InputMaybe<Array<Client_Directory_Client_Industry_Order_By>>;
-  where?: InputMaybe<Client_Directory_Client_Industry_Bool_Exp>;
-};
-
-/** aggregated selection of "directory_client_industry" */
+/** aggregated selection of "directory.client_industry" */
 export type Directory_Client_Industry_Aggregate = {
   __typename?: 'directory_client_industry_aggregate';
   aggregate?: Maybe<Directory_Client_Industry_Aggregate_Fields>;
   nodes: Array<Directory_Client_Industry>;
 };
 
-/** aggregate fields of "directory_client_industry" */
+/** aggregate fields of "directory.client_industry" */
 export type Directory_Client_Industry_Aggregate_Fields = {
   __typename?: 'directory_client_industry_aggregate_fields';
   count: Scalars['Int']['output'];
@@ -1413,36 +1391,35 @@ export type Directory_Client_Industry_Aggregate_Fields = {
 };
 
 
-/** aggregate fields of "directory_client_industry" */
+/** aggregate fields of "directory.client_industry" */
 export type Directory_Client_Industry_Aggregate_FieldsCountArgs = {
   columns?: InputMaybe<Array<Directory_Client_Industry_Select_Column>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** Boolean expression to filter rows from the table "directory_client_industry". All fields are combined with a logical 'AND'. */
+/** Boolean expression to filter rows from the table "directory.client_industry". All fields are combined with a logical 'AND'. */
 export type Directory_Client_Industry_Bool_Exp = {
   _and?: InputMaybe<Array<Directory_Client_Industry_Bool_Exp>>;
   _not?: InputMaybe<Directory_Client_Industry_Bool_Exp>;
   _or?: InputMaybe<Array<Directory_Client_Industry_Bool_Exp>>;
-  clients?: InputMaybe<Client_Directory_Client_Industry_Bool_Exp>;
-  clients_aggregate?: InputMaybe<Client_Directory_Client_Industry_Aggregate_Bool_Exp>;
+  color?: InputMaybe<String_Comparison_Exp>;
+  comment?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
 };
 
-/** unique or primary key constraints on table "directory_client_industry" */
+/** unique or primary key constraints on table "directory.client_industry" */
 export enum Directory_Client_Industry_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  DirectoryClientIndustryIdKey = 'directory_client_industry_id_key',
   /** unique or primary key constraint on columns "name" */
   DirectoryClientIndustryNameKey = 'directory_client_industry_name_key',
-  /** unique or primary key constraint on columns "name" */
+  /** unique or primary key constraint on columns "id" */
   DirectoryClientIndustryPkey = 'directory_client_industry_pkey'
 }
 
-/** input type for inserting data into table "directory_client_industry" */
+/** input type for inserting data into table "directory.client_industry" */
 export type Directory_Client_Industry_Insert_Input = {
-  clients?: InputMaybe<Client_Directory_Client_Industry_Arr_Rel_Insert_Input>;
+  color?: InputMaybe<Scalars['String']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1450,6 +1427,8 @@ export type Directory_Client_Industry_Insert_Input = {
 /** aggregate max on columns */
 export type Directory_Client_Industry_Max_Fields = {
   __typename?: 'directory_client_industry_max_fields';
+  color?: Maybe<Scalars['String']['output']>;
+  comment?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
@@ -1457,11 +1436,13 @@ export type Directory_Client_Industry_Max_Fields = {
 /** aggregate min on columns */
 export type Directory_Client_Industry_Min_Fields = {
   __typename?: 'directory_client_industry_min_fields';
+  color?: Maybe<Scalars['String']['output']>;
+  comment?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
 
-/** response of any mutation on the table "directory_client_industry" */
+/** response of any mutation on the table "directory.client_industry" */
 export type Directory_Client_Industry_Mutation_Response = {
   __typename?: 'directory_client_industry_mutation_response';
   /** number of rows affected by the mutation */
@@ -1470,42 +1451,49 @@ export type Directory_Client_Industry_Mutation_Response = {
   returning: Array<Directory_Client_Industry>;
 };
 
-/** input type for inserting object relation for remote table "directory_client_industry" */
+/** input type for inserting object relation for remote table "directory.client_industry" */
 export type Directory_Client_Industry_Obj_Rel_Insert_Input = {
   data: Directory_Client_Industry_Insert_Input;
   /** upsert condition */
   on_conflict?: InputMaybe<Directory_Client_Industry_On_Conflict>;
 };
 
-/** on_conflict condition type for table "directory_client_industry" */
+/** on_conflict condition type for table "directory.client_industry" */
 export type Directory_Client_Industry_On_Conflict = {
   constraint: Directory_Client_Industry_Constraint;
   update_columns?: Array<Directory_Client_Industry_Update_Column>;
   where?: InputMaybe<Directory_Client_Industry_Bool_Exp>;
 };
 
-/** Ordering options when selecting data from "directory_client_industry". */
+/** Ordering options when selecting data from "directory.client_industry". */
 export type Directory_Client_Industry_Order_By = {
-  clients_aggregate?: InputMaybe<Client_Directory_Client_Industry_Aggregate_Order_By>;
+  color?: InputMaybe<Order_By>;
+  comment?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
 };
 
-/** primary key columns input for table: directory_client_industry */
+/** primary key columns input for table: directory.client_industry */
 export type Directory_Client_Industry_Pk_Columns_Input = {
-  name: Scalars['String']['input'];
+  id: Scalars['uuid']['input'];
 };
 
-/** select columns of table "directory_client_industry" */
+/** select columns of table "directory.client_industry" */
 export enum Directory_Client_Industry_Select_Column {
+  /** column name */
+  Color = 'color',
+  /** column name */
+  Comment = 'comment',
   /** column name */
   Id = 'id',
   /** column name */
   Name = 'name'
 }
 
-/** input type for updating data in table "directory_client_industry" */
+/** input type for updating data in table "directory.client_industry" */
 export type Directory_Client_Industry_Set_Input = {
+  color?: InputMaybe<Scalars['String']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1520,12 +1508,18 @@ export type Directory_Client_Industry_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Directory_Client_Industry_Stream_Cursor_Value_Input = {
+  color?: InputMaybe<Scalars['String']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** update columns of table "directory_client_industry" */
+/** update columns of table "directory.client_industry" */
 export enum Directory_Client_Industry_Update_Column {
+  /** column name */
+  Color = 'color',
+  /** column name */
+  Comment = 'comment',
   /** column name */
   Id = 'id',
   /** column name */
@@ -1539,7 +1533,7 @@ export type Directory_Client_Industry_Updates = {
   where: Directory_Client_Industry_Bool_Exp;
 };
 
-/** Справочник статусов клиента */
+/** Статусная модель клиента */
 export type Directory_Client_Status = {
   __typename?: 'directory_client_status';
   color: Scalars['String']['output'];
@@ -1547,14 +1541,14 @@ export type Directory_Client_Status = {
   name: Scalars['String']['output'];
 };
 
-/** aggregated selection of "directory_client_status" */
+/** aggregated selection of "directory.client_status" */
 export type Directory_Client_Status_Aggregate = {
   __typename?: 'directory_client_status_aggregate';
   aggregate?: Maybe<Directory_Client_Status_Aggregate_Fields>;
   nodes: Array<Directory_Client_Status>;
 };
 
-/** aggregate fields of "directory_client_status" */
+/** aggregate fields of "directory.client_status" */
 export type Directory_Client_Status_Aggregate_Fields = {
   __typename?: 'directory_client_status_aggregate_fields';
   count: Scalars['Int']['output'];
@@ -1563,13 +1557,13 @@ export type Directory_Client_Status_Aggregate_Fields = {
 };
 
 
-/** aggregate fields of "directory_client_status" */
+/** aggregate fields of "directory.client_status" */
 export type Directory_Client_Status_Aggregate_FieldsCountArgs = {
   columns?: InputMaybe<Array<Directory_Client_Status_Select_Column>>;
   distinct?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-/** Boolean expression to filter rows from the table "directory_client_status". All fields are combined with a logical 'AND'. */
+/** Boolean expression to filter rows from the table "directory.client_status". All fields are combined with a logical 'AND'. */
 export type Directory_Client_Status_Bool_Exp = {
   _and?: InputMaybe<Array<Directory_Client_Status_Bool_Exp>>;
   _not?: InputMaybe<Directory_Client_Status_Bool_Exp>;
@@ -1579,15 +1573,13 @@ export type Directory_Client_Status_Bool_Exp = {
   name?: InputMaybe<String_Comparison_Exp>;
 };
 
-/** unique or primary key constraints on table "directory_client_status" */
+/** unique or primary key constraints on table "directory.client_status" */
 export enum Directory_Client_Status_Constraint {
-  /** unique or primary key constraint on columns "name" */
-  DirectoryClientStatusNameKey = 'directory_client_status_name_key',
   /** unique or primary key constraint on columns "id" */
   DirectoryClientStatusPkey = 'directory_client_status_pkey'
 }
 
-/** input type for inserting data into table "directory_client_status" */
+/** input type for inserting data into table "directory.client_status" */
 export type Directory_Client_Status_Insert_Input = {
   color?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -1610,7 +1602,7 @@ export type Directory_Client_Status_Min_Fields = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
-/** response of any mutation on the table "directory_client_status" */
+/** response of any mutation on the table "directory.client_status" */
 export type Directory_Client_Status_Mutation_Response = {
   __typename?: 'directory_client_status_mutation_response';
   /** number of rows affected by the mutation */
@@ -1619,33 +1611,33 @@ export type Directory_Client_Status_Mutation_Response = {
   returning: Array<Directory_Client_Status>;
 };
 
-/** input type for inserting object relation for remote table "directory_client_status" */
+/** input type for inserting object relation for remote table "directory.client_status" */
 export type Directory_Client_Status_Obj_Rel_Insert_Input = {
   data: Directory_Client_Status_Insert_Input;
   /** upsert condition */
   on_conflict?: InputMaybe<Directory_Client_Status_On_Conflict>;
 };
 
-/** on_conflict condition type for table "directory_client_status" */
+/** on_conflict condition type for table "directory.client_status" */
 export type Directory_Client_Status_On_Conflict = {
   constraint: Directory_Client_Status_Constraint;
   update_columns?: Array<Directory_Client_Status_Update_Column>;
   where?: InputMaybe<Directory_Client_Status_Bool_Exp>;
 };
 
-/** Ordering options when selecting data from "directory_client_status". */
+/** Ordering options when selecting data from "directory.client_status". */
 export type Directory_Client_Status_Order_By = {
   color?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
 };
 
-/** primary key columns input for table: directory_client_status */
+/** primary key columns input for table: directory.client_status */
 export type Directory_Client_Status_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
 };
 
-/** select columns of table "directory_client_status" */
+/** select columns of table "directory.client_status" */
 export enum Directory_Client_Status_Select_Column {
   /** column name */
   Color = 'color',
@@ -1655,7 +1647,7 @@ export enum Directory_Client_Status_Select_Column {
   Name = 'name'
 }
 
-/** input type for updating data in table "directory_client_status" */
+/** input type for updating data in table "directory.client_status" */
 export type Directory_Client_Status_Set_Input = {
   color?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -1677,7 +1669,7 @@ export type Directory_Client_Status_Stream_Cursor_Value_Input = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
-/** update columns of table "directory_client_status" */
+/** update columns of table "directory.client_status" */
 export enum Directory_Client_Status_Update_Column {
   /** column name */
   Color = 'color',
@@ -2131,13 +2123,13 @@ export type Mutation_Root = {
   delete_client_status?: Maybe<Client_Status_Mutation_Response>;
   /** delete single row from the table: "client_status" */
   delete_client_status_by_pk?: Maybe<Client_Status>;
-  /** delete data from the table: "directory_client_industry" */
+  /** delete data from the table: "directory.client_industry" */
   delete_directory_client_industry?: Maybe<Directory_Client_Industry_Mutation_Response>;
-  /** delete single row from the table: "directory_client_industry" */
+  /** delete single row from the table: "directory.client_industry" */
   delete_directory_client_industry_by_pk?: Maybe<Directory_Client_Industry>;
-  /** delete data from the table: "directory_client_status" */
+  /** delete data from the table: "directory.client_status" */
   delete_directory_client_status?: Maybe<Directory_Client_Status_Mutation_Response>;
-  /** delete single row from the table: "directory_client_status" */
+  /** delete single row from the table: "directory.client_status" */
   delete_directory_client_status_by_pk?: Maybe<Directory_Client_Status>;
   /** delete data from the table: "employee" */
   delete_employee?: Maybe<Employee_Mutation_Response>;
@@ -2167,13 +2159,13 @@ export type Mutation_Root = {
   insert_client_status?: Maybe<Client_Status_Mutation_Response>;
   /** insert a single row into the table: "client_status" */
   insert_client_status_one?: Maybe<Client_Status>;
-  /** insert data into the table: "directory_client_industry" */
+  /** insert data into the table: "directory.client_industry" */
   insert_directory_client_industry?: Maybe<Directory_Client_Industry_Mutation_Response>;
-  /** insert a single row into the table: "directory_client_industry" */
+  /** insert a single row into the table: "directory.client_industry" */
   insert_directory_client_industry_one?: Maybe<Directory_Client_Industry>;
-  /** insert data into the table: "directory_client_status" */
+  /** insert data into the table: "directory.client_status" */
   insert_directory_client_status?: Maybe<Directory_Client_Status_Mutation_Response>;
-  /** insert a single row into the table: "directory_client_status" */
+  /** insert a single row into the table: "directory.client_status" */
   insert_directory_client_status_one?: Maybe<Directory_Client_Status>;
   /** insert data into the table: "employee" */
   insert_employee?: Maybe<Employee_Mutation_Response>;
@@ -2213,17 +2205,17 @@ export type Mutation_Root = {
   update_client_status_by_pk?: Maybe<Client_Status>;
   /** update multiples rows of table: "client_status" */
   update_client_status_many?: Maybe<Array<Maybe<Client_Status_Mutation_Response>>>;
-  /** update data of the table: "directory_client_industry" */
+  /** update data of the table: "directory.client_industry" */
   update_directory_client_industry?: Maybe<Directory_Client_Industry_Mutation_Response>;
-  /** update single row of the table: "directory_client_industry" */
+  /** update single row of the table: "directory.client_industry" */
   update_directory_client_industry_by_pk?: Maybe<Directory_Client_Industry>;
-  /** update multiples rows of table: "directory_client_industry" */
+  /** update multiples rows of table: "directory.client_industry" */
   update_directory_client_industry_many?: Maybe<Array<Maybe<Directory_Client_Industry_Mutation_Response>>>;
-  /** update data of the table: "directory_client_status" */
+  /** update data of the table: "directory.client_status" */
   update_directory_client_status?: Maybe<Directory_Client_Status_Mutation_Response>;
-  /** update single row of the table: "directory_client_status" */
+  /** update single row of the table: "directory.client_status" */
   update_directory_client_status_by_pk?: Maybe<Directory_Client_Status>;
-  /** update multiples rows of table: "directory_client_status" */
+  /** update multiples rows of table: "directory.client_status" */
   update_directory_client_status_many?: Maybe<Array<Maybe<Directory_Client_Status_Mutation_Response>>>;
   /** update data of the table: "employee" */
   update_employee?: Maybe<Employee_Mutation_Response>;
@@ -2308,7 +2300,7 @@ export type Mutation_RootDelete_Directory_Client_IndustryArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Directory_Client_Industry_By_PkArgs = {
-  name: Scalars['String']['input'];
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -2703,17 +2695,17 @@ export type Query_Root = {
   client_status_aggregate: Client_Status_Aggregate;
   /** fetch data from the table: "client_status" using primary key columns */
   client_status_by_pk?: Maybe<Client_Status>;
-  /** fetch data from the table: "directory_client_industry" */
+  /** fetch data from the table: "directory.client_industry" */
   directory_client_industry: Array<Directory_Client_Industry>;
-  /** fetch aggregated fields from the table: "directory_client_industry" */
+  /** fetch aggregated fields from the table: "directory.client_industry" */
   directory_client_industry_aggregate: Directory_Client_Industry_Aggregate;
-  /** fetch data from the table: "directory_client_industry" using primary key columns */
+  /** fetch data from the table: "directory.client_industry" using primary key columns */
   directory_client_industry_by_pk?: Maybe<Directory_Client_Industry>;
-  /** fetch data from the table: "directory_client_status" */
+  /** fetch data from the table: "directory.client_status" */
   directory_client_status: Array<Directory_Client_Status>;
-  /** fetch aggregated fields from the table: "directory_client_status" */
+  /** fetch aggregated fields from the table: "directory.client_status" */
   directory_client_status_aggregate: Directory_Client_Status_Aggregate;
-  /** fetch data from the table: "directory_client_status" using primary key columns */
+  /** fetch data from the table: "directory.client_status" using primary key columns */
   directory_client_status_by_pk?: Maybe<Directory_Client_Status>;
   /** fetch data from the table: "employee" */
   employee: Array<Employee>;
@@ -2864,7 +2856,7 @@ export type Query_RootDirectory_Client_Industry_AggregateArgs = {
 
 
 export type Query_RootDirectory_Client_Industry_By_PkArgs = {
-  name: Scalars['String']['input'];
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -2978,21 +2970,21 @@ export type Subscription_Root = {
   client_status_stream: Array<Client_Status>;
   /** fetch data from the table in a streaming manner: "client" */
   client_stream: Array<Client>;
-  /** fetch data from the table: "directory_client_industry" */
+  /** fetch data from the table: "directory.client_industry" */
   directory_client_industry: Array<Directory_Client_Industry>;
-  /** fetch aggregated fields from the table: "directory_client_industry" */
+  /** fetch aggregated fields from the table: "directory.client_industry" */
   directory_client_industry_aggregate: Directory_Client_Industry_Aggregate;
-  /** fetch data from the table: "directory_client_industry" using primary key columns */
+  /** fetch data from the table: "directory.client_industry" using primary key columns */
   directory_client_industry_by_pk?: Maybe<Directory_Client_Industry>;
-  /** fetch data from the table in a streaming manner: "directory_client_industry" */
+  /** fetch data from the table in a streaming manner: "directory.client_industry" */
   directory_client_industry_stream: Array<Directory_Client_Industry>;
-  /** fetch data from the table: "directory_client_status" */
+  /** fetch data from the table: "directory.client_status" */
   directory_client_status: Array<Directory_Client_Status>;
-  /** fetch aggregated fields from the table: "directory_client_status" */
+  /** fetch aggregated fields from the table: "directory.client_status" */
   directory_client_status_aggregate: Directory_Client_Status_Aggregate;
-  /** fetch data from the table: "directory_client_status" using primary key columns */
+  /** fetch data from the table: "directory.client_status" using primary key columns */
   directory_client_status_by_pk?: Maybe<Directory_Client_Status>;
-  /** fetch data from the table in a streaming manner: "directory_client_status" */
+  /** fetch data from the table in a streaming manner: "directory.client_status" */
   directory_client_status_stream: Array<Directory_Client_Status>;
   /** fetch data from the table: "employee" */
   employee: Array<Employee>;
@@ -3182,7 +3174,7 @@ export type Subscription_RootDirectory_Client_Industry_AggregateArgs = {
 
 
 export type Subscription_RootDirectory_Client_Industry_By_PkArgs = {
-  name: Scalars['String']['input'];
+  id: Scalars['uuid']['input'];
 };
 
 
@@ -3315,6 +3307,25 @@ export type ClientQueryVariables = Exact<{
 
 export type ClientQuery = { __typename?: 'query_root', client_by_pk?: { __typename?: 'client', id: any, created_at: any, updated_at: any, name: string, contacts: Array<{ __typename?: 'client_contact', id: any, name: string, email?: string | null, phone?: string | null, is_main: boolean }>, responsible_employee?: { __typename?: 'employee', fullName?: string | null } | null, statuses: Array<{ __typename?: 'client_status', updated_at: any, is_current: boolean, status: { __typename?: 'directory_client_status', name: string, color: string } }> } | null };
 
+export type CreateClientMutationVariables = Exact<{
+  employee_id: Scalars['uuid']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type CreateClientMutation = { __typename?: 'mutation_root', insert_client?: { __typename?: 'client_mutation_response', returning: Array<{ __typename?: 'client', id: any }> } | null };
+
+export type CreateRelationshipClientMutationVariables = Exact<{
+  clientId?: InputMaybe<Scalars['uuid']['input']>;
+  status_id?: InputMaybe<Scalars['uuid']['input']>;
+  industry_id?: InputMaybe<Scalars['uuid']['input']>;
+  skipStatus: Scalars['Boolean']['input'];
+  skipIndustry: Scalars['Boolean']['input'];
+}>;
+
+
+export type CreateRelationshipClientMutation = { __typename?: 'mutation_root', insert_client_status?: { __typename?: 'client_status_mutation_response', returning: Array<{ __typename?: 'client_status', id: any }> } | null, insert_client_directory_client_industry?: { __typename?: 'client_directory_client_industry_mutation_response', returning: Array<{ __typename?: 'client_directory_client_industry', id: any }> } | null };
+
 export type ClientsTableFilterQueryVariables = Exact<{
   where?: InputMaybe<Client_Bool_Exp>;
 }>;
@@ -3331,7 +3342,7 @@ export type ClientsQueryVariables = Exact<{
 }>;
 
 
-export type ClientsQuery = { __typename?: 'query_root', client_aggregate: { __typename?: 'client_aggregate', aggregate?: { __typename?: 'client_aggregate_fields', count: number } | null }, client: Array<{ __typename?: 'client', id: any, name: string, statuses: Array<{ __typename?: 'client_status', status: { __typename?: 'directory_client_status', name: string, color: string } }>, contacts: Array<{ __typename?: 'client_contact', phone?: string | null }>, responsible_employee?: { __typename?: 'employee', fullName?: string | null } | null, industries: Array<{ __typename?: 'client_directory_client_industry', industry: { __typename?: 'directory_client_industry', name: string } }> }> };
+export type ClientsQuery = { __typename?: 'query_root', client_aggregate: { __typename?: 'client_aggregate', aggregate?: { __typename?: 'client_aggregate_fields', count: number } | null }, client: Array<{ __typename?: 'client', id: any, created_at: any, updated_at: any, name: string, statuses: Array<{ __typename?: 'client_status', status: { __typename?: 'directory_client_status', name: string, color: string } }>, contacts: Array<{ __typename?: 'client_contact', phone?: string | null }>, responsible_employee?: { __typename?: 'employee', fullName?: string | null } | null, industries: Array<{ __typename?: 'client_directory_client_industry', industry: { __typename?: 'directory_client_industry', name: string, color: string } }> }> };
 
 export type DirectoryClientIndustrySelectQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -3362,8 +3373,10 @@ export type EmployeeSelectQuery = { __typename?: 'query_root', employee: Array<{
 
 
 export const ClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Client"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"client_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"contacts"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"phone"}},{"kind":"Field","name":{"kind":"Name","value":"is_main"}}]}},{"kind":"Field","name":{"kind":"Name","value":"responsible_employee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fullName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"statuses"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"is_current"}}]}}]}}]}}]} as unknown as DocumentNode<ClientQuery, ClientQueryVariables>;
+export const CreateClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateClient"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"employee_id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"name"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_client"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"employee_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"employee_id"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"Variable","name":{"kind":"Name","value":"name"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<CreateClientMutation, CreateClientMutationVariables>;
+export const CreateRelationshipClientDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateRelationshipClient"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"clientId"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"status_id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"industry_id"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skipStatus"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"skipIndustry"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Boolean"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_client_status"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"client_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clientId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"status_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"status_id"}}}]}}],"directives":[{"kind":"Directive","name":{"kind":"Name","value":"skip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skipStatus"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"insert_client_directory_client_industry"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"objects"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"client_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"clientId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"industry_id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"industry_id"}}}]}}],"directives":[{"kind":"Directive","name":{"kind":"Name","value":"skip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"if"},"value":{"kind":"Variable","name":{"kind":"Name","value":"skipIndustry"}}}]}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"returning"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}}]} as unknown as DocumentNode<CreateRelationshipClientMutation, CreateRelationshipClientMutationVariables>;
 export const ClientsTableFilterDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ClientsTableFilter"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"client_bool_exp"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"client_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<ClientsTableFilterQuery, ClientsTableFilterQueryVariables>;
-export const ClientsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Clients"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"distinct_on"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"client_select_column"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"order_by"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"client_order_by"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"client_bool_exp"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"client_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"client"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"distinct_on"},"value":{"kind":"Variable","name":{"kind":"Name","value":"distinct_on"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"Variable","name":{"kind":"Name","value":"order_by"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"statuses"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"is_current"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"contacts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"is_main"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}},{"kind":"Field","name":{"kind":"Name","value":"responsible_employee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fullName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"industries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"industry"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<ClientsQuery, ClientsQueryVariables>;
+export const ClientsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Clients"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"distinct_on"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"client_select_column"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"order_by"}},"type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"client_order_by"}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"client_bool_exp"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"client_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"client"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"distinct_on"},"value":{"kind":"Variable","name":{"kind":"Name","value":"distinct_on"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"Variable","name":{"kind":"Name","value":"order_by"}}},{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}},{"kind":"Field","name":{"kind":"Name","value":"updated_at"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"statuses"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"is_current"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"status"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"contacts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"is_main"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"phone"}}]}},{"kind":"Field","name":{"kind":"Name","value":"responsible_employee"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fullName"}}]}},{"kind":"Field","name":{"kind":"Name","value":"industries"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"industry"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"color"}}]}}]}}]}}]}}]} as unknown as DocumentNode<ClientsQuery, ClientsQueryVariables>;
 export const DirectoryClientIndustrySelectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"DirectoryClientIndustrySelect"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"directory_client_industry_bool_exp"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"directory_client_industry"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<DirectoryClientIndustrySelectQuery, DirectoryClientIndustrySelectQueryVariables>;
 export const DirectoryClientStatusSelectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"DirectoryClientStatusSelect"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"directory_client_status_bool_exp"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"directory_client_status"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<DirectoryClientStatusSelectQuery, DirectoryClientStatusSelectQueryVariables>;
 export const EmployeeSelectDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"EmployeeSelect"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"offset"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"employee_bool_exp"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"employee"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"offset"},"value":{"kind":"Variable","name":{"kind":"Name","value":"offset"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fullName"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<EmployeeSelectQuery, EmployeeSelectQueryVariables>;

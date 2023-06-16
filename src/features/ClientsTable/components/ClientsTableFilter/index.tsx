@@ -60,19 +60,19 @@ export const ClientsTableFilter: React.FC<Props> = ({ onFinish }) => {
 
         <Col span={4}>
           <Form.Item name="status">
-            <DirectoryClientStatusSelect />
+            <DirectoryClientStatusSelect mode="multiple" />
           </Form.Item>
         </Col>
 
         <Col span={4}>
           <Form.Item name="responsible_employee">
-            <EmployeeSelect />
+            <EmployeeSelect mode="multiple" />
           </Form.Item>
         </Col>
 
         <Col span={4}>
           <Form.Item name="industry">
-            <DirectoryClientIndustrySelect />
+            <DirectoryClientIndustrySelect mode="multiple" />
           </Form.Item>
         </Col>
 

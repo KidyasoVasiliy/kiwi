@@ -28,12 +28,11 @@ export type EmployeeSelectValue = {
 
 export const EmployeeSelect: React.FC<
   SelectProps<EmployeeSelectValue | EmployeeSelectValue[]>
-> = ({ value, onChange }) => {
+> = (props) => {
   return (
     <DebounceSelect<EmployeeSelectQuery>
-      mode="multiple"
+      {...props}
       placeholder="Ответственный"
-      value={value}
       queryDocument={queryDocument}
       selectName="EmployeeSelect"
       getOptions={useCallback(
@@ -45,7 +44,6 @@ export const EmployeeSelect: React.FC<
           })),
         [],
       )}
-      onChange={onChange}
     />
   );
 };

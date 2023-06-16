@@ -27,6 +27,8 @@ const clientsQueryDoc: TypedDocumentNode<
       where: $where
     ) {
       id
+      created_at
+      updated_at
       name
       statuses(where: { is_current: { _eq: true } }) {
         status {
@@ -43,6 +45,7 @@ const clientsQueryDoc: TypedDocumentNode<
       industries {
         industry {
           name
+          color
         }
       }
     }

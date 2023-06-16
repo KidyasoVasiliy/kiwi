@@ -1,18 +1,43 @@
-import { Button } from 'antd';
+import { Button, Space, Typography, theme } from 'antd';
+import { Content } from 'antd/es/layout/layout';
 import { useNavigate } from 'react-router-dom';
+import { useTitle } from 'react-use';
+import { ClientForm } from 'src/features/ClientForm';
 
 export default function ClientsFormPage() {
+  useTitle('Форма клиента');
+
+  const {
+    token: { colorBgContainer, borderRadius },
+  } = theme.useToken();
+
   const navigate = useNavigate();
 
   return (
     <div>
-      <Button type="link" onClick={() => navigate(-1)}>
-        Назад
-      </Button>
-      <h1>ClientsPage</h1>
-      <Button onClick={() => navigate('/clients/123-123-123-123')}>
-        Создать
-      </Button>
+      <Space size="middle" direction="vertical" style={{ width: '100%' }}>
+        <Content
+          style={{
+            borderRadius,
+            padding: '22px 24px 12px',
+            background: colorBgContainer,
+          }}
+        >
+          <Button type="link" onClick={() => navigate(-1)}>
+            Назад
+          </Button>
+          <Typography.Title level={4}>Клиенты</Typography.Title>
+        </Content>
+        <Content
+          style={{
+            borderRadius,
+            padding: 24,
+            background: colorBgContainer,
+          }}
+        >
+          <ClientForm />
+        </Content>
+      </Space>
     </div>
   );
 }
