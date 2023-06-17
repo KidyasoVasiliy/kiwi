@@ -12,21 +12,22 @@ const queryDocument: TypedDocumentNode<
 > = gql`
   mutation CreateRelationshipClient(
     $clientId: uuid
+    # Статус, один
     $status_id: uuid
-    $industry_id: uuid
-    $skipStatus: Boolean!
+    # Отрасли, множество
+    $industries: [client_directory_client_industry_insert_input!]! ## как сделать необязательным?
+    # Отрасли, пропустить создание
     $skipIndustry: Boolean!
   ) {
     insert_client_status(
       objects: { client_id: $clientId, status_id: $status_id }
-    ) @skip(if: $skipStatus) {
+    ) {
       returning {
         id
       }
     }
-    insert_client_directory_client_industry(
-      objects: { client_id: $clientId, industry_id: $industry_id }
-    ) @skip(if: $skipIndustry) {
+    insert_client_directory_client_industry(objects: $industries)
+      @skip(if: $skipIndustry) {
       returning {
         id
       }

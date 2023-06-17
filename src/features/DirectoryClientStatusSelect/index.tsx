@@ -4,6 +4,7 @@ import React, { useCallback } from 'react';
 import {
   DirectoryClientStatusSelectQuery,
   DirectoryClientStatusSelectQueryVariables,
+  Directory_Client_Status,
 } from 'src/__gql__/graphql';
 import { DebounceSelect } from 'src/components/Deb';
 import { gql } from 'src/shared/app';
@@ -30,6 +31,23 @@ export type DirectoryClientStatusSelectValue = {
   value: string;
 };
 
+export const getDirectoryClientStatusOption = ({
+  id,
+  name,
+}: Pick<
+  Directory_Client_Status,
+  'id' | 'name'
+>): DirectoryClientStatusSelectValue => ({
+  key: id,
+  label: name,
+  value: id,
+});
+
+export const getDirectoryClientStatusOptions = (
+  list: Pick<Directory_Client_Status, 'id' | 'name'>[],
+): DirectoryClientStatusSelectValue[] =>
+  list.map(getDirectoryClientStatusOption);
+
 export const DirectoryClientStatusSelect: React.FC<
   SelectProps<DirectoryClientStatusSelectValue[]>
 > = (props) => {
@@ -41,11 +59,7 @@ export const DirectoryClientStatusSelect: React.FC<
       selectName="DirectoryClientStatusSelect"
       getOptions={useCallback(
         (result) =>
-          result.directory_client_status.map(({ id, name }) => ({
-            key: id,
-            label: name,
-            value: id,
-          })),
+          getDirectoryClientStatusOptions(result.directory_client_status),
         [],
       )}
     />

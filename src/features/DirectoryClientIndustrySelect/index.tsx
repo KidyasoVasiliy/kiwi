@@ -4,6 +4,7 @@ import React, { useCallback } from 'react';
 import {
   DirectoryClientIndustrySelectQuery,
   DirectoryClientIndustrySelectQueryVariables,
+  Directory_Client_Industry,
 } from 'src/__gql__/graphql';
 import { DebounceSelect } from 'src/components/Deb';
 import { gql } from 'src/shared/app';
@@ -30,6 +31,23 @@ export type DirectoryClientIndustrySelectValue = {
   value: string;
 };
 
+export const getDirectoryClientIndustryOption = ({
+  id,
+  name,
+}: Pick<
+  Directory_Client_Industry,
+  'id' | 'name'
+>): DirectoryClientIndustrySelectValue => ({
+  key: id,
+  label: name,
+  value: id,
+});
+
+export const getDirectoryClientIndustryOptions = (
+  list: Pick<Directory_Client_Industry, 'id' | 'name'>[],
+): DirectoryClientIndustrySelectValue[] =>
+  list.map(getDirectoryClientIndustryOption);
+
 export const DirectoryClientIndustrySelect: React.FC<
   SelectProps<DirectoryClientIndustrySelectValue[]>
 > = (props) => {
@@ -41,11 +59,7 @@ export const DirectoryClientIndustrySelect: React.FC<
       selectName="DirectoryClientIndustrySelect"
       getOptions={useCallback(
         (result) =>
-          result.directory_client_industry.map(({ id, name }) => ({
-            key: id,
-            label: name,
-            value: id,
-          })),
+          getDirectoryClientIndustryOptions(result.directory_client_industry),
         [],
       )}
     />

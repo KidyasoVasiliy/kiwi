@@ -29,6 +29,7 @@ const router = createBrowserRouter([
       // { path: 'deal/process', element: <DealProcessPage /> },
       { path: 'clients', element: <ClientsPage /> },
       { path: 'clients/create', element: <ClientsFormPage /> },
+      { path: 'clients/:id/edit', element: <ClientsFormPage /> },
       { path: 'clients/:id', element: <ClientsCardPage /> },
       // { path: 'objects', element: <ObjectsPage /> },
       // { path: 'objects/create', element: <ObjectsFormPage /> },

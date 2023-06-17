@@ -147,7 +147,9 @@ export const ClientsTable: React.FC = () => {
                 <Button
                   type="link"
                   icon={<EditOutlined />}
-                  onClick={() => navigate(record.id, { relative: 'path' })}
+                  onClick={() =>
+                    navigate(`${record.id}/edit`, { relative: 'path' })
+                  }
                 />
               </Tooltip>
             ),
