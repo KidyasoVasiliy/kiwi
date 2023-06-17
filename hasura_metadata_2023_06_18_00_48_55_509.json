@@ -1,0 +1,215 @@
+{
+  "resource_version": 191,
+  "metadata": {
+    "version": 3,
+    "sources": [
+      {
+        "name": "default",
+        "kind": "postgres",
+        "tables": [
+          {
+            "table": {
+              "name": "client_industry",
+              "schema": "directory"
+            }
+          },
+          {
+            "table": {
+              "name": "client_status",
+              "schema": "directory"
+            }
+          },
+          {
+            "table": {
+              "name": "client",
+              "schema": "public"
+            },
+            "object_relationships": [
+              {
+                "name": "responsible_employee",
+                "using": {
+                  "foreign_key_constraint_on": "employee_id"
+                }
+              }
+            ],
+            "array_relationships": [
+              {
+                "name": "contacts",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "client_id",
+                    "table": {
+                      "name": "client_contact",
+                      "schema": "public"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "industries",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "client_id",
+                    "table": {
+                      "name": "client_directory_client_industry",
+                      "schema": "public"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "objects",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "client_id",
+                    "table": {
+                      "name": "client_object",
+                      "schema": "public"
+                    }
+                  }
+                }
+              },
+              {
+                "name": "statuses",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "client_id",
+                    "table": {
+                      "name": "client_status",
+                      "schema": "public"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "client_contact",
+              "schema": "public"
+            },
+            "object_relationships": [
+              {
+                "name": "client",
+                "using": {
+                  "foreign_key_constraint_on": "client_id"
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "client_directory_client_industry",
+              "schema": "public"
+            },
+            "object_relationships": [
+              {
+                "name": "client",
+                "using": {
+                  "foreign_key_constraint_on": "client_id"
+                }
+              },
+              {
+                "name": "industry",
+                "using": {
+                  "foreign_key_constraint_on": "industry_id"
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "client_object",
+              "schema": "public"
+            },
+            "object_relationships": [
+              {
+                "name": "client",
+                "using": {
+                  "foreign_key_constraint_on": "client_id"
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "client_status",
+              "schema": "public"
+            },
+            "object_relationships": [
+              {
+                "name": "client",
+                "using": {
+                  "foreign_key_constraint_on": "client_id"
+                }
+              },
+              {
+                "name": "status",
+                "using": {
+                  "foreign_key_constraint_on": "status_id"
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "employee",
+              "schema": "public"
+            },
+            "array_relationships": [
+              {
+                "name": "responsible_clients",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "employee_id",
+                    "table": {
+                      "name": "client",
+                      "schema": "public"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "employee_occupancy",
+              "schema": "public"
+            }
+          }
+        ],
+        "configuration": {
+          "connection_info": {
+            "database_url": {
+              "from_env": "PG_DATABASE_URL"
+            },
+            "isolation_level": "read-committed",
+            "use_prepared_statements": false
+          }
+        }
+      }
+    ],
+    "backend_configs": {
+      "dataconnector": {
+        "athena": {
+          "uri": "http://localhost:8081/api/v1/athena"
+        },
+        "mariadb": {
+          "uri": "http://localhost:8081/api/v1/mariadb"
+        },
+        "mongodb": {
+          "uri": "http://localhost:8082"
+        },
+        "mysql8": {
+          "uri": "http://localhost:8081/api/v1/mysql"
+        },
+        "oracle": {
+          "uri": "http://localhost:8081/api/v1/oracle"
+        },
+        "snowflake": {
+          "uri": "http://localhost:8081/api/v1/snowflake"
+        }
+      }
+    }
+  }
+}

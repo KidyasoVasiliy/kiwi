@@ -1,0 +1,128 @@
+SET check_function_bodies = false;
+CREATE FUNCTION public.set_current_timestamp_updated_at() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+  _new record;
+BEGIN
+  _new := NEW;
+  _new."updated_at" = NOW();
+  RETURN _new;
+END;
+$$;
+CREATE FUNCTION public.update_client_contact_is_main_trigger() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    IF NEW.is_main = true THEN
+        UPDATE client_contact
+        SET is_main = false
+        WHERE client_id = NEW.client_id AND is_main = true;
+    END IF;
+    RETURN NEW;
+END;
+$$;
+CREATE FUNCTION public.update_client_status_is_current_trigger() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    IF NEW IS NOT NULL THEN
+        UPDATE client_status
+        SET is_current = false
+        WHERE client_id = NEW.client_id AND id <> NEW.id;
+        NEW.is_current = true;
+    END IF;
+    RETURN NEW;
+END;
+$$;
+CREATE TABLE public.client (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    name text NOT NULL,
+    employee_id uuid
+);
+COMMENT ON TABLE public.client IS 'Таблица клиентов';
+CREATE TABLE public.client_contact (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    name text NOT NULL,
+    phone text,
+    email text,
+    client_id uuid NOT NULL,
+    is_main boolean DEFAULT true NOT NULL
+);
+COMMENT ON TABLE public.client_contact IS 'Контакты клиента';
+CREATE TABLE public.client_directory_client_industry (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    client_id uuid NOT NULL,
+    industry_id uuid NOT NULL
+);
+COMMENT ON TABLE public.client_directory_client_industry IS 'many to many Клиент - Отрасль';
+CREATE TABLE public.client_object (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    name text NOT NULL,
+    client_id uuid NOT NULL
+);
+COMMENT ON TABLE public.client_object IS 'Таблица объектов клиента';
+CREATE TABLE public.client_status (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    client_id uuid NOT NULL,
+    is_current boolean DEFAULT true NOT NULL,
+    status_id uuid NOT NULL
+);
+COMMENT ON TABLE public.client_status IS 'Статусная модель клиента';
+CREATE TABLE public.employee (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    "fullName" text
+);
+COMMENT ON TABLE public.employee IS 'Карточка сотрудника';
+CREATE TABLE public.employee_occupancy (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    employee_id uuid NOT NULL,
+    deal_id bigint NOT NULL,
+    date date NOT NULL
+);
+COMMENT ON TABLE public.employee_occupancy IS 'Таблица занятости';
+ALTER TABLE ONLY public.client_contact
+    ADD CONSTRAINT client_contact_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.client_directory_client_industry
+    ADD CONSTRAINT client_directory_client_industry_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.client_object
+    ADD CONSTRAINT client_object_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.client
+    ADD CONSTRAINT client_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.client_status
+    ADD CONSTRAINT client_status_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.employee_occupancy
+    ADD CONSTRAINT employee_occupancy_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.employee
+    ADD CONSTRAINT employee_pkey PRIMARY KEY (id);
+CREATE TRIGGER set_public_client_object_updated_at BEFORE UPDATE ON public.client_object FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_client_object_updated_at ON public.client_object IS 'trigger to set value of column "updated_at" to current timestamp on row update';
+CREATE TRIGGER set_public_client_status_updated_at BEFORE UPDATE ON public.client_status FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_client_status_updated_at ON public.client_status IS 'trigger to set value of column "updated_at" to current timestamp on row update';
+CREATE TRIGGER set_public_client_updated_at BEFORE UPDATE ON public.client FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_client_updated_at ON public.client IS 'trigger to set value of column "updated_at" to current timestamp on row update';
+CREATE TRIGGER set_public_employee_updated_at BEFORE UPDATE ON public.employee FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
+COMMENT ON TRIGGER set_public_employee_updated_at ON public.employee IS 'trigger to set value of column "updated_at" to current timestamp on row update';
+CREATE TRIGGER update_client_contact_is_main_trigger BEFORE INSERT ON public.client_contact FOR EACH ROW EXECUTE FUNCTION public.update_client_contact_is_main_trigger();
+CREATE TRIGGER update_client_status_is_current_trigger BEFORE INSERT ON public.client_status FOR EACH ROW EXECUTE FUNCTION public.update_client_status_is_current_trigger();
+ALTER TABLE ONLY public.client_contact
+    ADD CONSTRAINT client_contact_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.client(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.client_directory_client_industry
+    ADD CONSTRAINT client_directory_client_industry_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.client(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.client_directory_client_industry
+    ADD CONSTRAINT client_directory_client_industry_industry_id_fkey FOREIGN KEY (industry_id) REFERENCES directory.client_industry(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.client
+    ADD CONSTRAINT client_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES public.employee(id) ON UPDATE SET NULL ON DELETE SET NULL;
+ALTER TABLE ONLY public.client_object
+    ADD CONSTRAINT client_object_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.client(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.client_status
+    ADD CONSTRAINT client_status_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.client(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.client_status
+    ADD CONSTRAINT client_status_status_id_fkey FOREIGN KEY (status_id) REFERENCES directory.client_status(id) ON UPDATE CASCADE ON DELETE CASCADE;
