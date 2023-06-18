@@ -72,7 +72,6 @@ const RootPage: React.FC = () => {
             mode="inline"
             items={items}
             onClick={({ key }) => {
-              console.log(key);
               navigate(key);
             }}
           />

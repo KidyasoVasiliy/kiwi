@@ -15,6 +15,11 @@ const config: CodegenConfig = {
   documents: ['src/**/*.tsx', 'src/**/*.ts'],
   generates: {
     './src/__gql__/': {
+      config: {
+        scalars: {
+          uuid: 'string',
+        },
+      },
       preset: 'client',
       plugins: [],
     },

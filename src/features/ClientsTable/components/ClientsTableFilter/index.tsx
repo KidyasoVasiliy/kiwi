@@ -1,7 +1,6 @@
 import { Button, Col, Form, Input, Row } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import debounce from 'lodash.debounce';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { DirectoryClientIndustrySelect } from 'src/features/DirectoryClientIndustrySelect';
 import { DirectoryClientIndustrySelectValue } from 'src/features/DirectoryClientIndustrySelect';
 import {

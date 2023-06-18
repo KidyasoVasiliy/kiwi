@@ -42,8 +42,9 @@ export const useInitialClientForm = ({ id }: Props) => {
     queryFn: async () =>
       graphQLClient.request(queryDocument, {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        id: id!, // @warn depend enabled: !!id
+        id: id!, // @warn Тайпинг не учитывает enabled: !!id
       }),
+    networkMode: 'always',
     enabled: !!id,
   });
 

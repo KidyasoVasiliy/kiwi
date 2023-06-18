@@ -1,64 +1,32 @@
 import { Button, Form, Input, Spin, message } from 'antd';
 import { useForm } from 'antd/es/form/Form';
-import differenceBy from 'lodash/differenceBy';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { InitialClientFormQuery } from 'src/__gql__/graphql';
 import {
   DirectoryClientIndustrySelect,
-  DirectoryClientIndustrySelectValue,
   getDirectoryClientIndustryOptions,
 } from 'src/features/DirectoryClientIndustrySelect';
 import {
   DirectoryClientStatusSelect,
-  DirectoryClientStatusSelectValue,
   getDirectoryClientStatusOption,
 } from 'src/features/DirectoryClientStatusSelect';
 import {
   EmployeeSelect,
-  EmployeeSelectValue,
   getEmployeeSelectOption,
 } from 'src/features/EmployeeSelect';
 import { REQUIRED } from 'src/shared/const/error-message';
+import { CustomError } from 'src/shared/error/CustomError';
 
+import { ClientFormType, ClientFormSubmitType } from './ClientFormType';
 import { useCreateClient } from './hooks/useCreateClient';
-import { useCreateRelationshipClient } from './hooks/useCreateRelationshipClient';
 import { useInitialClientForm } from './hooks/useInitialClientForm';
 import { useUpdateClient } from './hooks/useUpdateClient';
 
-export type ClientFormType = {
-  name: string;
-  responsible_employee: EmployeeSelectValue | undefined;
-  industries: Pick<DirectoryClientIndustrySelectValue, 'value'>[];
-  status: Pick<DirectoryClientStatusSelectValue, 'value'> | undefined;
-};
-
-export const ClientForm: React.FC = () => {
-  const { id } = useParams<{ id?: string }>();
-  const navigate = useNavigate();
-  const { data, isInitialLoading: isInitialClientFormLoading } =
-    useInitialClientForm({
-      id,
-    });
-
-  const [form] = useForm();
-  const { mutateAsync: createClient, ...createClientMeta } = useCreateClient();
-  const { mutateAsync: updateClient, ...updateClientMeta } = useUpdateClient();
-  const { mutate: createRelationshipClient, ...createRelationshipClientMeta } =
-    useCreateRelationshipClient();
-
-  const isSuccess =
-    (createClientMeta.isSuccess && createRelationshipClientMeta.isSuccess) ||
-    updateClientMeta.isSuccess;
-  const isError =
-    (createClientMeta.isError && createRelationshipClientMeta.isError) ||
-    updateClientMeta.isError;
-  const isLoading =
-    (createClientMeta.isLoading && createRelationshipClientMeta.isLoading) ||
-    updateClientMeta.isLoading;
-
+const adapterClientForm = (data?: InitialClientFormQuery): ClientFormType => {
   const initialClient = data?.client_by_pk;
 
-  const initialValues: ClientFormType = {
+  return {
     name: initialClient?.name ?? '',
     responsible_employee: initialClient?.responsible_employee
       ? getEmployeeSelectOption(initialClient.responsible_employee)
@@ -72,83 +40,53 @@ export const ClientForm: React.FC = () => {
       ? getDirectoryClientStatusOption(initialClient?.statuses[0].status)
       : undefined,
   };
+};
 
-  const onFinish = async (validValues: ClientFormType) => {
-    const values = validValues as DeepRequired<ClientFormType>;
+export const ClientForm: React.FC = () => {
+  const { id } = useParams<{ id?: string }>();
+  const navigate = useNavigate();
+  const { data, isFetching } = useInitialClientForm({
+    id,
+  });
+
+  const [form] = useForm();
+  const { createClient, isLoading: isCreateClientLoading } = useCreateClient();
+  const { updateClient, isLoading: isUpdateClientLoading } = useUpdateClient({
+    clientId: id,
+  });
+
+  const isLoading = isCreateClientLoading || isUpdateClientLoading;
+  const initialValues: ClientFormType = adapterClientForm(data);
+
+  const onFinish = async (vals: ClientFormType) => {
+    const values = vals as ClientFormSubmitType;
 
     if (id) {
-      const deletedIndustries = differenceBy(
-        initialValues.industries,
-        values.industries,
-        'value',
-      );
-
-      const createIndustries = differenceBy(
-        values.industries,
-        initialValues.industries,
-        'value',
-      );
-
-      await updateClient({
-        clientId: id,
-        client_set_input: {
-          name: values.name,
-          employee_id: values.responsible_employee?.value,
-        },
-        deleteClient_industry: deletedIndustries.map((el) => ({
-          client_id: { _eq: id },
-          industry_id: { _eq: el.value },
-        })),
-        skipDeleteIndustry: !deletedIndustries.length,
-        skipInsertIndustry: !createIndustries.length,
-        insertIndustries: createIndustries.map((el) => ({
-          client_id: id,
-          industry_id: el.value,
-        })),
-        skipInsertStatus: values.status?.value === initialValues.status?.value,
-        status_id: values.status!.value,
+      await updateClient(initialValues, values).catch((error) => {
+        if (error instanceof CustomError) {
+          message.success(error.message);
+        } else {
+          message.error('Произошла ошибка обновления');
+          console.error('updateClient:', error.message);
+        }
       });
-
+      message.success('Клиент успешно обновлен');
       navigate(`/clients/${id}`);
     } else {
-      const newClient = await createClient({
-        name: values.name,
-        employee_id: values.responsible_employee!.value,
+      await createClient(values).catch((error) => {
+        if (error instanceof CustomError) {
+          message.success(error.message);
+        } else {
+          message.error('Произошла ошибка создания');
+          console.error('createClient:', error.message);
+        }
       });
-
-      const newClientId = newClient.insert_client?.returning[0].id;
-
-      createRelationshipClient({
-        clientId: newClientId,
-        status_id: values.status!.value,
-        industries: values.industries.map(({ value }) => ({
-          client_id: newClientId,
-          industry_id: value,
-        })),
-        skipIndustry: !values.industries.length,
-      });
-
+      message.success('Клиент успешно создан');
       form.resetFields();
     }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      const msg = id ? 'Клиент успешно обновлен' : 'Клиент успешно создан';
-
-      message.success(msg);
-    }
-  }, [isSuccess, id]);
-
-  useEffect(() => {
-    if (isError) {
-      const msg = id ? 'Ошибка обновления клиента' : 'Ошибка создания клиента';
-
-      message.success(msg);
-    }
-  }, [id, isError]);
-
-  return isInitialClientFormLoading ? (
+  return isFetching ? (
     <div
       style={{
         display: 'flex',

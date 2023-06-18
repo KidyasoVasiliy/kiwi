@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { GraphQLClient } from 'graphql-request';
 import { graphql } from 'src/__gql__';
 

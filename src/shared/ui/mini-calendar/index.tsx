@@ -110,7 +110,7 @@ export const MiniCalendar: React.FC = () => {
         // test calendar
         fullCellRender={(ddayjs) => {
           const dayNum = ddayjs.date();
-          console.log(ddayjs.format('YYYY-MM-DD'));
+          // console.log(ddayjs.format('YYYY-MM-DD'));
           const isWork = scheduleResult.isWork.includes(
             ddayjs.format('YYYY-MM-DD'),
           );

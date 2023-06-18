@@ -1,4 +1,4 @@
-import { EditOutlined, EyeOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import { Badge, Button, Space, Table, Tag, Tooltip, Typography } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
