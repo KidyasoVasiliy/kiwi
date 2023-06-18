@@ -1,7 +1,8 @@
 import { Button, Form, Input, Spin, message } from 'antd';
 import { useForm } from 'antd/es/form/Form';
+import differenceBy from 'lodash/differenceBy';
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   DirectoryClientIndustrySelect,
   DirectoryClientIndustrySelectValue,
@@ -33,6 +34,7 @@ export type ClientFormType = {
 
 export const ClientForm: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
+  const navigate = useNavigate();
   const { data, isInitialLoading: isInitialClientFormLoading } =
     useInitialClientForm({
       id,
@@ -54,29 +56,60 @@ export const ClientForm: React.FC = () => {
     (createClientMeta.isLoading && createRelationshipClientMeta.isLoading) ||
     updateClientMeta.isLoading;
 
+  const initialClient = data?.client_by_pk;
+
+  const initialValues: ClientFormType = {
+    name: initialClient?.name ?? '',
+    responsible_employee: initialClient?.responsible_employee
+      ? getEmployeeSelectOption(initialClient.responsible_employee)
+      : undefined,
+    industries: initialClient?.industries
+      ? getDirectoryClientIndustryOptions(
+          initialClient?.industries.flatMap((industry) => industry.industry),
+        )
+      : [],
+    status: initialClient?.statuses[0]?.status
+      ? getDirectoryClientStatusOption(initialClient?.statuses[0].status)
+      : undefined,
+  };
+
   const onFinish = async (validValues: ClientFormType) => {
     const values = validValues as DeepRequired<ClientFormType>;
 
     if (id) {
+      const deletedIndustries = differenceBy(
+        initialValues.industries,
+        values.industries,
+        'value',
+      );
+
+      const createIndustries = differenceBy(
+        values.industries,
+        initialValues.industries,
+        'value',
+      );
+
       await updateClient({
         clientId: id,
         client_set_input: {
           name: values.name,
           employee_id: values.responsible_employee?.value,
         },
-      });
-      createRelationshipClient({
-        clientId: id,
+        deleteClient_industry: deletedIndustries.map((el) => ({
+          client_id: { _eq: id },
+          industry_id: { _eq: el.value },
+        })),
+        skipDeleteIndustry: !deletedIndustries.length,
+        skipInsertIndustry: !createIndustries.length,
+        insertIndustries: createIndustries.map((el) => ({
+          client_id: id,
+          industry_id: el.value,
+        })),
+        skipInsertStatus: values.status?.value === initialValues.status?.value,
         status_id: values.status!.value,
-        skipIndustry: true,
-        industries: {
-          client: undefined,
-          client_id: undefined,
-          id: undefined,
-          industry: undefined,
-          industry_id: undefined,
-        }, // как сделать industries не обязательным или разделить запросы?
       });
+
+      navigate(`/clients/${id}`);
     } else {
       const newClient = await createClient({
         name: values.name,
@@ -94,33 +127,26 @@ export const ClientForm: React.FC = () => {
         })),
         skipIndustry: !values.industries.length,
       });
+
+      form.resetFields();
     }
   };
 
   useEffect(() => {
-    if (isSuccess) message.success('Клиент успешно создан');
-  }, [isSuccess]);
+    if (isSuccess) {
+      const msg = id ? 'Клиент успешно обновлен' : 'Клиент успешно создан';
+
+      message.success(msg);
+    }
+  }, [isSuccess, id]);
 
   useEffect(() => {
-    if (isError) message.error('Ошибка создания клиента');
-  }, [isError]);
+    if (isError) {
+      const msg = id ? 'Ошибка обновления клиента' : 'Ошибка создания клиента';
 
-  const initialClient = data?.client_by_pk;
-
-  const initialValues: ClientFormType = {
-    name: initialClient?.name ?? '',
-    responsible_employee: initialClient?.responsible_employee
-      ? getEmployeeSelectOption(initialClient.responsible_employee)
-      : undefined,
-    industries: initialClient?.industries
-      ? getDirectoryClientIndustryOptions(
-          initialClient?.industries.flatMap((industry) => industry.industry),
-        )
-      : [],
-    status: initialClient?.statuses[0]?.status
-      ? getDirectoryClientStatusOption(initialClient?.statuses[0].status)
-      : undefined,
-  };
+      message.success(msg);
+    }
+  }, [id, isError]);
 
   return isInitialClientFormLoading ? (
     <div

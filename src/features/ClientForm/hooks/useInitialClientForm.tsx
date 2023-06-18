@@ -19,7 +19,7 @@ const queryDocument: TypedDocumentNode<
         fullName
       }
       industries {
-        industry_id
+        id
         industry {
           id
           name

@@ -85,6 +85,7 @@
     "@types/react-dom": "^18.2.4",
     "antd": "^5.5.2",
     "dayjs": "^1.11.8",
+    "deep-object-diff": "^1.1.9",
     "graphql-request": "^6.1.0",
     "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
