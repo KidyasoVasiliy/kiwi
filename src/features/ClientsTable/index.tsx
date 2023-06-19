@@ -1,11 +1,11 @@
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, SettingOutlined } from '@ant-design/icons';
 import { Badge, Button, Space, Table, Tag, Tooltip, Typography } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ClientsQueryVariables, Order_By } from 'src/__gql__/graphql';
+import { ClientsTableQueryVariables, Order_By } from 'src/__gql__/graphql';
 import {
   getOffset,
   getLimit,
@@ -17,6 +17,7 @@ import {
   ClientsTableFilter,
   ClientsTableFilterType,
 } from './components/ClientsTableFilter';
+import { ClientsTableSettings } from './components/ClientsTableSettings';
 import { getClientBoolExp } from './helpers/getCountClientBoolExp';
 import { useClientsTable, ClientsTableDataType } from './hooks/useClients';
 
@@ -53,7 +54,7 @@ const columns: ColumnsType<ClientsTableDataType> = [
 export const ClientsTable: React.FC = () => {
   const navigate = useNavigate();
 
-  const [tableParams, setTableParams] = useState<ClientsQueryVariables>({
+  const [tableParams, setTableParams] = useState<ClientsTableQueryVariables>({
     order_by: { updated_at: Order_By.Desc },
     distinct_on: null,
     where: null,
@@ -76,7 +77,7 @@ export const ClientsTable: React.FC = () => {
     const offset = getOffset(pagination.current, pagination.pageSize);
     const limit = getLimit(pagination.current, pagination.pageSize);
 
-    let order_by: ClientsQueryVariables['order_by'] = null;
+    let order_by: ClientsTableQueryVariables['order_by'] = null;
     const sortDirection =
       sorter.order === 'ascend' ? Order_By.Asc : Order_By.Desc;
     switch (sorter.field) {
@@ -115,11 +116,14 @@ export const ClientsTable: React.FC = () => {
       />
       <Table
         loading={isFetching}
-        columns={columns.concat([
+        size="middle"
+        columns={[
+          ...columns,
           {
             title: 'Отрасль',
             dataIndex: 'industries',
             key: 'industries',
+            width: 300,
             render: (_, { industries }) => (
               <>
                 {industries.map(({ name, color }) => (
@@ -134,6 +138,7 @@ export const ClientsTable: React.FC = () => {
             title: 'Статус',
             key: 'status',
             dataIndex: 'status',
+            width: 200,
             render: (_, { status }) =>
               status ? <Badge text={status.name} color={status.color} /> : null,
           },
@@ -142,6 +147,8 @@ export const ClientsTable: React.FC = () => {
             key: 'action',
             width: 130,
             align: 'center',
+            filterDropdown: (props) => <ClientsTableSettings {...props} />,
+            filterIcon: <SettingOutlined />,
             render: (_, record) => (
               <Tooltip title="Редактировать клиента">
                 <Button
@@ -154,7 +161,7 @@ export const ClientsTable: React.FC = () => {
               </Tooltip>
             ),
           },
-        ])}
+        ]}
         dataSource={data?.list}
         pagination={{
           current,

@@ -1,13 +1,16 @@
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { useQuery } from '@tanstack/react-query';
-import { ClientsQuery, ClientsQueryVariables } from 'src/__gql__/graphql';
+import {
+  ClientsTableQuery,
+  ClientsTableQueryVariables,
+} from 'src/__gql__/graphql';
 import { graphQLClient, gql } from 'src/shared/app';
 
-const clientsQueryDoc: TypedDocumentNode<
-  ClientsQuery,
-  ClientsQueryVariables
+const queryDocument: TypedDocumentNode<
+  ClientsTableQuery,
+  ClientsTableQueryVariables
 > = gql`
-  query Clients(
+  query ClientsTable(
     $offset: Int
     $limit: Int
     $distinct_on: [client_select_column!]
@@ -52,7 +55,7 @@ const clientsQueryDoc: TypedDocumentNode<
   }
 `;
 
-const mapClientsTable = (list: ClientsQuery['client'] = []) => {
+const mapping = (list: ClientsTableQuery['client'] = []) => {
   const newList = list.map(
     ({ statuses, contacts, responsible_employee, industries, ...rest }) => {
       return {
@@ -71,14 +74,14 @@ const mapClientsTable = (list: ClientsQuery['client'] = []) => {
   return newList;
 };
 
-export type ClientsTableDataType = ReturnType<typeof mapClientsTable>[number];
-export const useClientsTable = (variables: ClientsQueryVariables) => {
+export type ClientsTableDataType = ReturnType<typeof mapping>[number];
+export const useClientsTable = (variables: ClientsTableQueryVariables) => {
   const result = useQuery({
     refetchOnWindowFocus: false,
     queryKey: ['clients', variables],
-    queryFn: async () => graphQLClient.request(clientsQueryDoc, variables),
+    queryFn: async () => graphQLClient.request(queryDocument, variables),
     select: (data) => ({
-      list: mapClientsTable(data.client),
+      list: mapping(data.client),
       pagination: data.client_aggregate.aggregate,
     }),
   });
