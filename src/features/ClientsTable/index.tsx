@@ -1,10 +1,7 @@
-import { EditOutlined, SettingOutlined } from '@ant-design/icons';
-import { Badge, Button, Space, Table, Tag, Tooltip, Typography } from 'antd';
-import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
+import { Table, Typography } from 'antd';
+import type { TablePaginationConfig } from 'antd/es/table';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
-import dayjs from 'dayjs';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { ClientsTableQueryVariables, Order_By } from 'src/__gql__/graphql';
 import {
   getOffset,
@@ -17,52 +14,28 @@ import {
   ClientsTableFilter,
   ClientsTableFilterType,
 } from './components/ClientsTableFilter';
-import { ClientsTableSettings } from './components/ClientsTableSettings';
 import { getClientBoolExp } from './helpers/getCountClientBoolExp';
-import { useClientsTable, ClientsTableDataType } from './hooks/useClients';
-
-const columns: ColumnsType<ClientsTableDataType> = [
-  {
-    title: 'Наименование',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text, { id, updated_at }) => (
-      <Space direction="vertical" size="small">
-        <Link to={id} relative="path">
-          {text}
-        </Link>
-        {/* <Typography.Text type="secondary">
-          Создан {dayjs(created_at).format('DD/MM/YYYY HH:mm')}
-        </Typography.Text> */}
-        <Typography.Text type="secondary">
-          от {dayjs(updated_at).format('DD/MM/YYYY HH:mm')}
-        </Typography.Text>
-      </Space>
-    ),
-    sorter: true,
-    showSorterTooltip: { title: 'Сортировка по наименованию клиента' },
-  },
-  {
-    title: 'Ответственный',
-    dataIndex: 'responsible_employee',
-    key: 'responsible_employee',
-    sorter: true,
-    showSorterTooltip: { title: 'Сортировка по имени сотрудника' },
-  },
-];
+import { useClientsTable, ClientsTableDataType } from './hooks/useClientsTable';
+import { useColumnsClientTable } from './hooks/useColumnsClientTable';
 
 export const ClientsTable: React.FC = () => {
-  const navigate = useNavigate();
-
   const [tableParams, setTableParams] = useState<ClientsTableQueryVariables>({
     order_by: { updated_at: Order_By.Desc },
     distinct_on: null,
     where: null,
     offset: 0,
     limit: 10,
+    includeCreatedAt: false,
+    includeUpdateAt: false,
   });
-
+  const { columns } = useColumnsClientTable({ setTableParams });
   const { data, isFetching } = useClientsTable(tableParams);
+
+  const offset = tableParams.offset ?? 0;
+  const limit = tableParams.limit ?? 10;
+  const current = getPageNumber(offset, limit);
+  const pageSize = getPageSize(offset, limit);
+  const total = data?.pagination?.count;
 
   const handleTableChange = (
     pagination: TablePaginationConfig,
@@ -82,7 +55,9 @@ export const ClientsTable: React.FC = () => {
       sorter.order === 'ascend' ? Order_By.Asc : Order_By.Desc;
     switch (sorter.field) {
       case 'name':
-        order_by = { name: sortDirection };
+      case 'created_at':
+      case 'updated_at':
+        order_by = { [sorter.field]: sortDirection };
         break;
       case 'responsible_employee':
         order_by = { responsible_employee: { fullName: sortDirection } };
@@ -93,12 +68,6 @@ export const ClientsTable: React.FC = () => {
 
     setTableParams((prev) => ({ ...prev, offset, limit, order_by }));
   };
-
-  const offset = tableParams.offset ?? 0;
-  const limit = tableParams.limit ?? 10;
-  const current = getPageNumber(offset, limit);
-  const pageSize = getPageSize(offset, limit);
-  const total = data?.pagination?.count;
 
   const handleSubmitFilter = (values: ClientsTableFilterType) => {
     setTableParams((prev) => ({
@@ -117,51 +86,7 @@ export const ClientsTable: React.FC = () => {
       <Table
         loading={isFetching}
         size="middle"
-        columns={[
-          ...columns,
-          {
-            title: 'Отрасль',
-            dataIndex: 'industries',
-            key: 'industries',
-            width: 300,
-            render: (_, { industries }) => (
-              <>
-                {industries.map(({ name, color }) => (
-                  <Tag color={color} key={name}>
-                    {name.toUpperCase()}
-                  </Tag>
-                ))}
-              </>
-            ),
-          },
-          {
-            title: 'Статус',
-            key: 'status',
-            dataIndex: 'status',
-            width: 200,
-            render: (_, { status }) =>
-              status ? <Badge text={status.name} color={status.color} /> : null,
-          },
-          {
-            title: 'Действия',
-            key: 'action',
-            width: 130,
-            align: 'center',
-            filterDropdown: (props) => <ClientsTableSettings {...props} />,
-            filterIcon: <SettingOutlined />,
-            render: (_, record) => (
-              <Tooltip title="Редактировать клиента">
-                <Button
-                  type="link"
-                  icon={<EditOutlined />}
-                  onClick={() =>
-                    navigate(`${record.id}/edit`, { relative: 'path' })
-                  }
-                />
-              </Tooltip>
-            ),
-          },
-        ]}
+        columns={columns}
         dataSource={data?.list}
         pagination={{
           current,

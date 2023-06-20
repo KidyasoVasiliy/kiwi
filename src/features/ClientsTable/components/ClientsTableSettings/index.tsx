@@ -4,33 +4,17 @@ import type { MenuProps } from 'antd';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import React, { useState } from 'react';
+import { ClientsTableQueryVariables } from 'src/__gql__/graphql';
 
 const { useToken } = theme;
 
+type CheckboxValueTyped = keyof typeof dataMap;
 const dataMap = {
   created_at: {
     label: 'Дата создания',
   },
   updated_at: {
     label: 'Дата обновления',
-  },
-  address: {
-    label: 'Адрес',
-  },
-  phone: {
-    label: 'Телефон',
-  },
-  name: {
-    label: 'Наименование',
-  },
-  responsible_employee: {
-    label: 'Ответственный',
-  },
-  industries: {
-    label: 'Отрасль',
-  },
-  status: {
-    label: 'Статус',
   },
 };
 
@@ -45,19 +29,39 @@ const items: MenuProps['items'] = Object.entries(dataMap).map(
   }),
 );
 
-export const ClientsTableSettings: React.FC<FilterDropdownProps> = ({
+type Props = FilterDropdownProps & {
+  setTableParams: React.Dispatch<
+    React.SetStateAction<ClientsTableQueryVariables>
+  >;
+  changeColumns: (tableParams: ClientsTableQueryVariables) => void;
+};
+
+export const ClientsTableSettings: React.FC<Props> = ({
   close,
+  setTableParams,
+  changeColumns,
 }) => {
   const { token } = useToken();
-  const [state, setState] = useState<CheckboxValueType[]>([]);
+  const [state, setState] = useState<CheckboxValueTyped[]>([]);
 
   const onChange = (checkedValues: CheckboxValueType[]) => {
-    setState(checkedValues);
+    const typedCeckedValues = checkedValues as CheckboxValueTyped[];
+    setState(typedCeckedValues);
   };
 
   const onSubmit = () => {
-    console.log('checked = ', state);
-    /** @todo add fields gql  */
+    setTableParams((prev) => {
+      const tableParams = {
+        ...prev,
+        includeCreatedAt: state.includes('created_at'),
+        includeUpdateAt: state.includes('updated_at'),
+      };
+
+      setTimeout(() => changeColumns(tableParams), 50); // изменить колонки во время запроса а не перед ним
+
+      return tableParams;
+    });
+
     close();
   };
 
