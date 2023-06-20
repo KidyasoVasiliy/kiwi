@@ -18,13 +18,18 @@ export default function ClientsPage() {
         <Content
           style={{
             borderRadius,
-            padding: '22px 24px 12px',
+            padding: '22px 24px 22px',
             background: colorBgContainer,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}
         >
-          <Typography.Title level={4}>Клиенты</Typography.Title>
+          <Typography.Title level={4} style={{ margin: 0 }}>
+            Клиенты
+          </Typography.Title>
           <Button
-            type="link"
+            type="primary"
             onClick={() => navigate('create', { relative: 'path' })}
           >
             Добавить клиента
