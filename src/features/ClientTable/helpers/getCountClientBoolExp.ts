@@ -1,13 +1,13 @@
 import { Client_Bool_Exp, InputMaybe } from 'src/__gql__/graphql';
 
-import { ClientsTableFilterType } from '../components/ClientsTableFilter';
+import { ClientTableFilterType } from '../components/ClientTableFilter';
 
 /** Собирает фильтры:
  * responsible_employee
  * industry
  * status
  */
-export const getClientBoolExp = (values: ClientsTableFilterType) => {
+export const getClientBoolExp = (values: ClientTableFilterType) => {
   const where: InputMaybe<Client_Bool_Exp> = {};
 
   if (values.responsible_employee?.length) {

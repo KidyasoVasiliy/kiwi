@@ -2,7 +2,7 @@ import { Table, Typography } from 'antd';
 import type { TablePaginationConfig } from 'antd/es/table';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
 import React, { useState } from 'react';
-import { ClientsTableQueryVariables, Order_By } from 'src/__gql__/graphql';
+import { ClientTableQueryVariables, Order_By } from 'src/__gql__/graphql';
 import {
   getOffset,
   getLimit,
@@ -11,15 +11,15 @@ import {
 } from 'src/shared/lib/pagination';
 
 import {
-  ClientsTableFilter,
-  ClientsTableFilterType,
-} from './components/ClientsTableFilter';
+  ClientTableFilter,
+  ClientTableFilterType,
+} from './components/ClientTableFilter';
 import { getClientBoolExp } from './helpers/getCountClientBoolExp';
-import { useClientsTable, ClientsTableDataType } from './hooks/useClientsTable';
+import { useClientTable, ClientTableDataType } from './hooks/useClientTable';
 import { useColumnsClientTable } from './hooks/useColumnsClientTable';
 
-export const ClientsTable: React.FC = () => {
-  const [tableParams, setTableParams] = useState<ClientsTableQueryVariables>({
+export const ClientTable: React.FC = () => {
+  const [tableParams, setTableParams] = useState<ClientTableQueryVariables>({
     order_by: { updated_at: Order_By.Desc },
     distinct_on: null,
     where: null,
@@ -29,7 +29,7 @@ export const ClientsTable: React.FC = () => {
     includeUpdateAt: false,
   });
   const { columns } = useColumnsClientTable({ setTableParams });
-  const { data, isFetching } = useClientsTable(tableParams);
+  const { data, isFetching } = useClientTable(tableParams);
 
   const offset = tableParams.offset ?? 0;
   const limit = tableParams.limit ?? 10;
@@ -41,8 +41,8 @@ export const ClientsTable: React.FC = () => {
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue | null>,
     sorter:
-      | SorterResult<ClientsTableDataType>
-      | SorterResult<ClientsTableDataType>[],
+      | SorterResult<ClientTableDataType>
+      | SorterResult<ClientTableDataType>[],
   ) => {
     if (!pagination.current || !pagination.pageSize || Array.isArray(sorter))
       return; // typeguard
@@ -50,7 +50,7 @@ export const ClientsTable: React.FC = () => {
     const offset = getOffset(pagination.current, pagination.pageSize);
     const limit = getLimit(pagination.current, pagination.pageSize);
 
-    let order_by: ClientsTableQueryVariables['order_by'] = null;
+    let order_by: ClientTableQueryVariables['order_by'] = null;
     const sortDirection =
       sorter.order === 'ascend' ? Order_By.Asc : Order_By.Desc;
     switch (sorter.field) {
@@ -69,7 +69,7 @@ export const ClientsTable: React.FC = () => {
     setTableParams((prev) => ({ ...prev, offset, limit, order_by }));
   };
 
-  const handleSubmitFilter = (values: ClientsTableFilterType) => {
+  const handleSubmitFilter = (values: ClientTableFilterType) => {
     setTableParams((prev) => ({
       ...prev,
       offset: 0,
@@ -79,7 +79,7 @@ export const ClientsTable: React.FC = () => {
 
   return (
     <>
-      <ClientsTableFilter
+      <ClientTableFilter
         isFetching={isFetching}
         onFinish={handleSubmitFilter}
       />

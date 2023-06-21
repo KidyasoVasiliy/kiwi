@@ -12,9 +12,9 @@ import {
   EmployeeSelectValue,
 } from 'src/features/EmployeeSelect';
 
-import { useClientsTableFilterCount } from './hooks/useClientsTableFilterCount';
+import { useClientTableFilterCount } from './hooks/useClientTableFilterCount';
 
-export type ClientsTableFilterType = {
+export type ClientTableFilterType = {
   search?: string;
   status?: DirectoryClientStatusSelectValue[];
   industry?: DirectoryClientIndustrySelectValue[];
@@ -23,18 +23,18 @@ export type ClientsTableFilterType = {
 
 type Props = {
   isFetching: boolean;
-  onFinish: (values: ClientsTableFilterType) => void;
+  onFinish: (values: ClientTableFilterType) => void;
 };
 
-export const ClientsTableFilter: React.FC<Props> = ({ onFinish }) => {
+export const ClientTableFilter: React.FC<Props> = ({ onFinish }) => {
   const [form] = useForm();
   const { isFetching, debounceFetcher, submitText, isEmpty } =
-    useClientsTableFilterCount();
+    useClientTableFilterCount();
 
   return (
-    <Form<ClientsTableFilterType>
+    <Form<ClientTableFilterType>
       form={form}
-      name="ClientsTableFilter"
+      name="ClientTableFilter"
       onValuesChange={debounceFetcher}
       initialValues={{
         search: '',

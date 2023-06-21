@@ -4,7 +4,7 @@ import type { MenuProps } from 'antd';
 import { CheckboxValueType } from 'antd/es/checkbox/Group';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import React, { useState } from 'react';
-import { ClientsTableQueryVariables } from 'src/__gql__/graphql';
+import { ClientTableQueryVariables } from 'src/__gql__/graphql';
 
 const { useToken } = theme;
 
@@ -31,12 +31,12 @@ const items: MenuProps['items'] = Object.entries(dataMap).map(
 
 type Props = FilterDropdownProps & {
   setTableParams: React.Dispatch<
-    React.SetStateAction<ClientsTableQueryVariables>
+    React.SetStateAction<ClientTableQueryVariables>
   >;
-  changeColumns: (tableParams: ClientsTableQueryVariables) => void;
+  changeColumns: (tableParams: ClientTableQueryVariables) => void;
 };
 
-export const ClientsTableSettings: React.FC<Props> = ({
+export const ClientTableSettings: React.FC<Props> = ({
   close,
   setTableParams,
   changeColumns,

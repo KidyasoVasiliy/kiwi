@@ -3,20 +3,20 @@ import { Tag, Badge, Tooltip, Button } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ClientsTableQueryVariables } from 'src/__gql__/graphql';
+import { ClientTableQueryVariables } from 'src/__gql__/graphql';
 
-import { ClientsTableDataType } from './useClientsTable';
-import { ClientsTableSettings } from '../components/ClientsTableSettings';
+import { ClientTableDataType } from './useClientTable';
+import { ClientTableSettings } from '../components/ClientTableSettings';
 
 type Props = {
   setTableParams: React.Dispatch<
-    React.SetStateAction<ClientsTableQueryVariables>
+    React.SetStateAction<ClientTableQueryVariables>
   >;
 };
 export const useColumnsClientTable = ({ setTableParams }: Props) => {
   const navigate = useNavigate();
 
-  const [columns, setColumns] = useState<ColumnsType<ClientsTableDataType>>(
+  const [columns, setColumns] = useState<ColumnsType<ClientTableDataType>>(
     () => [
       {
         title: 'Наименование',
@@ -66,7 +66,7 @@ export const useColumnsClientTable = ({ setTableParams }: Props) => {
         width: 130,
         align: 'center',
         filterDropdown: (props) => (
-          <ClientsTableSettings
+          <ClientTableSettings
             {...props}
             setTableParams={setTableParams}
             changeColumns={changeColumns}
@@ -88,7 +88,7 @@ export const useColumnsClientTable = ({ setTableParams }: Props) => {
     ],
   );
 
-  const changeColumns = (tableParams: ClientsTableQueryVariables) => {
+  const changeColumns = (tableParams: ClientTableQueryVariables) => {
     setColumns((prevColumns) => {
       let currentColumns = [...prevColumns];
       const actionColumn = currentColumns.pop();
@@ -120,7 +120,7 @@ export const useColumnsClientTable = ({ setTableParams }: Props) => {
       const nextColumns = [
         ...currentColumns,
         actionColumn,
-      ] as ColumnsType<ClientsTableDataType>;
+      ] as ColumnsType<ClientTableDataType>;
 
       return nextColumns;
     });

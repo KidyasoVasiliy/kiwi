@@ -1,7 +1,7 @@
 import { Button, Space, Typography, theme } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { useNavigate } from 'react-router-dom';
-import { ClientsTable } from 'src/features/ClientsTable';
+import { ClientTable } from 'src/features/ClientTable';
 import { useTitle } from 'src/shared/lib/browser/dom';
 
 export default function ClientsPage() {
@@ -42,7 +42,7 @@ export default function ClientsPage() {
             background: colorBgContainer,
           }}
         >
-          <ClientsTable />
+          <ClientTable />
         </Content>
       </Space>
     </>
