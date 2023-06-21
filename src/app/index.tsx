@@ -10,9 +10,9 @@ import ClientsFormPage from 'src/pages/clientsForm';
 // import EmployeesPage from 'src/pages/employees';
 // import EmployeesCardPage from 'src/pages/employeesCard';
 // import EmployeesFormPage from 'src/pages/employeesForm';
-// import ObjectsPage from 'src/pages/objects';
-// import ObjectsCardPage from 'src/pages/objectsCard';
-// import ObjectsFormPage from 'src/pages/objectsForm';
+import ObjectsPage from 'src/pages/objects';
+import ObjectsCardPage from 'src/pages/objectsCard';
+import ObjectsFormPage from 'src/pages/objectsForm';
 import Root from 'src/pages/root';
 // import SettingsPage from 'src/pages/settings';
 // import StaffPage from 'src/pages/staff';
@@ -31,9 +31,10 @@ const router = createBrowserRouter([
       { path: 'clients/create', element: <ClientsFormPage /> },
       { path: 'clients/:id/edit', element: <ClientsFormPage /> },
       { path: 'clients/:id', element: <ClientsCardPage /> },
-      // { path: 'objects', element: <ObjectsPage /> },
-      // { path: 'objects/create', element: <ObjectsFormPage /> },
-      // { path: 'objects/:id', element: <ObjectsCardPage /> },
+      { path: 'objects', element: <ObjectsPage /> },
+      { path: 'objects/create', element: <ObjectsFormPage /> },
+      { path: 'objects/:id/edit', element: <ObjectsFormPage /> },
+      { path: 'objects/:id', element: <ObjectsCardPage /> },
       // { path: 'employees', element: <EmployeesPage /> },
       // { path: 'employees/create', element: <EmployeesFormPage /> },
       // { path: 'employees/:id', element: <EmployeesCardPage /> },

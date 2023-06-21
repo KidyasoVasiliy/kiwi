@@ -10,7 +10,7 @@ export default function ClientsCardPage() {
 
   return (
     <div>
-      <Button type="link" onClick={() => navigate('/clients')}>
+      <Button type="link" onClick={() => navigate(-1)}>
         Назад
       </Button>
       <ClientCard />

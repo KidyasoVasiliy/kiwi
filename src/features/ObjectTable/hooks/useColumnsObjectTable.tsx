@@ -1,22 +1,22 @@
 import { SettingOutlined, EditOutlined } from '@ant-design/icons';
-import { Tag, Badge, Tooltip, Button } from 'antd';
+import { Tooltip, Button } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ClientsTableQueryVariables } from 'src/__gql__/graphql';
+import { ObjectTableQueryVariables } from 'src/__gql__/graphql';
 
-import { ClientsTableDataType } from './useClientsTable';
-import { ClientsTableSettings } from '../components/ClientsTableSettings';
+import { ObjectTableDataType } from './useObjectTable';
+import { ObjectTableSettings } from '../components/ObjectTableSettings';
 
 type Props = {
   setTableParams: React.Dispatch<
-    React.SetStateAction<ClientsTableQueryVariables>
+    React.SetStateAction<ObjectTableQueryVariables>
   >;
 };
-export const useColumnsClientTable = ({ setTableParams }: Props) => {
+export const useColumnsObjectTable = ({ setTableParams }: Props) => {
   const navigate = useNavigate();
 
-  const [columns, setColumns] = useState<ColumnsType<ClientsTableDataType>>(
+  const [columns, setColumns] = useState<ColumnsType<ObjectTableDataType>>(
     () => [
       {
         title: 'Наименование',
@@ -28,37 +28,17 @@ export const useColumnsClientTable = ({ setTableParams }: Props) => {
           </Link>
         ),
         sorter: true,
-        showSorterTooltip: { title: 'Сортировка по наименованию клиента' },
+        showSorterTooltip: { title: 'Сортировка по наименованию объекта' },
       },
       {
-        title: 'Ответственный',
-        dataIndex: 'responsible_employee',
-        key: 'responsible_employee',
-        sorter: true,
-        showSorterTooltip: { title: 'Сортировка по имени сотрудника' },
-      },
-      {
-        title: 'Отрасль',
-        dataIndex: 'industries',
-        key: 'industries',
-        width: 300,
-        render: (_, { industries }) => (
-          <>
-            {industries.map(({ name, color }) => (
-              <Tag color={color} key={name}>
-                {name.toUpperCase()}
-              </Tag>
-            ))}
-          </>
+        title: 'Клиент',
+        dataIndex: 'client',
+        key: 'client',
+        render: (text, { client_id }) => (
+          <Link to={`/clients/${client_id}`}>{text}</Link>
         ),
-      },
-      {
-        title: 'Статус',
-        key: 'status',
-        dataIndex: 'status',
-        width: 200,
-        render: (_, { status }) =>
-          status ? <Badge text={status.name} color={status.color} /> : null,
+        sorter: true,
+        showSorterTooltip: { title: 'Сортировка по наименованию объекта' },
       },
       {
         title: 'Действия',
@@ -66,7 +46,7 @@ export const useColumnsClientTable = ({ setTableParams }: Props) => {
         width: 130,
         align: 'center',
         filterDropdown: (props) => (
-          <ClientsTableSettings
+          <ObjectTableSettings
             {...props}
             setTableParams={setTableParams}
             changeColumns={changeColumns}
@@ -74,7 +54,7 @@ export const useColumnsClientTable = ({ setTableParams }: Props) => {
         ),
         filterIcon: <SettingOutlined />,
         render: (_, record) => (
-          <Tooltip title="Редактировать клиента">
+          <Tooltip title="Редактировать объекта">
             <Button
               type="link"
               icon={<EditOutlined />}
@@ -88,7 +68,7 @@ export const useColumnsClientTable = ({ setTableParams }: Props) => {
     ],
   );
 
-  const changeColumns = (tableParams: ClientsTableQueryVariables) => {
+  const changeColumns = (tableParams: ObjectTableQueryVariables) => {
     setColumns((prevColumns) => {
       let currentColumns = [...prevColumns];
       const actionColumn = currentColumns.pop();
@@ -99,7 +79,7 @@ export const useColumnsClientTable = ({ setTableParams }: Props) => {
           dataIndex: 'created_at',
           key: 'created_at',
           sorter: true,
-          showSorterTooltip: { title: 'Сортировка дате создания клиента' },
+          showSorterTooltip: { title: 'Сортировка дате создания объекта' },
         });
       } else {
         currentColumns = currentColumns.filter((el) => el.key !== 'created_at');
@@ -111,7 +91,7 @@ export const useColumnsClientTable = ({ setTableParams }: Props) => {
           dataIndex: 'updated_at',
           key: 'updated_at',
           sorter: true,
-          showSorterTooltip: { title: 'Сортировка дате изменения клиента' },
+          showSorterTooltip: { title: 'Сортировка дате изменения объекта' },
         });
       } else {
         currentColumns = currentColumns.filter((el) => el.key !== 'updated_at');
@@ -120,7 +100,7 @@ export const useColumnsClientTable = ({ setTableParams }: Props) => {
       const nextColumns = [
         ...currentColumns,
         actionColumn,
-      ] as ColumnsType<ClientsTableDataType>;
+      ] as ColumnsType<ObjectTableDataType>;
 
       return nextColumns;
     });

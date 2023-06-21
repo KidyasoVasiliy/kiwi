@@ -143,7 +143,7 @@ export const ClientForm: React.FC = () => {
           style={{ width: 180 }}
           loading={isLoading}
         >
-          Сохранить
+          {id ? 'Сохранить' : 'Создать'}
         </Button>
       </Form.Item>
     </Form>

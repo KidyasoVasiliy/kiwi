@@ -1,6 +1,6 @@
 import { Button, Space, Typography, theme } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useTitle } from 'react-use';
 import { ClientForm } from 'src/features/ClientForm';
 
@@ -11,6 +11,7 @@ export default function ClientsFormPage() {
     token: { colorBgContainer, borderRadius },
   } = theme.useToken();
 
+  const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
 
   return (
@@ -26,7 +27,9 @@ export default function ClientsFormPage() {
           <Button type="link" onClick={() => navigate(-1)}>
             Назад
           </Button>
-          <Typography.Title level={4}>Клиенты</Typography.Title>
+          <Typography.Title level={4}>
+            {id ? 'Изменить клиента' : 'Создать клиента'}
+          </Typography.Title>
         </Content>
         <Content
           style={{
