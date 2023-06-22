@@ -3,19 +3,19 @@ import { useQueryClient } from '@tanstack/react-query';
 import debounce from 'lodash.debounce';
 import { useState, useRef, useCallback, useMemo } from 'react';
 import {
-  ClientTableFilterQuery,
-  ClientTableFilterQueryVariables,
+  EmployeeTableFilterQuery,
+  EmployeeTableFilterQueryVariables,
 } from 'src/__gql__/graphql';
 import { graphQLClient, gql } from 'src/shared/app';
 
-import { ClientTableFilterType } from '..';
-import { getClientBoolExp } from '../../../helpers/getClientBoolExp';
+import { EmployeeTableFilterType } from '..';
+import { getEmployeeBoolExp } from '../../../helpers/getEmployeeBoolExp';
 
 const queryDocument: TypedDocumentNode<
-  ClientTableFilterQuery,
-  ClientTableFilterQueryVariables
+  EmployeeTableFilterQuery,
+  EmployeeTableFilterQueryVariables
 > = gql`
-  query ClientTableFilter($where: client_bool_exp) {
+  query EmployeeTableFilter($where: client_bool_exp) {
     client_aggregate(where: $where) {
       aggregate {
         count
@@ -24,40 +24,40 @@ const queryDocument: TypedDocumentNode<
   }
 `;
 
-const useClientTableFilter = () => {
-  const queryClient = useQueryClient();
+const useEmployeeTableFilter = () => {
+  const queryEmployee = useQueryClient();
 
-  const fetchClientTableFilter = async (
-    variables: ClientTableFilterQueryVariables,
+  const fetchEmployeeTableFilter = async (
+    variables: EmployeeTableFilterQueryVariables,
   ) => {
-    const result = await queryClient.ensureQueryData({
-      queryKey: ['ClientCount', variables],
+    const result = await queryEmployee.ensureQueryData({
+      queryKey: ['EmployeeCount', variables],
       queryFn: async () => graphQLClient.request(queryDocument, variables),
     });
 
     return result.client_aggregate.aggregate?.count;
   };
 
-  return { fetchClientTableFilter };
+  return { fetchEmployeeTableFilter };
 };
 
-export const useClientTableFilterCount = () => {
-  const { fetchClientTableFilter } = useClientTableFilter();
+export const useEmployeeTableFilterCount = () => {
+  const { fetchEmployeeTableFilter } = useEmployeeTableFilter();
 
   const [isFetching, setFetching] = useState(false);
   const [count, setCount] = useState<number | undefined>(undefined);
   const fetchRef = useRef(0);
 
   const loadOptions = useCallback(
-    (values: ClientTableFilterType) => {
+    (values: EmployeeTableFilterType) => {
       fetchRef.current += 1;
       const fetchId = fetchRef.current;
       setCount(undefined);
       setFetching(true);
 
-      const where = getClientBoolExp(values);
+      const where = getEmployeeBoolExp(values);
 
-      fetchClientTableFilter({
+      fetchEmployeeTableFilter({
         where,
       }).then((_count) => {
         if (fetchId !== fetchRef.current) {
@@ -68,7 +68,7 @@ export const useClientTableFilterCount = () => {
         setFetching(false);
       });
     },
-    [fetchClientTableFilter],
+    [fetchEmployeeTableFilter],
   );
 
   const debounceFetcher = useMemo(() => {

@@ -3,6 +3,9 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import ClientsPage from 'src/pages/clients';
 import ClientsCardPage from 'src/pages/clientsCard';
 import ClientsFormPage from 'src/pages/clientsForm';
+import EmployeesPage from 'src/pages/employees';
+import EmployeesCardPage from 'src/pages/employeesCard';
+import EmployeesFormPage from 'src/pages/employeesForm';
 // import DealPage from 'src/pages/deal';
 // import DealFormPage from 'src/pages/dealForm';
 // import DealProcessPage from 'src/pages/dealProcess';
@@ -35,9 +38,10 @@ const router = createBrowserRouter([
       { path: 'objects/create', element: <ObjectsFormPage /> },
       { path: 'objects/:id/edit', element: <ObjectsFormPage /> },
       { path: 'objects/:id', element: <ObjectsCardPage /> },
-      // { path: 'employees', element: <EmployeesPage /> },
-      // { path: 'employees/create', element: <EmployeesFormPage /> },
-      // { path: 'employees/:id', element: <EmployeesCardPage /> },
+      { path: 'employees', element: <EmployeesPage /> },
+      { path: 'employees/create', element: <EmployeesFormPage /> },
+      { path: 'employees/:id/edit', element: <EmployeesFormPage /> },
+      { path: 'employees/:id', element: <EmployeesCardPage /> },
       // { path: 'staff', element: <StaffPage /> },
       // { path: 'staff/create', element: <StaffFormPage /> },
       // { path: 'staff/:id', element: <StaffCardPage /> },

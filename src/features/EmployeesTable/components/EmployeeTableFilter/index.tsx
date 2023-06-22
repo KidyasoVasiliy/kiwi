@@ -1,33 +1,30 @@
 import { Button, Col, Form, Input, Row } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import React from 'react';
-import { ClientSelect, ClientSelectValue } from 'src/features/ClientSelect';
 
-import { useObjectTableFilterCount } from './hooks/useObjectTableFilterCount';
+import { useEmployeeTableFilterCount } from './hooks/useEmployeeTableFilterCount';
 
-export type ObjectTableFilterType = {
+export type EmployeeTableFilterType = {
   search?: string;
-  client?: ClientSelectValue[];
 };
 
 type Props = {
   isFetching: boolean;
-  onFinish: (values: ObjectTableFilterType) => void;
+  onFinish: (values: EmployeeTableFilterType) => void;
 };
 
-export const ObjectTableFilter: React.FC<Props> = ({ onFinish }) => {
+export const EmployeeTableFilter: React.FC<Props> = ({ onFinish }) => {
   const [form] = useForm();
   const { isFetching, debounceFetcher, submitText, isEmpty } =
-    useObjectTableFilterCount();
+    useEmployeeTableFilterCount();
 
   return (
-    <Form<ObjectTableFilterType>
+    <Form<EmployeeTableFilterType>
       form={form}
-      name="ObjectTableFilter"
+      name="EmployeeTableFilter"
       onValuesChange={debounceFetcher}
       initialValues={{
         search: '',
-        client: [],
       }}
       onFinish={onFinish}
       autoComplete="off"
@@ -41,12 +38,6 @@ export const ObjectTableFilter: React.FC<Props> = ({ onFinish }) => {
                 form.setFieldValue('search', searchValue);
               }}
             />
-          </Form.Item>
-        </Col>
-
-        <Col span={4}>
-          <Form.Item name="client">
-            <ClientSelect mode="multiple" />
           </Form.Item>
         </Col>
 

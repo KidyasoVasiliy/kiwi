@@ -1,20 +1,23 @@
-import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { PageLayout } from 'src/components/PageLayout';
 import { ClientCard } from 'src/features/ClientCard';
-import { useTitle } from 'src/shared/lib/browser/dom';
-import { MiniCalendar } from 'src/shared/ui/mini-calendar';
 
 export default function ClientsCardPage() {
-  useTitle('Клиенты');
   const navigate = useNavigate();
 
   return (
-    <div>
-      <Button type="link" onClick={() => navigate(-1)}>
-        Назад
-      </Button>
+    <PageLayout
+      documentTitle="Карточка клиент"
+      pageTitle="Карточка клиент"
+      prevBtnConfig={{
+        onClick: () => navigate(-1),
+      }}
+      primaryBtnConfig={{
+        text: 'Редактировать',
+        onClick: () => navigate('edit', { relative: 'path' }),
+      }}
+    >
       <ClientCard />
-      <MiniCalendar />
-    </div>
+    </PageLayout>
   );
 }

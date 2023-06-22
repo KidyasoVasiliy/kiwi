@@ -1,4 +1,10 @@
-import { SettingOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  CompassOutlined,
+  DeploymentUnitOutlined,
+  FileDoneOutlined,
+  SettingOutlined,
+  TeamOutlined,
+} from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
 import React, { useState } from 'react';
@@ -26,8 +32,8 @@ const initiNav = (pathname: string) => {
   if (pathname.startsWith('/deal')) return ['/deal'];
   if (pathname.startsWith('/clients')) return ['/clients'];
   if (pathname.startsWith('/objects')) return ['/objects'];
-  if (pathname.startsWith('/staff')) return ['/staff'];
   if (pathname.startsWith('/employees')) return ['/employees'];
+  if (pathname.startsWith('/staff')) return ['/staff'];
   if (pathname.startsWith('/settings')) return ['/settings'];
   if (pathname.startsWith('/dictionaries')) return ['/dictionaries'];
 
@@ -35,13 +41,13 @@ const initiNav = (pathname: string) => {
 };
 
 const items: MenuItem[] = [
-  getItem('Сделки', '/deal', <TeamOutlined />),
-  getItem('Клиенты', 'sub1', <UserOutlined />, [
+  getItem('Сделки', '/deal', <FileDoneOutlined />),
+  getItem('Клиенты', 'sub1', <CompassOutlined />, [
     getItem('Список клиентов', '/clients'),
     getItem('Список объектов', '/objects'),
   ]),
-  getItem('Пользователи', '/staff', <TeamOutlined />),
-  getItem('Сотрудники', '/employees', <TeamOutlined />),
+  getItem('Пользователи', '/employees', <TeamOutlined />),
+  getItem('Сотрудники', '/staff', <DeploymentUnitOutlined />),
   getItem('Настройки', 'sub2', <SettingOutlined />, [
     getItem('Основные', '/settings'),
     getItem('Справочники', '/dictionaries'),

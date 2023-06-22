@@ -2,7 +2,7 @@ import { Table, Typography } from 'antd';
 import type { TablePaginationConfig } from 'antd/es/table';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
 import React, { useState } from 'react';
-import { ClientTableQueryVariables, Order_By } from 'src/__gql__/graphql';
+import { EmployeeTableQueryVariables, Order_By } from 'src/__gql__/graphql';
 import {
   getOffset,
   getLimit,
@@ -11,15 +11,18 @@ import {
 } from 'src/shared/lib/pagination';
 
 import {
-  ClientTableFilter,
-  ClientTableFilterType,
-} from './components/ClientTableFilter';
-import { getClientBoolExp } from './helpers/getClientBoolExp';
-import { useClientTable, ClientTableDataType } from './hooks/useClientTable';
-import { useColumnsClientTable } from './hooks/useColumnsClientTable';
+  EmployeeTableFilter,
+  EmployeeTableFilterType,
+} from './components/EmployeeTableFilter';
+import { getEmployeeBoolExp } from './helpers/getEmployeeBoolExp';
+import { useColumnsEmployeeTable } from './hooks/useColumnsEmployeeTable';
+import {
+  useEmployeeTable,
+  EmployeeTableDataType,
+} from './hooks/useEmployeeTable';
 
-export const ClientTable: React.FC = () => {
-  const [tableParams, setTableParams] = useState<ClientTableQueryVariables>({
+export const EmployeeTable: React.FC = () => {
+  const [tableParams, setTableParams] = useState<EmployeeTableQueryVariables>({
     order_by: { updated_at: Order_By.Desc },
     distinct_on: null,
     where: null,
@@ -28,8 +31,8 @@ export const ClientTable: React.FC = () => {
     includeCreatedAt: false,
     includeUpdateAt: false,
   });
-  const { columns } = useColumnsClientTable({ setTableParams });
-  const { data, isFetching } = useClientTable(tableParams);
+  const { columns } = useColumnsEmployeeTable({ setTableParams });
+  const { data, isFetching } = useEmployeeTable(tableParams);
 
   const offset = tableParams.offset ?? 0;
   const limit = tableParams.limit ?? 10;
@@ -41,8 +44,8 @@ export const ClientTable: React.FC = () => {
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue | null>,
     sorter:
-      | SorterResult<ClientTableDataType>
-      | SorterResult<ClientTableDataType>[],
+      | SorterResult<EmployeeTableDataType>
+      | SorterResult<EmployeeTableDataType>[],
   ) => {
     if (!pagination.current || !pagination.pageSize || Array.isArray(sorter))
       return; // typeguard
@@ -50,17 +53,14 @@ export const ClientTable: React.FC = () => {
     const offset = getOffset(pagination.current, pagination.pageSize);
     const limit = getLimit(pagination.current, pagination.pageSize);
 
-    let order_by: ClientTableQueryVariables['order_by'] = null;
+    let order_by: EmployeeTableQueryVariables['order_by'] = null;
     const sortDirection =
       sorter.order === 'ascend' ? Order_By.Asc : Order_By.Desc;
     switch (sorter.field) {
-      case 'name':
+      case 'fullName':
       case 'created_at':
       case 'updated_at':
         order_by = { [sorter.field]: sortDirection };
-        break;
-      case 'responsible_employee':
-        order_by = { responsible_employee: { fullName: sortDirection } };
         break;
       default:
         order_by = { updated_at: Order_By.Desc };
@@ -69,17 +69,17 @@ export const ClientTable: React.FC = () => {
     setTableParams((prev) => ({ ...prev, offset, limit, order_by }));
   };
 
-  const handleSubmitFilter = (values: ClientTableFilterType) => {
+  const handleSubmitFilter = (values: EmployeeTableFilterType) => {
     setTableParams((prev) => ({
       ...prev,
       offset: 0,
-      where: getClientBoolExp(values),
+      where: getEmployeeBoolExp(values),
     }));
   };
 
   return (
     <>
-      <ClientTableFilter
+      <EmployeeTableFilter
         isFetching={isFetching}
         onFinish={handleSubmitFilter}
       />

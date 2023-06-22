@@ -3,39 +3,29 @@ import { Tooltip, Button } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ObjectTableQueryVariables } from 'src/__gql__/graphql';
+import { EmployeeTableQueryVariables } from 'src/__gql__/graphql';
 
-import { ObjectTableDataType } from './useObjectTable';
-import { ObjectTableSettings } from '../components/ObjectTableSettings';
+import { EmployeeTableDataType } from './useEmployeeTable';
+import { EmployeeTableSettings } from '../components/EmployeeTableSettings';
 
 type Props = {
   setTableParams: React.Dispatch<
-    React.SetStateAction<ObjectTableQueryVariables>
+    React.SetStateAction<EmployeeTableQueryVariables>
   >;
 };
-export const useColumnsObjectTable = ({ setTableParams }: Props) => {
+export const useColumnsEmployeeTable = ({ setTableParams }: Props) => {
   const navigate = useNavigate();
 
-  const [columns, setColumns] = useState<ColumnsType<ObjectTableDataType>>(
+  const [columns, setColumns] = useState<ColumnsType<EmployeeTableDataType>>(
     () => [
       {
         title: 'Наименование',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'fullName',
+        key: 'fullName',
         render: (text, { id }) => (
           <Link to={id} relative="path">
             {text}
           </Link>
-        ),
-        sorter: true,
-        showSorterTooltip: { title: 'Сортировка по наименованию объекта' },
-      },
-      {
-        title: 'Клиент',
-        dataIndex: 'client',
-        key: 'client',
-        render: (text, { client_id }) => (
-          <Link to={`/clients/${client_id}`}>{text}</Link>
         ),
         sorter: true,
         showSorterTooltip: { title: 'Сортировка по наименованию клиента' },
@@ -46,7 +36,7 @@ export const useColumnsObjectTable = ({ setTableParams }: Props) => {
         width: 130,
         align: 'center',
         filterDropdown: (props) => (
-          <ObjectTableSettings
+          <EmployeeTableSettings
             {...props}
             setTableParams={setTableParams}
             changeColumns={changeColumns}
@@ -54,7 +44,7 @@ export const useColumnsObjectTable = ({ setTableParams }: Props) => {
         ),
         filterIcon: <SettingOutlined />,
         render: (_, record) => (
-          <Tooltip title="Редактировать">
+          <Tooltip title="Редактировать клиента">
             <Button
               type="link"
               icon={<EditOutlined />}
@@ -68,7 +58,7 @@ export const useColumnsObjectTable = ({ setTableParams }: Props) => {
     ],
   );
 
-  const changeColumns = (tableParams: ObjectTableQueryVariables) => {
+  const changeColumns = (tableParams: EmployeeTableQueryVariables) => {
     setColumns((prevColumns) => {
       let currentColumns = [...prevColumns];
       const actionColumn = currentColumns.pop();
@@ -79,7 +69,7 @@ export const useColumnsObjectTable = ({ setTableParams }: Props) => {
           dataIndex: 'created_at',
           key: 'created_at',
           sorter: true,
-          showSorterTooltip: { title: 'Сортировка дате создания объекта' },
+          showSorterTooltip: { title: 'Сортировка дате создания пользователя' },
         });
       } else {
         currentColumns = currentColumns.filter((el) => el.key !== 'created_at');
@@ -91,7 +81,9 @@ export const useColumnsObjectTable = ({ setTableParams }: Props) => {
           dataIndex: 'updated_at',
           key: 'updated_at',
           sorter: true,
-          showSorterTooltip: { title: 'Сортировка дате изменения объекта' },
+          showSorterTooltip: {
+            title: 'Сортировка дате изменения пользователя',
+          },
         });
       } else {
         currentColumns = currentColumns.filter((el) => el.key !== 'updated_at');
@@ -100,7 +92,7 @@ export const useColumnsObjectTable = ({ setTableParams }: Props) => {
       const nextColumns = [
         ...currentColumns,
         actionColumn,
-      ] as ColumnsType<ObjectTableDataType>;
+      ] as ColumnsType<EmployeeTableDataType>;
 
       return nextColumns;
     });

@@ -51,7 +51,7 @@ export const ClientTableFilter: React.FC<Props> = ({ onFinish }) => {
             <Input.Search
               placeholder="Поиск"
               onSearch={(searchValue) => {
-                console.log(searchValue);
+                form.setFieldValue('search', searchValue);
               }}
             />
           </Form.Item>

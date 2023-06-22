@@ -1,16 +1,22 @@
-import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useTitle } from 'src/shared/lib/browser/dom';
+import { PageLayout } from 'src/components/PageLayout';
 
 export default function ObjectsCardPage() {
-  useTitle('Объекты');
   const navigate = useNavigate();
 
   return (
-    <div>
-      <Button type="link" onClick={() => navigate('/objects')}>
-        Назад
-      </Button>
-    </div>
+    <PageLayout
+      documentTitle="Карточка объекта"
+      pageTitle="Карточка объекта"
+      prevBtnConfig={{
+        onClick: () => navigate(-1),
+      }}
+      primaryBtnConfig={{
+        text: 'Редактировать',
+        onClick: () => navigate('edit', { relative: 'path' }),
+      }}
+    >
+      Карточка объекта
+    </PageLayout>
   );
 }
