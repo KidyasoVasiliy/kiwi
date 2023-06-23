@@ -46,6 +46,7 @@ const queryDocument: TypedDocumentNode<
       contacts(where: { is_main: { _eq: true } }) {
         phone
       }
+      employee_id
       responsible_employee {
         fullName
       }

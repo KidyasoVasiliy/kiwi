@@ -34,6 +34,9 @@ export const useColumnsClientTable = ({ setTableParams }: Props) => {
         title: 'Ответственный',
         dataIndex: 'responsible_employee',
         key: 'responsible_employee',
+        render: (text, { employee_id, responsible_employee }) => (
+          <Link to={`/employees/${employee_id}`}>{responsible_employee}</Link>
+        ),
         sorter: true,
         showSorterTooltip: { title: 'Сортировка по имени сотрудника' },
       },
