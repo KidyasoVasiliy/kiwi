@@ -49,7 +49,7 @@ export const useObjectTableFilterCount = () => {
   const fetchRef = useRef(0);
 
   const loadOptions = useCallback(
-    (values: ObjectTableFilterType) => {
+    (_changedValues: ObjectTableFilterType, values: ObjectTableFilterType) => {
       fetchRef.current += 1;
       const fetchId = fetchRef.current;
       setCount(undefined);

@@ -9,24 +9,22 @@ import { ObjectTableDataType } from './useObjectTable';
 import { ObjectTableSettings } from '../components/ObjectTableSettings';
 
 type Props = {
-  setTableParams: React.Dispatch<
+  setTableParams?: React.Dispatch<
     React.SetStateAction<ObjectTableQueryVariables>
   >;
+  skipColumnsKey?: string[];
 };
-export const useColumnsObjectTable = ({ setTableParams }: Props) => {
+
+export const useColumnsObjectTable = (props?: Props) => {
   const navigate = useNavigate();
 
   const [columns, setColumns] = useState<ColumnsType<ObjectTableDataType>>(
     () => [
       {
-        title: 'Наименование',
+        title: 'Наименование объекта',
         dataIndex: 'name',
         key: 'name',
-        render: (text, { id }) => (
-          <Link to={id} relative="path">
-            {text}
-          </Link>
-        ),
+        render: (text, { id }) => <Link to={`/objects/${id}`}>{text}</Link>,
         sorter: true,
         showSorterTooltip: { title: 'Сортировка по наименованию объекта' },
       },
@@ -45,13 +43,15 @@ export const useColumnsObjectTable = ({ setTableParams }: Props) => {
         key: 'action',
         width: 130,
         align: 'center',
-        filterDropdown: (props) => (
-          <ObjectTableSettings
-            {...props}
-            setTableParams={setTableParams}
-            changeColumns={changeColumns}
-          />
-        ),
+        filterDropdown: props?.setTableParams
+          ? (filterDropdownProps) => (
+              <ObjectTableSettings
+                {...filterDropdownProps}
+                setTableParams={props.setTableParams!}
+                changeColumns={changeColumns}
+              />
+            )
+          : undefined,
         filterIcon: <SettingOutlined />,
         render: (_, record) => (
           <Tooltip title="Редактировать">
@@ -106,5 +106,12 @@ export const useColumnsObjectTable = ({ setTableParams }: Props) => {
     });
   };
 
-  return { columns, setColumns };
+  const filteredColumns = columns.filter(
+    (el) => !props?.skipColumnsKey?.includes(el.key as string),
+  );
+
+  return {
+    columns: filteredColumns,
+    setColumns,
+  };
 };

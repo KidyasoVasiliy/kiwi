@@ -1,9 +1,13 @@
 import { Button, Form, Input, Spin, message } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { InitialObjectFormQuery } from 'src/__gql__/graphql';
-import { ClientSelect, getClientSelectOption } from 'src/features/ClientSelect';
+import {
+  ClientSelect,
+  ClientSelectValue,
+  getClientSelectOption,
+} from 'src/features/ClientSelect';
 import { REQUIRED } from 'src/shared/const/error-message';
 import { CustomError } from 'src/shared/error/CustomError';
 
@@ -12,9 +16,21 @@ import { useInitialObjectForm } from './hooks/useInitialObjectForm';
 import { useUpdateObject } from './hooks/useUpdateObject';
 import { ObjectFormSubmitType, ObjectFormType } from './ObjectFormType';
 
-const adapterObjectForm = (data?: InitialObjectFormQuery): ObjectFormType => {
+const adapterObjectForm = (
+  data?: InitialObjectFormQuery,
+  externalValues?: Partial<ObjectFormType>,
+): ObjectFormType => {
   const initialClient = data?.client_object_by_pk;
 
+  // if create
+  if (!data) {
+    return {
+      name: '',
+      client: externalValues?.client,
+    };
+  }
+
+  // if edit, ignore externalValues
   return {
     name: initialClient?.name ?? '',
     client: initialClient?.client
@@ -26,6 +42,10 @@ const adapterObjectForm = (data?: InitialObjectFormQuery): ObjectFormType => {
 export const ObjectForm: React.FC = () => {
   const { id } = useParams<{ id?: string }>();
   const navigate = useNavigate();
+  const { state: externalClient } = useLocation() as {
+    state?: ClientSelectValue;
+  };
+
   const { data, isFetching } = useInitialObjectForm({
     id,
   });
@@ -37,7 +57,10 @@ export const ObjectForm: React.FC = () => {
   });
 
   const isLoading = isCreateObjectLoading || isUpdateObjectLoading;
-  const initialValues: ObjectFormType = adapterObjectForm(data);
+
+  const initialValues: ObjectFormType = adapterObjectForm(data, {
+    client: externalClient,
+  });
 
   const onFinish = async (vals: ObjectFormType) => {
     const values = vals as ObjectFormSubmitType;

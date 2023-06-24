@@ -13,10 +13,15 @@ export type ObjectTableFilterType = {
 type Props = {
   isFetching: boolean;
   onFinish: (values: ObjectTableFilterType) => void;
+  externalValues?: ObjectTableFilterType;
 };
 
-export const ObjectTableFilter: React.FC<Props> = ({ onFinish }) => {
+export const ObjectTableFilter: React.FC<Props> = ({
+  onFinish,
+  externalValues,
+}) => {
   const [form] = useForm();
+
   const { isFetching, debounceFetcher, submitText, isEmpty } =
     useObjectTableFilterCount();
 
@@ -27,10 +32,11 @@ export const ObjectTableFilter: React.FC<Props> = ({ onFinish }) => {
       onValuesChange={debounceFetcher}
       initialValues={{
         search: '',
-        client: [],
+        client: externalValues?.client,
       }}
       onFinish={onFinish}
       autoComplete="off"
+      preserve
     >
       <Row gutter={16}>
         <Col flex="auto">
@@ -44,7 +50,8 @@ export const ObjectTableFilter: React.FC<Props> = ({ onFinish }) => {
           </Form.Item>
         </Col>
 
-        <Col span={4}>
+        {/** В случае внешнего клиента не отображать фильтр */}
+        <Col span={4} style={externalValues?.client && { display: 'none' }}>
           <Form.Item name="client">
             <ClientSelect mode="multiple" />
           </Form.Item>

@@ -3,6 +3,7 @@ import type { TablePaginationConfig } from 'antd/es/table';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
 import React, { useState } from 'react';
 import { ClientTableQueryVariables, Order_By } from 'src/__gql__/graphql';
+import { TableEmpty } from 'src/components/TableEmpty';
 import {
   getOffset,
   getLimit,
@@ -17,6 +18,8 @@ import {
 import { getClientBoolExp } from './helpers/getClientBoolExp';
 import { useClientTable, ClientTableDataType } from './hooks/useClientTable';
 import { useColumnsClientTable } from './hooks/useColumnsClientTable';
+import { getClientSelectOption } from '../ClientSelect';
+import { ObjectTable } from '../ObjectTable';
 
 export const ClientTable: React.FC = () => {
   const [tableParams, setTableParams] = useState<ClientTableQueryVariables>({
@@ -87,7 +90,27 @@ export const ClientTable: React.FC = () => {
         loading={isFetching}
         size="middle"
         columns={columns}
+        expandable={{
+          expandedRowRender: (record) => {
+            return (
+              <ObjectTable
+                externalClient={getClientSelectOption({
+                  id: record.id,
+                  name: record.name,
+                })}
+              />
+            );
+          },
+        }}
         dataSource={data?.list}
+        locale={{
+          emptyText: (
+            <TableEmpty
+              primaryBtnText="Создать клиента"
+              primaryBtnNavigate={{ to: '/clients/create' }}
+            />
+          ),
+        }}
         pagination={{
           current,
           pageSize,

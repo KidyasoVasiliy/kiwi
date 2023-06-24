@@ -11,7 +11,7 @@ export const getObjectBoolExp = (values: ObjectTableFilterType) => {
 
   if (values.search?.length) {
     where.name = {
-      _ilike: values.search,
+      _ilike: `%${values.search}%`,
     };
   }
 

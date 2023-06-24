@@ -1,8 +1,10 @@
-import { Table, Typography } from 'antd';
+import { Col, Table, Typography } from 'antd';
 import type { TablePaginationConfig } from 'antd/es/table';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
 import React, { useState } from 'react';
 import { ObjectTableQueryVariables, Order_By } from 'src/__gql__/graphql';
+import { TableEmpty } from 'src/components/TableEmpty';
+import { ClientSelectValue } from 'src/features/ClientSelect';
 import {
   getOffset,
   getLimit,
@@ -18,18 +20,31 @@ import { getObjectBoolExp } from './helpers/getObjectBoolExp';
 import { useColumnsObjectTable } from './hooks/useColumnsObjectTable';
 import { useObjectTable, ObjectTableDataType } from './hooks/useObjectTable';
 
-export const ObjectTable: React.FC = () => {
+type Props = {
+  externalClient?: ClientSelectValue;
+};
+
+export const ObjectTable: React.FC<Props> = ({ externalClient }) => {
+  const externalValues: ObjectTableFilterType | undefined = externalClient
+    ? {
+        client: [externalClient],
+      }
+    : undefined;
+
   const [tableParams, setTableParams] = useState<ObjectTableQueryVariables>({
     order_by: { updated_at: Order_By.Desc },
     distinct_on: null,
-    where: null,
+    where: externalValues ? getObjectBoolExp(externalValues) : undefined,
     offset: 0,
     limit: 10,
     includeCreatedAt: false,
     includeUpdateAt: false,
   });
-  const { columns } = useColumnsObjectTable({ setTableParams });
-  const { data, isFetching } = useObjectTable(tableParams);
+  const { columns } = useColumnsObjectTable({
+    setTableParams,
+    skipColumnsKey: externalClient ? ['client'] : undefined,
+  });
+  const { data, isFetching, isInitialLoading } = useObjectTable(tableParams);
 
   const offset = tableParams.offset ?? 0;
   const limit = tableParams.limit ?? 10;
@@ -77,17 +92,35 @@ export const ObjectTable: React.FC = () => {
     }));
   };
 
+  const isEmptyDataList = !isInitialLoading && data?.list.length === 0;
+
+  const Wrapper = externalValues ? Col : React.Fragment;
+
   return (
-    <>
-      <ObjectTableFilter
-        isFetching={isFetching}
-        onFinish={handleSubmitFilter}
-      />
+    <Wrapper {...(externalValues && { offset: 1 })}>
+      {!isEmptyDataList && (
+        <ObjectTableFilter
+          isFetching={isFetching}
+          onFinish={handleSubmitFilter}
+          externalValues={externalValues}
+        />
+      )}
       <Table
         loading={isFetching}
         size="middle"
         columns={columns}
         dataSource={data?.list}
+        locale={{
+          emptyText: (
+            <TableEmpty
+              primaryBtnText="Создать объект"
+              primaryBtnNavigate={{
+                to: '/objects/create',
+                options: { state: externalClient },
+              }}
+            />
+          ),
+        }}
         pagination={{
           current,
           pageSize,
@@ -101,6 +134,6 @@ export const ObjectTable: React.FC = () => {
         showSorterTooltip
         onChange={handleTableChange}
       />
-    </>
+    </Wrapper>
   );
 };
