@@ -1,4 +1,20 @@
 SET check_function_bodies = false;
+CREATE FUNCTION public.prevent_duplicate_client_status_insert() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM client_status
+        WHERE client_id = NEW.client_id
+        AND status_id = NEW.status_id
+        AND is_current = true
+    ) THEN
+        RAISE EXCEPTION 'Cannot insert duplicate record.';
+    END IF;
+    RETURN NEW;
+END;
+$$;
 CREATE FUNCTION public.set_current_timestamp_updated_at() RETURNS trigger
     LANGUAGE plpgsql
     AS $$
@@ -66,6 +82,15 @@ CREATE TABLE public.client_object (
     client_id uuid NOT NULL
 );
 COMMENT ON TABLE public.client_object IS 'Таблица объектов клиента';
+CREATE TABLE public.client_object_contact (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    name text NOT NULL,
+    phone text,
+    email text,
+    object_id uuid NOT NULL,
+    is_main boolean DEFAULT true NOT NULL
+);
+COMMENT ON TABLE public.client_object_contact IS 'Контакты объекта';
 CREATE TABLE public.client_status (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
@@ -92,6 +117,8 @@ ALTER TABLE ONLY public.client_contact
     ADD CONSTRAINT client_contact_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.client_directory_client_industry
     ADD CONSTRAINT client_directory_client_industry_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.client_object_contact
+    ADD CONSTRAINT client_object_contact_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.client_object
     ADD CONSTRAINT client_object_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.client
@@ -102,6 +129,7 @@ ALTER TABLE ONLY public.employee_occupancy
     ADD CONSTRAINT employee_occupancy_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.employee
     ADD CONSTRAINT employee_pkey PRIMARY KEY (id);
+CREATE TRIGGER prevent_duplicate_client_status_insert_trigger BEFORE INSERT ON public.client_status FOR EACH ROW EXECUTE FUNCTION public.prevent_duplicate_client_status_insert();
 CREATE TRIGGER set_public_client_object_updated_at BEFORE UPDATE ON public.client_object FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
 COMMENT ON TRIGGER set_public_client_object_updated_at ON public.client_object IS 'trigger to set value of column "updated_at" to current timestamp on row update';
 CREATE TRIGGER set_public_client_status_updated_at BEFORE UPDATE ON public.client_status FOR EACH ROW EXECUTE FUNCTION public.set_current_timestamp_updated_at();
@@ -122,6 +150,8 @@ ALTER TABLE ONLY public.client
     ADD CONSTRAINT client_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES public.employee(id) ON UPDATE SET NULL ON DELETE SET NULL;
 ALTER TABLE ONLY public.client_object
     ADD CONSTRAINT client_object_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.client(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY public.client_object_contact
+    ADD CONSTRAINT client_object_contact_object_id_fkey FOREIGN KEY (object_id) REFERENCES public.client_object(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.client_status
     ADD CONSTRAINT client_status_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.client(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY public.client_status

@@ -1,5 +1,5 @@
 {
-  "resource_version": 191,
+  "resource_version": 196,
   "metadata": {
     "version": 3,
     "sources": [
@@ -127,6 +127,34 @@
                 "name": "client",
                 "using": {
                   "foreign_key_constraint_on": "client_id"
+                }
+              }
+            ],
+            "array_relationships": [
+              {
+                "name": "object_contacts",
+                "using": {
+                  "foreign_key_constraint_on": {
+                    "column": "object_id",
+                    "table": {
+                      "name": "client_object_contact",
+                      "schema": "public"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "table": {
+              "name": "client_object_contact",
+              "schema": "public"
+            },
+            "object_relationships": [
+              {
+                "name": "client_object",
+                "using": {
+                  "foreign_key_constraint_on": "object_id"
                 }
               }
             ]
